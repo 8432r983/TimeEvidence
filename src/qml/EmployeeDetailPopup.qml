@@ -24,12 +24,14 @@ Popup
         leftPanel.employeeName = emp.name;
         leftPanel.employeeStatus = emp.status;
 
-        activity.setActivity(leftPanel.employeeName, true);
-        leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName);
-
         monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
 
         summaryRow.totalHours = monthmodel.getMonthHours();
+        summaryRow.totalDifference = monthmodel.getMonthDifference();
+    }
+
+    onOpened: {
+        leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
     }
 
     MonthLogger { id: monthlogger }
@@ -54,7 +56,7 @@ Popup
             property string employeeStatus  : ""
             property string startTime       : ""
             property string endTime         : ""
-            property bool buttonsEnabled    : false
+            property bool buttonsEnabled    : activity.getActivity(leftPanel.employeeName) !== ""
 
             function intToTime(minutes)
             {
@@ -213,14 +215,14 @@ Popup
                     buttonW                     : parent.width * 0.5 - Style.popup.borderWidth*4
                     buttonText                  : qsTr("DOLAZAK")
                     textSize                    : buttonH*0.6
-                    enabled                     : leftPanel.buttonsEnabled
-                    opacity                     : leftPanel.buttonsEnabled ? 1.0 : 0.3
+                    enabled                     : !leftPanel.buttonsEnabled
+                    opacity                     : !leftPanel.buttonsEnabled ? 1.0 : 0.3
 
                     onClicked:
                     {
                         leftPanel.startTime = datetime.formatted.toString().split(" ")[0];
-                        activity.setActivity(leftPanel.employeeName, false);
-                        leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName);
+                        activity.setActivity(leftPanel.employeeName, leftPanel.startTime);
+                        leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
                     }
                 }
 
@@ -235,29 +237,31 @@ Popup
                     buttonW                 : startButton.buttonW
                     buttonText              : qsTr("ODLAZAK")
                     textSize                : buttonH*0.6
-                    enabled                 : !leftPanel.buttonsEnabled
-                    opacity                 : !leftPanel.buttonsEnabled ? 1.0 : 0.3
+                    enabled                 : leftPanel.buttonsEnabled
+                    opacity                 : leftPanel.buttonsEnabled ? 1.0 : 0.3
 
                     onClicked:
                     {
                         //leftPanel.endTime = datetime.formatted.toString().split(" ")[0];
                         leftPanel.endTime = leftPanel.intToTime(leftPanel.timeToInt(datetime.formatted.toString().split(" ")[0]) + Math.round(Math.random() * 100));
 
-                        if(!activity.getActivity(leftPanel.employeeName))
+                        if(activity.getActivity(leftPanel.employeeName) !== "")
                         {
                             monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
                                                  datetime.formatted.toString().split(" ")[1],
-                                                 leftPanel.startTime,
+                                                 activity.getActivity(leftPanel.employeeName),
                                                  leftPanel.endTime);
 
 
-                            activity.setActivity(leftPanel.employeeName, true);
+                            activity.setActivity(leftPanel.employeeName, "");
                         }
 
-                        leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName);
+                        leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
 
                         monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+
                         summaryRow.totalHours = monthmodel.getMonthHours();
+                        summaryRow.totalDifference = monthmodel.getMonthDifference();
                     }
                 }
             }
@@ -283,7 +287,7 @@ Popup
             id          : hoursStats
             width       : parent.width
             height      : parent.height - headerRow.height - summaryRow.height
-            anchors.top : headerRow.bottom
+            anchors.top : summaryRow.bottom
             model       : monthmodel
             delegate    : Row
             {
@@ -332,7 +336,7 @@ Popup
         {
             id          : headerRow
             height      : parent.height/8
-            anchors.top : summaryRow.bottom
+            anchors.top : bottomPanel.top
 
             MText
             {
@@ -386,16 +390,25 @@ Popup
         Row
         {
             id              : summaryRow
-            height          : parent.height/8
-            anchors.top     : bottomPanel.top
+            spacing         : 10
+            height          : parent.height * 0.15
+            anchors.top     : headerRow.bottom
 
-            property int summaryWidth   : parent.width/4
-            property string totalHours  : ""
+            property string totalHours      : ""
+            property string totalDifference : ""
 
             MText
             {
                 id: monthHoursText
                 mainText            : "Ukupno Odrađeno: " + summaryRow.totalHours
+                textH               : summaryRow.height
+                eraseVerticalBorder : false
+            }
+
+            MText
+            {
+                id: monthDifferenceText
+                mainText            : "Ukupno Višak/Manjak: " + summaryRow.totalDifference
                 textH               : summaryRow.height
                 eraseVerticalBorder : false
             }

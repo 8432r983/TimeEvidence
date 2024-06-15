@@ -88,11 +88,14 @@ void MonthModel::loadEntries(QString date, QString Name) {
 
             int totalTime     = m_entries[0]->calcTotal();
             m_totalMonthHours = m_entries[0]->calcTotal();
+            m_totalDifference = 0;
             for(int i = 1; i < m_entries.size(); i++) {
                 if(m_entries[i]->date != m_entries[i - 1]->date) {
                     m_entries[i - 1]->total =
                         m_entries[i - 1]->intToTime(totalTime);
                     m_entries[i - 1]->setDifference();
+
+                    m_totalDifference += m_entries[i - 1]->calcDifference();
 
                     totalTime = m_entries[i]->calcTotal();
                 } else {
@@ -105,12 +108,15 @@ void MonthModel::loadEntries(QString date, QString Name) {
             m_entries[m_entries.size() - 1]->total =
                 m_entries[m_entries.size() - 1]->intToTime(totalTime);
             m_entries[m_entries.size() - 1]->setDifference();
+            m_totalDifference +=
+                m_entries[m_entries.size() - 1]->calcDifference();
         }
     } else {
         qDebug() << "file doesnt exist";
     }
 
     emit totalMonthHoursChanged();
+    emit totalDifferenceChanged();
 
     std::reverse(m_entries.begin(), m_entries.end());
     endResetModel();
@@ -122,6 +128,16 @@ QString MonthModel::getMonthHours() {
     return "";
 }
 
+QString MonthModel::getMonthDifference() {
+    if(m_entries.size() != 0)
+        return m_entries[0]->intToTime(m_totalDifference);
+    return "";
+}
+
 int MonthModel::totalMonthHours() const {
     return m_totalMonthHours;
+}
+
+int MonthModel::totalDifference() const {
+    return m_totalDifference;
 }

@@ -4,12 +4,17 @@ activity::activity(QObject *parent)
     : QObject{parent} {
 }
 
-bool activity::getActivity(QString Name) {
+QString activity::getActivity(QString Name) {
     if(activeList.contains(Name))
         return activeList[Name];
-    return false;
+    return "";
 }
 
-void activity::setActivity(QString Name, bool val) {
+void activity::setActivity(QString Name, QString val) {
     activeList[Name] = val;
+    emit activeListChanged();
+}
+
+QHash<QString, QString> activity::activeList() const {
+    return m_activeList;
 }

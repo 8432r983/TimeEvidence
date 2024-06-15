@@ -10,6 +10,8 @@ class MonthModel : public QAbstractListModel {
 
     Q_PROPERTY(int totalMonthHours READ totalMonthHours NOTIFY
                    totalMonthHoursChanged FINAL)
+    Q_PROPERTY(int totalDifference READ totalDifference NOTIFY
+                   totalDifferenceChanged FINAL)
 
   public:
     enum EntryRoles {
@@ -30,16 +32,20 @@ class MonthModel : public QAbstractListModel {
 
     Q_INVOKABLE void    loadEntries(QString date, QString Name);
     Q_INVOKABLE QString getMonthHours();
+    Q_INVOKABLE QString getMonthDifference();
 
     int totalMonthHours() const;
+    int totalDifference() const;
 
   signals:
     void totalMonthHoursChanged();
+    void totalDifferenceChanged();
 
   private:
     QVector<Entry *> m_entries;
     QString          employeeFolder = "";
-    int m_totalMonthHours;
+    int              m_totalMonthHours;
+    int              m_totalDifference;
 };
 
 #endif // MONTHMODEL_H
