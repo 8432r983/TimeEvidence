@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fonts/segoeui.ttf</file>
+        <file>fonts/seguisym.ttf</file>
+    </qresource>
+</RCC>

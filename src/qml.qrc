@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Style/Style1.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/NumericKeyboard.qml</file>
+        <file>qml/enterTime.qml</file>
+    </qresource>
+</RCC>

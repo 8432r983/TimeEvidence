@@ -1,0 +1,22 @@
+pragma Singleton
+import QtQuick 2.9
+import QtQml 2.9
+import QtQuick.Window 2.2
+
+QtObject {
+    readonly property int    dispWidth               :  800;
+    readonly property int    dispHeight              :  480;
+    readonly property color  dispBgColor             : "black";
+
+
+    // added for ITAMS-DISP
+    readonly property QtObject popup               : QtObject {
+        readonly property int    margines          : 150
+        readonly property color  backColor         : "black"
+        readonly property color  borderColor       : "white"
+        readonly property int    borderWidth       : 2
+        readonly property int    borderRadius      : 10
+    }
+
+}
+
