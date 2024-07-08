@@ -1,0 +1,28 @@
+1. using QSettings read the file which is in the following files
+
+QString HalFolders::getConfigFilePath() {
+    QString filePath("");
+#if((WIN_10_DEMO) || (WIN_10_FULL))
+    filePath = QGuiApplication::applicationDirPath() + "/ineteh/itams.ini";
+#elif(GUF_ROKO_0700)
+    filePath = "/root/inelteh/itams.ini";
+#elif((GUF_DUNF_1900) || (CHE_DUNF_0310))
+    filePath = "/home/root/inelteh/itams.ini";
+#else
+#endif
+    return filePath;
+}
+
+
+in the file we will have variable 
+[AppSettingsGeneral]
+deviceid=1
+
+________________________
+2. 
+* instead of return  make two buttons dolazak i odlazak...
+* ime zaposlanik bez (Zappp).. neka bude (Z) ili S na kraj desno.!!
+* back button under "Bolovanje bez dozvole.... width 150x60 for button is ok on smallest display...
+
+
+
