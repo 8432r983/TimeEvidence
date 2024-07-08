@@ -1,12 +1,11 @@
-#include "KeyboardHandler.h"
 #include "NameListModel.h"
-#include "NumericButton.h"
 #include <QDebug>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QScreen>
 #include <QtGui/QFontDatabase>
+#include "datetime.h"
 
 /*----------------------------------------------------------------------------*/
 void appQmlRegisterFonts() {
@@ -67,10 +66,10 @@ int main(int argc, char *argv[]) {
     appQmlRegisterFonts();
     appQmlRegisterStyle(app.primaryScreen());
 
-    qmlRegisterType<NameListModel>("com.example", 1, 0, "NameListModel");
+    qmlRegisterType<NameListModel>("NameListModel", 1, 0, "NameListModel");
 
-    KeyboardHandler handleKey;
-    engine.rootContext()->setContextProperty("handleKey", &handleKey);
+    QQmlContext *context = engine.rootContext();
+    context->setContextProperty("datetime", DateTime::instance());
 
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(

@@ -1,17 +1,16 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.9
+import Style 1.0
 
 Item {
     id: numericKeyboard
-    anchors.fill: parent
 
-    property real buttonWidth: numericKeyboard.width * 0.1
-    property real buttonHeight: numericKeyboard.height * 0.1
+    property real buttonWidth: 0
+    property real buttonHeight: 0
 
-    property real textSize: buttonHeight * 0.53
+    property real textSize: buttonHeight * 0.8
 
-    property color buttonDefaultColor: "#4E5BF2"
-    property color buttonPressedColor: Qt.darker(buttonDefaultColor, 1.2)
+    property bool lettersVisible: true
 
     signal keyPressed(int value)
     signal deletePressed()
@@ -22,179 +21,157 @@ Item {
         spacing: 10
         anchors.centerIn: parent
 
-        Row {
+        Row
+        {
             spacing: 10
-            Repeater {
-                model: 3
-                delegate: Button {
-                    width: numericKeyboard.buttonWidth
-                    height: numericKeyboard.buttonHeight
+            MButton
+            {
+                buttonW: buttonWidth
+                buttonH: buttonHeight
+                textSize: numericKeyboard.textSize
 
-                    text: (index + 1).toString()
-                    font.pixelSize: numericKeyboard.textSize
-                    background: Rectangle {
-                        color: "lightgray"
-                        radius: 5
-                        layer.enabled: true
-                        // layer.effect: DropShadow {
-                        //     transparentBorder: true
-                        //     samples: 20
-                        // }
-                    }
-                    onClicked: numericKeyboard.keyPressed(index + 1)
-                }
+                onClicked: letterPressed("C")
+
+                buttonText: "C"
+            }
+            MButton
+            {
+                buttonW: buttonWidth
+                buttonH: buttonHeight
+                textSize: numericKeyboard.textSize
+
+                onClicked: letterPressed("D")
+
+                buttonText: "D"
+            }
+            MButton
+            {
+                buttonW: buttonWidth
+                buttonH: buttonHeight
+                textSize: numericKeyboard.textSize
+
+                onClicked: letterPressed("E")
+
+                buttonText: "E"
+            }
+            MButton
+            {
+                buttonW: buttonWidth
+                buttonH: buttonHeight
+                textSize: numericKeyboard.textSize
+
+                onClicked: letterPressed("F")
+
+                buttonText: "F"
+            }
+        }
+
+        Row
+        {
+            spacing: 10
+            MButton
+            {
+                buttonW: buttonWidth
+                buttonH: buttonHeight
+                textSize: numericKeyboard.textSize
+
+                onClicked: keyPressed(8)
+
+                buttonText: "8"
             }
 
-            Button {
-                width: numericKeyboard.buttonWidth
-                height: numericKeyboard.buttonHeight
-                text: "A"
-                font.pixelSize: numericKeyboard.textSize
-                background: Rectangle {
-                    color: "lightblue"
-                    radius: 5
-                    layer.enabled: true
-                    // layer.effect: DropShadow {
-                    //     transparentBorder: true
-                    //     samples: 20
-                    // }
-                }
-                onClicked: numericKeyboard.letterPressed("A")
+            MButton
+            {
+                buttonW: buttonWidth
+                buttonH: buttonHeight
+                textSize: numericKeyboard.textSize
+
+                onClicked: keyPressed(9)
+
+                buttonText: "9"
+            }
+
+            MButton
+            {
+                buttonW: buttonWidth
+                buttonH: buttonHeight
+                textSize: numericKeyboard.textSize
+
+                onClicked: letterPressed("A")
+
+                buttonText: "A"
+            }
+
+            MButton
+            {
+                buttonW: buttonWidth
+                buttonH: buttonHeight
+                textSize: numericKeyboard.textSize
+
+                onClicked: letterPressed("B")
+
+                buttonText: "B"
             }
         }
 
         Row {
             spacing: 10
             Repeater {
-                model: 3
-                delegate: Button {
-                    width: numericKeyboard.buttonWidth
-                    height: numericKeyboard.buttonHeight
-                    text: (index + 4).toString()
-                    font.pixelSize: numericKeyboard.textSize
-                    background: Rectangle {
-                        color: "lightgray"
-                        radius: 5
-                        layer.enabled: true
-                        // layer.effect: DropShadow {
-                        //     transparentBorder: true
-                        //     samples: 20
-                        // }
-                    }
-                    onClicked: numericKeyboard.keyPressed(index + 4)
-                }
-            }
+                model: 4
+                delegate: MButton
+                {
+                    buttonW: buttonWidth
+                    buttonH: buttonHeight
 
-            Button {
-                width: numericKeyboard.buttonWidth
-                height: numericKeyboard.buttonHeight
-                text: "B"
-                font.pixelSize: numericKeyboard.textSize
-                background: Rectangle {
-                    color: "lightblue"
-                    radius: 5
-                    layer.enabled: true
-                    // layer.effect: DropShadow {
-                    //     transparentBorder: true
-                    //     samples: 20
-                    // }
+                    textSize: numericKeyboard.textSize
+
+                    onClicked: keyPressed(index+4)
+
+                    buttonText: (index+4).toString()
                 }
-                onClicked: numericKeyboard.letterPressed("B")
             }
         }
 
         Row {
             spacing: 10
             Repeater {
-                model: 3
-                delegate: Button {
-                    width: numericKeyboard.buttonWidth
-                    height: numericKeyboard.buttonHeight
-                    text: (index + 7).toString()
-                    font.pixelSize: numericKeyboard.textSize
-                    background: Rectangle {
-                        color: "lightgray"
-                        radius: 5
-                        layer.enabled: true
-                        // layer.effect: DropShadow {
-                        //     transparentBorder: true
-                        //     samples: 20
-                        // }
-                    }
-                    onClicked: numericKeyboard.keyPressed(index + 7)
-                }
-            }
+                model: 4
+                delegate: MButton
+                {
+                    buttonW: buttonWidth
+                    buttonH: buttonHeight
+                    textSize: numericKeyboard.textSize
 
-            Button {
-                width: numericKeyboard.buttonWidth
-                height: numericKeyboard.buttonHeight
-                text: "C"
-                font.pixelSize: numericKeyboard.textSize
-                background: Rectangle {
-                    color: "lightblue"
-                    radius: 5
-                    layer.enabled: true
-                    // layer.effect: DropShadow {
-                    //     transparentBorder: true
-                    //     samples: 20
-                    // }
+                    onClicked: keyPressed(index)
+
+                    buttonText: index.toString()
                 }
-                onClicked: numericKeyboard.letterPressed("C")
             }
         }
 
         Row {
             spacing: 10
 
-            Button {
-                width: numericKeyboard.buttonWidth
-                height: numericKeyboard.buttonHeight
-                text: "Del"
-                font.pixelSize: numericKeyboard.textSize
-                background: Rectangle {
-                    color: "lightgray"
-                    radius: 5
-                    layer.enabled: true
-                    // layer.effect: DropShadow {
-                    //     transparentBorder: true
-                    //     samples: 20
-                    // }
-                }
-                onClicked: numericKeyboard.deletePressed()
+            MButton
+            {
+                buttonW: buttonWidth * 2 + parent.spacing
+                buttonH: buttonHeight
+                textSize: numericKeyboard.textSize
+
+                onClicked: deletePressed()
+
+                buttonText: "\u232B"
             }
 
-            Button {
-                width: numericKeyboard.buttonWidth
-                height: numericKeyboard.buttonHeight
-                text: "0"
-                font.pixelSize: numericKeyboard.textSize
-                background: Rectangle {
-                    color: "lightgray"
-                    radius: 5
-                    layer.enabled: true
-                    // layer.effect: DropShadow {
-                    //     transparentBorder: true
-                    //     samples: 20
-                    // }
-                }
-                onClicked: numericKeyboard.keyPressed(0)
-            }
+            MButton
+            {
+                buttonW: buttonWidth * 2 + parent.spacing
+                buttonH: buttonHeight
+                textSize: numericKeyboard.textSize
 
-            Button {
-                width: numericKeyboard.buttonWidth * 2.1
-                height: numericKeyboard.buttonHeight
-                text: "Enter"
-                font.pixelSize: numericKeyboard.textSize
-                background: Rectangle {
-                    color: "lightgray"
-                    radius: 5
-                    layer.enabled: true
-                    // layer.effect: DropShadow {
-                    //     transparentBorder: true
-                    //     samples: 20
-                    // }
-                }
-                onClicked: numericKeyboard.enterPressed()
+                onClicked: enterPressed()
+
+                buttonText: "\u2713"
             }
         }
     }

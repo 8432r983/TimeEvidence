@@ -3,193 +3,180 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.3
 import QtQuick.Layouts 1.3
-import com.example 1.0
+import NameListModel 1.0
 
 import QtQuick.Controls.Styles 1.4
+import Style 1.0
 
-Window {
-    id: window
-    width: 800
-    height: 480
-    visible: true
-    title: qsTr("Hello World")
+Window
+{
+    id      : window
+    width   : Style.dispWidth
+    height  : Style.dispHeight
+    visible : true
+    title   : qsTr("Time Evidence")
+    color   : Style.dispBgColor
 
-    Rectangle {
-        id: clockBox
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: window.height * 0.2
-        color: "#CED3DC"
+    NameListModel {id:namemodel}
 
-        Text {
-            id: clockText
-            text: Qt.formatDateTime(new Date(), "hh:mm:ss") // Initial time
-            font.pixelSize: window.height * 0.13 // Adjust font size based on window height
-            horizontalAlignment: Text.AlignHCenter // Center align horizontally
-            verticalAlignment: Text.AlignVCenter // Center align vertically
-            anchors {
-                top: parent.top
-                horizontalCenter: parent.horizontalCenter
-                margins: 30
-            } // Position at the top center of the parent window
+    Rectangle
+    {
+        id              : nameBox
+        height          : parent.height
+        width           : window.width * 0.4
+        anchors.left    : parent.left
+        color           : Style.popup.backColor
+
+        ListView
+        {
+            id                      : nameView
+            width                   : parent.width-Style.popup.borderWidth*4
+            height                  : parent.height
+            anchors.horizontalCenter: parent.horizontalCenter
+            model                   : namemodel
+            spacing                 : 5
+
+            delegate: MouseArea
+            {
+                onClicked:
+                {
+                    nameView.currentIndex = index;
+                    keyboard.name = namemodel.getName(index);
+                    keyboard.employeeStatus = namemodel.getStatus(index);
+                    keyboard.employeeIndex = index;
+
+                    //console.log(keyboard.name);
+                    //console.log(keyboard.employeeStatus);
+                }
+                height: nameView.height/8
+                width: parent.width
+
+                Text
+                {
+                    text            : (index+1).toString() + ". " + model.name
+                    elide           : Text.ElideMiddle
+                    font.pixelSize  : nameView.height/12
+                    height          : nameView.height/8
+                    width           : nameView.width
+                    color           : Style.popup.borderColor
+                }
+            }
+
+            highlight: Rectangle {
+                color           : Style.popup.backColor
+                height          : nameView.height/10
+                width           : parent.width
+                radius          : Style.popup.borderRadius
+                border.width    : Style.popup.borderWidth
+                border.color    :Style.popup.borderColor
+            }
         }
     }
 
-    Rectangle {
-        id: bigBox
-        anchors.top: clockBox.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+    Rectangle
+    {
+        id              : keyboardBox
+        height          : parent.height
+        width           : window.width - nameBox.width
+        anchors.bottom  : parent.bottom
+        anchors.right   : parent.right
+        border.width    : Style.popup.borderWidth
+        color           : Style.popup.backColor
+        border.color    : Style.popup.borderColor
 
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "#CED3DC" }
-            GradientStop { position: 1.0; color: "#5B616A" }
-        }
-        Rectangle {
-            id: leftBox
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#5B616A" }
-                GradientStop { position: 1.0; color: "#CED3DC" }
+        Rectangle
+        {
+            id                          : passwordBox
+            width                       : keyboard.width*0.95
+            height                      : parent.height/10
+            anchors.bottom              : keyboard.top
+            anchors.horizontalCenter    : keyboard.horizontalCenter
+            anchors.bottomMargin        : 20
+            radius                      : Style.popup.borderRadius
+            color                       : Style.popup.backColor
+            border.color                : Style.popup.borderColor
+
+            Text
+            {
+                id                  : nameField
+                anchors.centerIn    : parent
+                color               : Style.popup.borderColor
+                text                : ""
+                font.pixelSize      : parent.height * 0.5
             }
-            anchors {
-                left: parent.left
-                right: parent.horizontalCenter
-                top: parent.top
-                bottom: parent.bottom
-                topMargin: 20
-                bottomMargin: 20
-                leftMargin: 70
-                rightMargin: 70
-            }
-            border.color: "grey"
-            border.width: 1
-            radius: 30
-            clip: true
-            ListView {
-                id: listView
-                anchors.fill: parent
-                model: NameListModel {}
-                delegate: MouseArea {
-                    width: listView.width
-                    height: 40
 
-                    Text {
-                        id: nameText
-                        text: model.name
-                        wrapMode: Text.WrapAnywhere
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.leftMargin: 10
-                        color: (listView.currentIndex === model.index) ? "red" : "white"
-                    }
+            MButton
+            {
+                anchors.right           : parent.right
+                anchors.verticalCenter  : parent.verticalCenter
+                anchors.rightMargin     : 5
+                buttonH                 : parent.height - Style.popup.borderWidth*2
+                buttonW                 : parent.width/5
+                buttonText              : "X"
+                textSize                : buttonH * 0.7
+                borderW                 : 0
 
-                    onClicked: {
-                        clickAnimation.start()
-                        console.log("click")
-                        listView.currentIndex = model.index
-                    }
-
-                    // Scale animation
-                    SequentialAnimation {
-                        id: clickAnimation
-                        running: false
-
-                        // Scale up
-                        PropertyAnimation {
-                            target: nameText
-                            property: "scale"
-                            to: 1.1
-                            duration: 100
-                            easing.type: Easing.InOutQuad
-                        }
-
-                        // Scale down
-                        PropertyAnimation {
-                            target: nameText
-                            property: "scale"
-                            to: 1.0
-                            duration: 100
-                            easing.type: Easing.InOutQuad
-                        }
-                    }
+                onClicked:
+                {
+                    nameField.text = ""
+                    keyboard.password = ""
                 }
             }
         }
 
-        Rectangle {
-            id: rightBox
-            border.width: 1
-            radius: 30
-            border.color: "grey"
-            anchors {
-                left: parent.horizontalCenter
-                right: parent.right
-                top: parent.top
-                bottom: parent.bottom
-                topMargin: 20
-                bottomMargin: 20
-                leftMargin: 40
-                rightMargin: 40
+        MClock
+        {
+            anchors.bottom              : passwordBox.top
+            anchors.horizontalCenter    : passwordBox.horizontalCenter
+            clockWidth                  : parent.width-Style.popup.borderWidth*2
+            clockHeight                 : parent.height - passwordBox.height - keyboard.height
+            border.color                : Style.popup.backColor
+            border.width                : 0
+        }
+
+        NumericKeyboard {
+            id: keyboard
+
+            property string password: "1456A"
+            property string name: namemodel.getName(0);
+            property string employeeStatus: namemodel.getStatus(0);
+            property int    employeeIndex: 0
+
+            width               : keyboardBox.width
+            height              : keyboardBox.height * 0.5
+            anchors.bottom      : parent.bottom
+            buttonWidth         : keyboard.width * 0.225
+            buttonHeight        : keyboard.height * 0.19
+            anchors.bottomMargin: 20
+
+            onKeyPressed: {
+                if(nameField.text.length < 20) nameField.text += "\u25CF";
+                password += value.toString();
             }
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#5B616A" }
-                GradientStop { position: 1.0; color: "#CED3DC" }
+            onDeletePressed: {
+                nameField.text = nameField.text.length > 0 ? nameField.text.slice(0, -1) : "";
+                password = password.length > 0 ? password.slice(0,-1) : "";
             }
-
-                TextField {
-                    id: inputField
-                    anchors.top: keyboard.top
-                    anchors.topMargin: parent.height * 0.1
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    height: parent.height * 0.1
-                    width: keyboard.width / 3
-                    font.pixelSize: inputField.height * 0.53
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-
-                    layer.enabled: true
-                    // layer.effect: DropShadow {
-                    //     transparentBorder: true
-                    //     samples: 20
-                    // }
-                }
-
-                NumericKeyboard {
-                    id: keyboard
-                    width: rightBox.width * 0.5
-                    anchors.bottom: parent.bottom
-                    height: parent * 0.7
-                    onKeyPressed: {
-                        inputField.text += value
-                        handleKey.handleKeyPress(value)
-                    }
-                    onDeletePressed: {
-                        inputField.text = inputField.text.length > 0 ? inputField.text.slice(0, -1) : ""
-                        handleKey.handleDeletePress()
-                    }
-                    onEnterPressed: {
-                        console.log("Entered: " + inputField.text)
-                        handleKey.handleEnterPress()
-                    }
-                    onLetterPressed: {
-                        inputField.text += letter
-                        handleKey.handleLetterPress(letter)
-                    }
+            onEnterPressed: {
+                console.log("Entered: " + nameField.text);
+                if(namemodel.verifyEmployee(password, name))
+                {
+                    mainPopup.setData({employeeName: name, employeeStatus: employeeStatus, employeeIndex: employeeIndex});
+                    mainPopup.open()
+                    //leftPanel.employeeName = name;
+                    //leftPanel.employeeStatus = employeeStatus;
+                    //leftPanel.employeeIndex = employeeIndex;
                 }
             }
-
+            onLetterPressed: {
+                nameField.text += "\u25CF";
+                password += letter;
+            }
+        }
     }
 
-    // Update the clock every second
-    Timer {
-        interval: 1000 // Update every second
-        running: true // Start the timer immediately
-        repeat: true // Repeat indefinitely
-        onTriggered: {
-            // Update the clock text
-            clockText.text = Qt.formatDateTime(new Date(), "hh:mm:ss")
-        }
+    EmployeeDetailPopup
+    {
+        id: mainPopup
     }
 }
