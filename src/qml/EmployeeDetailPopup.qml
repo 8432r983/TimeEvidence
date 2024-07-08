@@ -251,7 +251,7 @@ Popup
         MButton
         {
             id                          : exitButton
-            anchors.verticalCenter      : parent.verticalCenter
+            anchors.bottom              : monthSummary.top
             anchors.horizontalCenter    : parent.horizontalCenter
             buttonW                     : clock.width-Style.popup.borderWidth*2
             buttonH                     : parent.height * 0.15
@@ -265,6 +265,16 @@ Popup
                 keyboard.password = ""
                 nameField.text = ""
             }
+        }
+
+        Rectangle
+        {
+            id                          : monthSummary
+            anchors.horizontalCenter    : parent.horizontalCenter
+            anchors.bottom              : parent.bottom
+            color                       : Style.popup.backColor
+            width                       : parent.width
+            height                      : parent.height * 0.55
         }
     }
 }

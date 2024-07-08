@@ -32,7 +32,9 @@ Window
             id                      : nameView
             width                   : parent.width-Style.popup.borderWidth*4
             height                  : parent.height
+            anchors.topMargin       : 10
             anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top             : refreshButton.bottom
             model                   : namemodel
             spacing                 : 5
 
@@ -44,12 +46,9 @@ Window
                     keyboard.name = namemodel.getName(index);
                     keyboard.employeeStatus = namemodel.getStatus(index);
                     keyboard.employeeIndex = index;
-
-                    //console.log(keyboard.name);
-                    //console.log(keyboard.employeeStatus);
                 }
                 height: nameView.height/8
-                width: parent.width
+                width: nameView.width
 
                 Text
                 {
@@ -59,16 +58,35 @@ Window
                     height          : nameView.height/8
                     width           : nameView.width
                     color           : Style.popup.borderColor
+                    x               : 10
                 }
             }
 
             highlight: Rectangle {
                 color           : Style.popup.backColor
                 height          : nameView.height/10
-                width           : parent.width
+                width           : nameView.width
                 radius          : Style.popup.borderRadius
                 border.width    : Style.popup.borderWidth
                 border.color    :Style.popup.borderColor
+            }
+        }
+
+        MButton
+        {
+            id                          : refreshButton
+            anchors.horizontalCenter    : parent.horizontalCenter
+            anchors.top                 : parent.top
+            buttonW                     : parent.width
+            buttonH                     : parent.height/10
+            buttonText                  : "\u27F3"
+            textSize                    : buttonH
+            anchors.topMargin           : 5
+
+            onClicked:
+            {
+                namemodel.refreshEmployees();
+                nameView.update()
             }
         }
     }
@@ -124,6 +142,7 @@ Window
 
         MClock
         {
+            id: clock
             anchors.bottom              : passwordBox.top
             anchors.horizontalCenter    : passwordBox.horizontalCenter
             clockWidth                  : parent.width-Style.popup.borderWidth*2
@@ -162,9 +181,6 @@ Window
                     popupLoader.source = "EmployeeDetailPopup.qml";
                     popupLoader.item.setData({employeeName: name, employeeStatus: employeeStatus, employeeIndex: employeeIndex});
                     popupLoader.loaded()
-                    //leftPanel.employeeName = name;
-                    //leftPanel.employeeStatus = employeeStatus;
-                    //leftPanel.employeeIndex = employeeIndex;
                 }
                 else
                 {
@@ -173,7 +189,8 @@ Window
                     popupLoader.loaded()
                 }
             }
-            onLetterPressed: {
+            onLetterPressed:
+            {
                 nameField.text += "\u25CF";
                 password += letter;
             }
@@ -182,8 +199,8 @@ Window
 
     Loader
     {
-        id: popupLoader
-        anchors.fill: parent
+        id              : popupLoader
+        anchors.fill    : parent
         onLoaded:
         {
             item.open();

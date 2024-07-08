@@ -47,6 +47,7 @@ class NameListModel : public QAbstractListModel {
     Q_INVOKABLE QString getName(int index);
     Q_INVOKABLE QString getStatus(int index);
     Q_INVOKABLE void    popupExited();
+    Q_INVOKABLE void    refreshEmployees();
 
     virtual QHash<int, QByteArray> roleNames() const override;
 
