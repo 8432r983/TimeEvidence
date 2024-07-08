@@ -86,7 +86,7 @@ Window
             onClicked:
             {
                 namemodel.refreshEmployees();
-                nameView.update()
+                //nameView.update()
             }
         }
     }
