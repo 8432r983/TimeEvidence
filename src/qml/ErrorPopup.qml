@@ -9,29 +9,39 @@ import Style 1.0
 Popup
 {
     id: errorPopup
-    anchors.centerIn    : parent
-    width               : parent.width * 0.7
-    height              : parent.height * 0.7
-    background          : Rectangle
-                        {
-                            color: Style.popup.backColor
-                            border.width: Style.popup.borderWidth
-                            border.color: Style.popup.borderColor
-                        }
+    width       : Style.dispWidth;
+    height      : Style.dispHeight;
+    modal       : true;
+    focus       : true;
+    margins     : 0;
+    padding     : 0;
+    closePolicy : Popup.NoAutoClose
+    x           : parent ? ((parent.width - width)/2) :0
+    y           : parent ? ((parent.height - height)/2) :0
+    z:1;
+    background  : Rectangle { anchors.fill: parent;color:
+            Style.popup.backColor ;border.width: 0; opacity: Style.opacityMin; }
 
     property string message: ""
-    opacity: 0.7
 
-    Text
-    {
-        anchors.centerIn    : parent
-        font.pixelSize      : parent.height * 0.1
-        text                : message
-        color               : Style.popup.borderColor
+    Rectangle {
+        width  : parent.width - Style.popup.margines;
+        height : parent.height -Style.popup.margines;
+        color  : Style.dispBgColor
+        border {
+            width : Style.popup.borderWidth;
+            color : Style.popup.borderColor;
+        }
+        anchors.centerIn : parent;
+        Text  {
+            anchors.centerIn    : parent
+            font.pixelSize      : parent.height * 0.1
+            text                : message
+            color               : Style.popup.borderColor
+        }
     }
 
-    MouseArea
-    {
+    MouseArea {
         anchors.fill: parent
         onClicked:
         {
