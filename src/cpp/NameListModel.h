@@ -22,6 +22,7 @@ class NameListModel : public QAbstractListModel {
     Q_PROPERTY(
         QVector<Employee> employees READ employees NOTIFY employeesChanged)
     Q_PROPERTY(bool verified READ verified NOTIFY verifiedChanged)
+    Q_PROPERTY(int currentDevice)
 
   public:
     explicit NameListModel(QObject *parent = nullptr);
@@ -73,8 +74,9 @@ class NameListModel : public QAbstractListModel {
     const QString cPath =
         "C:\\Praksa\\TimeEvidence\\data\\"; // MAR path to server
 #endif
-    const QString cEmployees = "zaposlenici.txt";
-    const QString cHolidays  = "praznici.txt";
+    const QString cEmployees      = "zaposlenici.txt";
+    const QString cHolidays       = "praznici.txt";
+    int           m_currentDevice = 1;
 };
 
 #endif // NAMELISTMODEL_H

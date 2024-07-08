@@ -47,8 +47,8 @@ Window
                     keyboard.employeeStatus = namemodel.getStatus(index);
                     keyboard.employeeIndex = index;
                 }
-                height: nameView.height/8
-                width: nameView.width
+                height  : nameView.height/8
+                width   : nameView.width
 
                 Text
                 {
@@ -179,7 +179,7 @@ Window
                 if(namemodel.verifyEmployee(password, name))
                 {
                     popupLoader.source = "EmployeeDetailPopup.qml";
-                    popupLoader.item.setData({employeeName: name, employeeStatus: employeeStatus, employeeIndex: employeeIndex});
+                    popupLoader.item.setData({employeeName: name, employeeStatus: employeeStatus});
                     popupLoader.loaded()
                 }
                 else

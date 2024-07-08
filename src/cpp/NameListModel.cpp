@@ -86,8 +86,9 @@ void NameListModel::loadEmployees() {
                 QString employeeStatus = elements[4].replace(" ", "");
                 int     device         = elements[5].toInt();
 
-                m_employees.append(
-                    {name, password, hours, vacation, device, employeeStatus});
+                if(device == m_currentDevice)
+                    m_employees.append({name, password, hours, vacation, device,
+                                        employeeStatus});
             }
             c++;
         }

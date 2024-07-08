@@ -1,11 +1,12 @@
 #include "NameListModel.h"
+#include "datetime.h"
 #include <QDebug>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QScreen>
+#include <QSettings>
 #include <QtGui/QFontDatabase>
-#include "datetime.h"
 
 /*----------------------------------------------------------------------------*/
 void appQmlRegisterFonts() {
