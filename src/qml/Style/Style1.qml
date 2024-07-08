@@ -8,6 +8,7 @@ QtObject {
     readonly property int    dispHeight              :  480;
     readonly property color  dispBgColor             : "black";
 
+    readonly property real opacityMin :0.5;
 
     // added for ITAMS-DISP
     readonly property QtObject popup               : QtObject {
