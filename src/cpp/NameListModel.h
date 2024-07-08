@@ -66,13 +66,14 @@ class NameListModel : public QAbstractListModel {
 
 #if(WIN_FULL)
     const QString cPath =
-        "C:\\Praksa\\TimeEvidence\\data\\"; // MAR path to server
+        "C:\\QtProjects\\TimeEvidence\\data\\"; // MAR path to server
 #elif(WIN_DEMO)
     const QString cPath =
         "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\data\\";
-#elif((GUF_ROKO_0700) || (CHE_DUNF_0310))
-    const QString cPath =
-        "C:\\Praksa\\TimeEvidence\\data\\"; // MAR path to server
+#elif(GUF_ROKO_0700)
+    const QString cPath = "/root/data/"
+#elif(CHE_DUNF_0310)
+    const QString cPath = "/home/root/data/"
 #endif
     const QString cEmployees      = "zaposlenici.txt";
     const QString cHolidays       = "praznici.txt";
