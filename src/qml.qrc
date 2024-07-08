@@ -8,5 +8,6 @@
         <file>qml/MButtonImage.qml</file>
         <file>qml/MButtonText.qml</file>
         <file>qml/EmployeeDetailPopup.qml</file>
+        <file>qml/ErrorPopup.qml</file>
     </qresource>
 </RCC>

@@ -80,9 +80,7 @@ Window
         width           : window.width - nameBox.width
         anchors.bottom  : parent.bottom
         anchors.right   : parent.right
-        border.width    : Style.popup.borderWidth
         color           : Style.popup.backColor
-        border.color    : Style.popup.borderColor
 
         Rectangle
         {
@@ -161,11 +159,18 @@ Window
                 console.log("Entered: " + nameField.text);
                 if(namemodel.verifyEmployee(password, name))
                 {
-                    mainPopup.setData({employeeName: name, employeeStatus: employeeStatus, employeeIndex: employeeIndex});
-                    mainPopup.open()
+                    popupLoader.source = "EmployeeDetailPopup.qml";
+                    popupLoader.item.setData({employeeName: name, employeeStatus: employeeStatus, employeeIndex: employeeIndex});
+                    popupLoader.loaded()
                     //leftPanel.employeeName = name;
                     //leftPanel.employeeStatus = employeeStatus;
                     //leftPanel.employeeIndex = employeeIndex;
+                }
+                else
+                {
+                    popupLoader.source = "ErrorPopup.qml";
+                    popupLoader.item.message = "Kriva lozinka. Pokušajte ponovo."
+                    popupLoader.loaded()
                 }
             }
             onLetterPressed: {
@@ -175,8 +180,13 @@ Window
         }
     }
 
-    EmployeeDetailPopup
+    Loader
     {
-        id: mainPopup
+        id: popupLoader
+        anchors.fill: parent
+        onLoaded:
+        {
+            item.open();
+        }
     }
 }
