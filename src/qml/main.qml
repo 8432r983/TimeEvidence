@@ -17,6 +17,19 @@ Window
     title   : qsTr("Time Evidence")
     color   : Style.dispBgColor
 
+    property bool anyOpen: false;
+    //opacity :(anyOpen)? 0.5 : 1;
+    Loader
+    {
+        id       : popupLoader
+        x        : 0
+        y        : 0
+        width    : Style.dispWidth;
+        height   : Style.dispHeight;
+        z        : parent.z + 10
+        source   : "";
+        onLoaded : item.open();
+    }
     NameListModel {id:namemodel}
 
     Rectangle
@@ -83,8 +96,7 @@ Window
             textSize                    : buttonH
             anchors.topMargin           : 5
 
-            onClicked:
-            {
+            onClicked: {
                 namemodel.refreshEmployees();
                 //nameView.update()
             }
@@ -181,12 +193,14 @@ Window
                     popupLoader.source = "EmployeeDetailPopup.qml";
                     popupLoader.item.setData({employeeName: name, employeeStatus: employeeStatus});
                     popupLoader.loaded()
+                    //anyOpen = true;
                 }
                 else
                 {
                     popupLoader.source = "ErrorPopup.qml";
                     popupLoader.item.message = "Kriva lozinka. Pokušajte ponovo."
                     popupLoader.loaded()
+                    //anyOpen = true;
                 }
             }
             onLetterPressed:
@@ -194,16 +208,6 @@ Window
                 nameField.text += "\u25CF";
                 password += letter;
             }
-        }
-    }
-
-    Loader
-    {
-        id              : popupLoader
-        anchors.fill    : parent
-        onLoaded:
-        {
-            item.open();
         }
     }
 }
