@@ -23,7 +23,7 @@ class NameListModel : public QAbstractListModel {
         QVector<Employee> employees READ employees NOTIFY employeesChanged)
     Q_PROPERTY(bool verified READ verified NOTIFY verifiedChanged)
     Q_PROPERTY(
-        int currentDevice READ currentDevice NOTIFY currentDeviceChanged FINAL);
+        int currentDevice READ currentDevice NOTIFY currentDeviceChanged);
 
   public:
     explicit NameListModel(QObject *parent = nullptr);

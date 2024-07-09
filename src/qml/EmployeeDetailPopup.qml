@@ -38,8 +38,6 @@ Popup
             height          : parent.height-Style.popup.borderWidth*2
             width           : parent.width * 0.4
             color           : Style.popup.backColor
-            border.width    : Style.popup.borderWidth
-            border.color    : Style.popup.borderColor
 
             property string employeeName    : ""
             property string employeeStatus  : ""
@@ -48,7 +46,6 @@ Popup
             property int    difference      : 0
             property string startDate       : ""
             property string endDate         : ""
-            property bool startLeave        : true
 
             function intToDate(minutes)
             {
@@ -76,64 +73,12 @@ Popup
 
             MButton
             {
-                id                          : startButton
-                anchors.top                 : parent.top
-                anchors.topMargin           : 10
-                anchors.horizontalCenter    : parent.horizontalCenter
-                buttonH                     : parent.height * 0.2
-                buttonW                     : parent.width * 0.95
-                buttonText                  : qsTr("DOLAZAK")
-                textSize                    : buttonH*0.6
-                enabled                     : leftPanel.startLeave
-                visible                     : leftPanel.startLeave
-
-                onClicked:
-                {
-                    leftPanel.startTime = leftPanel.timeToInt(datetime.formatted.toString().split(" ")[0]);
-                    leftPanel.startDate = datetime.formatted.toString().split(" ")[0];
-                    leftPanel.startLeave = !leftPanel.startLeave
-                    console.log(leftPanel.startDate, leftPanel.startTime)
-                }
-            }
-
-            MButton
-            {
-                id                 : leaveButton
-                anchors.centerIn   : startButton
-                buttonH            : startButton.buttonH
-                buttonW            : startButton.buttonW
-                buttonText         : qsTr("ODLAZAK")
-                textSize           : buttonH*0.6
-                enabled            : !leftPanel.startLeave
-                visible            : !leftPanel.startLeave
-
-                onClicked:
-                {
-                    if(leftPanel.startTime != 0)
-                    {
-                        leftPanel.endTime = leftPanel.timeToInt(datetime.formatted.toString().split(" ")[0]) + Math.round(Math.random()*100)
-                        leftPanel.endDate = datetime.formatted.toString().split(" ")[0];
-
-                        leftPanel.difference = leftPanel.endTime - leftPanel.startTime
-                        leftPanel.startTime = 0
-                        leftPanel.endTime = 0
-
-                        leftPanel.startLeave = !leftPanel.startLeave
-
-                        console.log(leftPanel.endDate, leftPanel.endTime);
-                        console.log(leftPanel.difference)
-                    }
-                }
-            }
-
-            MButton
-            {
                 id                          : vacationButton
-                anchors.horizontalCenter    : startButton.horizontalCenter
-                anchors.top                 : startButton.bottom
-                anchors.topMargin           : 10
-                buttonW                     : startButton.buttonW
-                buttonH                     : startButton.buttonH
+                anchors.horizontalCenter    : exitButton.horizontalCenter
+                anchors.bottom              : sickDayButton1.top
+                anchors.bottomMargin        : 10
+                buttonW                     : exitButton.buttonW
+                buttonH                     : exitButton.buttonH
                 buttonText                  : qsTr("ZAHTJEV ZA GODIŠNJI")
                 textSize                    : buttonH*0.5
             }
@@ -141,11 +86,11 @@ Popup
             MButton
             {
                 id                          : sickDayButton1
-                anchors.horizontalCenter    : startButton.horizontalCenter
-                anchors.top                 : vacationButton.bottom
-                anchors.topMargin           : 10
-                buttonW                     : startButton.buttonW
-                buttonH                     : startButton.buttonH
+                anchors.horizontalCenter    : exitButton.horizontalCenter
+                anchors.bottom              : sickDayButton2.top
+                anchors.bottomMargin        : 10
+                buttonW                     : exitButton.buttonW
+                buttonH                     : exitButton.buttonH
                 buttonText                  : qsTr("BOLOVANJE SA DOZVOLOM")
                 textSize                    : buttonH*0.5
             }
@@ -154,13 +99,32 @@ Popup
             {
 
                 id                          : sickDayButton2
-                anchors.horizontalCenter    : startButton.horizontalCenter
-                anchors.top                 : sickDayButton1.bottom
-                anchors.topMargin           : 10
-                buttonW                     : startButton.buttonW
-                buttonH                     : startButton.buttonH
+                anchors.horizontalCenter    : exitButton.horizontalCenter
+                anchors.bottom              : exitButton.top
+                anchors.bottomMargin        : 10
+                buttonW                     : exitButton.buttonW
+                buttonH                     : exitButton.buttonH
                 buttonText                  : qsTr("BOLOVANJE BEZ DOZVOLE")
                 textSize                    : buttonH*0.5
+            }
+
+            MButton
+            {
+                id                          : exitButton
+                anchors.bottom              : leftPanel.bottom
+                anchors.horizontalCenter    : leftPanel.horizontalCenter
+                buttonW                     : leftPanel.width-Style.popup.borderWidth*2
+                buttonH                     : parent.height * 0.2125
+                buttonText                  : "\u2B8C"
+                textSize                    : parent.height * 0.15
+
+                onClicked:
+                {
+                    namemodel.popupExited();
+                    mainPopup.close();
+                    keyboard.password = ""
+                    nameField.text = ""
+                }
             }
         }
 
@@ -180,7 +144,7 @@ Popup
                 anchors.bottom          : parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 width                   : parent.width - Style.popup.borderWidth*4
-                height                  : parent.height/5
+                height                  : parent.height * 0.15
                 color                   : Style.popup.backColor
                 border.color            : Style.popup.borderColor
 
@@ -199,29 +163,68 @@ Popup
             MClock
             {
                 id                          : clock
-                anchors.bottom              : exitButton.top
-                anchors.horizontalCenter    : exitButton.horizontalCenter
+                anchors.bottom              : startAndLeave.top
+                anchors.horizontalCenter    : startAndLeave.horizontalCenter
                 clockWidth                  : parent.width - Style.popup.borderWidth*2
                 clockHeight                 : parent.height * 0.8
             }
 
-            MButton
+            Rectangle
             {
-                id                          : exitButton
-                anchors.bottom              : nameEmployee.top
-                anchors.horizontalCenter    : nameEmployee.horizontalCenter
-                anchors.bottomMargin        : 5
-                buttonW                     : clock.width-Style.popup.borderWidth*2
-                buttonH                     : parent.height * 0.20
-                buttonText                  : "\u2B8C"
-                textSize                    : parent.height * 0.15
+                id: startAndLeave
+                anchors.bottom: nameEmployee.top
+                anchors.horizontalCenter: nameEmployee.horizontalCenter
+                width: parent.width
+                height: parent.height * 0.25
+                color: Style.popup.backColor
 
-                onClicked:
+                MButton
                 {
-                    namemodel.popupExited();
-                    mainPopup.close();
-                    keyboard.password = ""
-                    nameField.text = ""
+                    id                          : startButton
+                    anchors.top                 : parent.top
+                    anchors.left                : parent.left
+                    anchors.leftMargin          : Style.popup.borderWidth*2
+                    anchors.verticalCenter      : parent.verticalCenter
+                    buttonH                     : parent.height - Style.popup.borderWidth*4
+                    buttonW                     : parent.width * 0.5 - Style.popup.borderWidth*4
+                    buttonText                  : qsTr("DOLAZAK")
+                    textSize                    : buttonH*0.6
+
+                    onClicked:
+                    {
+                        leftPanel.startTime = leftPanel.timeToInt(datetime.formatted.toString().split(" ")[0]);
+                        leftPanel.startDate = datetime.formatted.toString().split(" ")[0];
+                        console.log(leftPanel.startDate, leftPanel.startTime)
+                    }
+                }
+
+                MButton
+                {
+                    id                      : leaveButton
+                    anchors.left            : startButton.right
+                    anchors.leftMargin      : Style.popup.borderWidth*4
+                    anchors.bottom          : startButton.bottom
+                    anchors.verticalCenter  : startButton.verticalCenter
+                    buttonH                 : startButton.buttonH
+                    buttonW                 : startButton.buttonW
+                    buttonText              : qsTr("ODLAZAK")
+                    textSize                : buttonH*0.6
+
+                    onClicked:
+                    {
+                        if(leftPanel.startTime != 0)
+                        {
+                            leftPanel.endTime = leftPanel.timeToInt(datetime.formatted.toString().split(" ")[0]) + Math.round(Math.random()*100)
+                            leftPanel.endDate = datetime.formatted.toString().split(" ")[0];
+
+                            leftPanel.difference = leftPanel.endTime - leftPanel.startTime
+                            leftPanel.startTime = 0
+                            leftPanel.endTime = 0
+
+                            console.log(leftPanel.endDate, leftPanel.endTime);
+                            console.log(leftPanel.difference)
+                        }
+                    }
                 }
             }
         }

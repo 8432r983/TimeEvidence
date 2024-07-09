@@ -9,5 +9,6 @@
         <file>qml/MButtonText.qml</file>
         <file>qml/EmployeeDetailPopup.qml</file>
         <file>qml/ErrorPopup.qml</file>
+        <file>qml/DetailListView.qml</file>
     </qresource>
 </RCC>
