@@ -22,7 +22,8 @@ class NameListModel : public QAbstractListModel {
     Q_PROPERTY(
         QVector<Employee> employees READ employees NOTIFY employeesChanged)
     Q_PROPERTY(bool verified READ verified NOTIFY verifiedChanged)
-    Q_PROPERTY(int currentDevice)
+    Q_PROPERTY(
+        int currentDevice READ currentDevice NOTIFY currentDeviceChanged FINAL);
 
   public:
     explicit NameListModel(QObject *parent = nullptr);
@@ -44,6 +45,9 @@ class NameListModel : public QAbstractListModel {
 
     void loadEmployees();
 
+    QString getConfigFilePath();
+    void    setDevice();
+
     Q_INVOKABLE bool    verifyEmployee(QString password, QString name);
     Q_INVOKABLE QString getName(int index);
     Q_INVOKABLE QString getStatus(int index);
@@ -56,9 +60,13 @@ class NameListModel : public QAbstractListModel {
          employees() const; // MAR Keep it private... no need for signals...
     bool verified() const;
 
+    int currentDevice() const;
+
   signals:
     void verifiedChanged();
     void employeesChanged();
+
+    void currentDeviceChanged();
 
   private:
     QVector<Employee> m_employees;
@@ -66,7 +74,9 @@ class NameListModel : public QAbstractListModel {
 
 #if(WIN_FULL)
     const QString cPath =
-        "C:\\QtProjects\\TimeEvidence\\data\\"; // MAR path to server
+        "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\data\\"; // MAR
+                                                                      // path to
+                                                                      // server
 #elif(WIN_DEMO)
     const QString cPath =
         "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\data\\";

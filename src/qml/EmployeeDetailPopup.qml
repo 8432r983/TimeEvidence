@@ -189,7 +189,7 @@ Popup
                     x              : parent.width/2 - paintedWidth/2
                     width          : parent.width
                     height         : parent.height
-                    text           : leftPanel.employeeName + " (" +(leftPanel.employeeStatus === "Z" ? "Zaposlenik" : "Student") + ")"
+                    text           : leftPanel.employeeName + " (" +(leftPanel.employeeStatus === "Z" ? "Z" : "S") + ")"
                     font.pixelSize : parent.height * 0.7
                     color          : Style.popup.borderColor
                     elide          : Text.ElideMiddle

@@ -3,7 +3,7 @@
 QString HalFolders::getConfigFilePath() {
     QString filePath("");
 #if((WIN_10_DEMO) || (WIN_10_FULL))
-    filePath = QGuiApplication::applicationDirPath() + "/ineteh/itams.ini";
+    filePath = QGuiApplication::applicationDirPath() + "/inelteh/itams.ini";
 #elif(GUF_ROKO_0700)
     filePath = "/root/inelteh/itams.ini";
 #elif((GUF_DUNF_1900) || (CHE_DUNF_0310))
@@ -12,7 +12,6 @@ QString HalFolders::getConfigFilePath() {
 #endif
     return filePath;
 }
-
 
 in the file we will have variable 
 [AppSettingsGeneral]

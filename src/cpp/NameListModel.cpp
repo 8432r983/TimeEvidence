@@ -1,12 +1,14 @@
 #include "NameListModel.h"
 #include <QDebug>
 #include <QFile>
+#include <QSettings>
 #include <QTextStream>
 
 NameListModel::NameListModel(QObject *parent)
     : QAbstractListModel(parent) {
 
     beginResetModel();
+    setDevice();
     loadEmployees();
     endResetModel();
 }
@@ -99,6 +101,31 @@ void NameListModel::loadEmployees() {
     // path....
 }
 
+QString NameListModel::getConfigFilePath() {
+    QString filePath(
+        "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\build\\Desktop_Qt_"
+        "5_15_2_MinGW_32_bit-Debug\\src\\debug\\inelteh\\items.ini");
+#if((WIN_10_DEMO) || (WIN_10_FULL))
+    filePath = QGuiApplication::applicationDirPath() + "/inelteh/items.ini";
+#elif(GUF_ROKO_0700)
+    filePath = "/root/inelteh/itams.ini";
+#elif((GUF_DUNF_1900) || (CHE_DUNF_0310))
+    filePath = "/home/root/inelteh/itams.ini";
+#else
+#endif
+    return filePath;
+}
+
+void NameListModel::setDevice() {
+    QString filePath = getConfigFilePath();
+
+    QSettings settings(filePath, QSettings::IniFormat);
+    settings.beginGroup("AppSettingsGeneral");
+    m_currentDevice = settings.value("deviceid", 1).toInt();
+    settings.endGroup();
+    emit currentDeviceChanged();
+}
+
 bool NameListModel::verifyEmployee(QString password, QString name) {
     for(int i = 0; i < m_employees.size(); i++) {
         if(m_employees[i].password == password && m_employees[i].name == name) {
@@ -132,4 +159,8 @@ void NameListModel::refreshEmployees() {
     beginResetModel();
     loadEmployees();
     endResetModel();
+}
+
+int NameListModel::currentDevice() const {
+    return m_currentDevice;
 }

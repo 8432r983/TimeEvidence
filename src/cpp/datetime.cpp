@@ -50,34 +50,33 @@ void DateTime::initializeTimer() {
     m_timer->start();
 }
 
-void DateTime::setCurrentDay()
-{
-    QDate date;
-    int day = date.currentDate().dayOfWeek();
+void DateTime::setCurrentDay() {
+    QDate   date;
+    int     day = date.currentDate().dayOfWeek();
     QString weekDay;
 
-    switch (day) {
-        case 1:
-            weekDay = "ponedeljak";
-            break;
-        case 2:
-            weekDay = "utorak";
-            break;
-        case 3:
-            weekDay = "srijeda";
-            break;
-        case 4:
-            weekDay = "četvrtak";
-            break;
-        case 5:
-            weekDay = "petak";
-            break;
-        case 6:
-            weekDay = "subota";
-            break;
-        case 7:
-            weekDay = "nedelja";
-            break;
+    switch(day) {
+    case 1:
+        weekDay = "ponedeljak";
+        break;
+    case 2:
+        weekDay = "utorak";
+        break;
+    case 3:
+        weekDay = "srijeda";
+        break;
+    case 4:
+        weekDay = "četvrtak";
+        break;
+    case 5:
+        weekDay = "petak";
+        break;
+    case 6:
+        weekDay = "subota";
+        break;
+    case 7:
+        weekDay = "nedelja";
+        break;
     }
     m_currentDay = weekDay;
     emit currentDayChanged();
@@ -91,7 +90,6 @@ void DateTime::timerTout() {
     setCurrentDay();
 }
 
-QString DateTime::currentDay() const
-{
+QString DateTime::currentDay() const {
     return m_currentDay;
 }
