@@ -84,7 +84,7 @@ void DateTime::setCurrentDay() {
 
 void DateTime::timerTout() {
     QDateTime curr     = QDateTime::currentDateTime();
-    QString   formated = curr.toString("hh:mm dd.MM.yyyy.");
+    QString   formated = curr.toString("hh:mm dd.MM.yyyy");
     // qCDebug(lcDateTime) << formated;
     setFormatted(formated);
     setCurrentDay();

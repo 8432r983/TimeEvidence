@@ -6,6 +6,8 @@ import QtQuick.Dialogs 1.3
 
 import Style 1.0
 
+import HoursManager 1.0
+
 Popup
 {
     id                  : mainPopup
@@ -17,10 +19,20 @@ Popup
         color: Style.popup.backColor
     }
 
+    HoursManager {id:hoursManager}
+
     function setData(data)
     {
-        leftPanel.employeeName = data.employeeName
-        leftPanel.employeeStatus = data.employeeStatus
+        leftPanel.employeeName = data.employeeName;
+        leftPanel.employeeStatus = data.employeeStatus;
+
+        hoursManager.setMainPath(leftPanel.employeeName);
+        if(entries.getInOut(leftPanel.employeeName) === "")
+        {
+            entries.setInOut(leftPanel.employeeName, "D");
+        }
+
+        leftPanel.buttonsEnabled = entries.getInOut(leftPanel.employeeName) === "D";
     }
 
     Rectangle
@@ -41,11 +53,9 @@ Popup
 
             property string employeeName    : ""
             property string employeeStatus  : ""
-            property int    startTime       : 0
-            property int    endTime         : 0
-            property int    difference      : 0
-            property string startDate       : ""
-            property string endDate         : ""
+            property string startTime       : ""
+            property string endTime         : ""
+            property bool buttonsEnabled    : entries.getInOut(leftPanel.employeeName) === "D"
 
             function intToDate(minutes)
             {
@@ -189,12 +199,18 @@ Popup
                     buttonW                     : parent.width * 0.5 - Style.popup.borderWidth*4
                     buttonText                  : qsTr("DOLAZAK")
                     textSize                    : buttonH*0.6
+                    enabled                     : leftPanel.buttonsEnabled
+                    opacity                     : leftPanel.buttonsEnabled ? 1.0 : 0.3
 
                     onClicked:
                     {
-                        leftPanel.startTime = leftPanel.timeToInt(datetime.formatted.toString().split(" ")[0]);
-                        leftPanel.startDate = datetime.formatted.toString().split(" ")[0];
-                        console.log(leftPanel.startDate, leftPanel.startTime)
+                        leftPanel.startTime = datetime.formatted.toString().split(" ")[0];
+                        //console.log(leftPanel.startDate, leftPanel.startTime);
+
+                        entries.setStartTime(leftPanel.employeeName, leftPanel.startTime);
+                        entries.setInOut(leftPanel.employeeName, "O");
+
+                        leftPanel.buttonsEnabled = entries.getInOut(leftPanel.employeeName) === "D";
                     }
                 }
 
@@ -209,21 +225,24 @@ Popup
                     buttonW                 : startButton.buttonW
                     buttonText              : qsTr("ODLAZAK")
                     textSize                : buttonH*0.6
+                    enabled                 : !leftPanel.buttonsEnabled
+                    opacity                 : !leftPanel.buttonsEnabled ? 1.0 : 0.3
 
                     onClicked:
                     {
-                        if(leftPanel.startTime != 0)
+                        leftPanel.endTime = datetime.formatted.toString().split(" ")[0];
+
+                        if(entries.getInOut(leftPanel.employeeName) === "O")
                         {
-                            leftPanel.endTime = leftPanel.timeToInt(datetime.formatted.toString().split(" ")[0]) + Math.round(Math.random()*100)
-                            leftPanel.endDate = datetime.formatted.toString().split(" ")[0];
-
-                            leftPanel.difference = leftPanel.endTime - leftPanel.startTime
-                            leftPanel.startTime = 0
-                            leftPanel.endTime = 0
-
-                            console.log(leftPanel.endDate, leftPanel.endTime);
-                            console.log(leftPanel.difference)
+                            hoursManager.addEntry(datetime.currentDay.slice(0,3),
+                                                  datetime.formatted.toString().split(" ")[1],
+                                                  entries.getStartTime(leftPanel.employeeName),
+                                                  leftPanel.endTime);
+                            entries.setInOut(leftPanel.employeeName, "D");
+                            //entries.setStartTime(leftPanel.employeeName, 0);
                         }
+
+                        leftPanel.buttonsEnabled = entries.getInOut(leftPanel.employeeName) === "D";
                     }
                 }
             }

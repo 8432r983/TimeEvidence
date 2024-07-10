@@ -17,6 +17,8 @@ Window
     title   : qsTr("Time Evidence")
     color   : Style.dispBgColor
 
+    NameListModel {id:namemodel}
+
     property bool anyOpen: false;
     //opacity :(anyOpen)? 0.5 : 1;
     Loader
@@ -30,7 +32,6 @@ Window
         source   : "";
         onLoaded : item.open();
     }
-    NameListModel {id:namemodel}
 
     Rectangle
     {

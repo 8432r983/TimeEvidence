@@ -1,0 +1,53 @@
+#ifndef EMPLOYEEMODEL_H
+#define EMPLOYEEMODEL_H
+
+#include <QAbstractListModel>
+#include <QObject>
+
+struct Entry {
+    QString day;
+    QString date;
+    QString clockIn;
+    QString clockOut;
+    QString total;
+    QString travel;
+    QString difference;
+};
+
+class EmployeeModel : public QAbstractListModel {
+    Q_OBJECT
+
+    Q_PROPERTY(QVector<Entry> entries READ entries NOTIFY entriesChanged FINAL)
+
+  public:
+    enum EntryRoles {
+        DayRole        = Qt::UserRole + 1,
+        DateRole       = Qt::UserRole + 2,
+        ClockInRole    = Qt::UserRole + 3,
+        ClockOutRole   = Qt::UserRole + 4,
+        TotalRole      = Qt::UserRole + 5,
+        TravelRole     = Qt::UserRole + 6,
+        DifferenceRole = Qt::UserRole + 7
+    };
+
+    int rowCount(const QModelIndex &parent) const override;
+    virtual QHash<int, QByteArray> roleNames() const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+
+    void loadEntries(QString date, QString Name);
+    void setEmployeeFolder();
+
+    int     timeToInt(QString time);
+    QString intToTime(int time);
+
+    explicit EmployeeModel(QObject *parent = nullptr);
+    QVector<Entry> entries() const;
+  signals:
+    void entriesChanged();
+
+  private:
+    QVector<Entry> m_entries;
+    QString        employeeFolder = "";
+};
+
+#endif // EMPLOYEEMODEL_H

@@ -1,5 +1,7 @@
 #include "NameListModel.h"
 #include "datetime.h"
+#include "entrymanager.h"
+#include "hoursmanager.h"
 #include <QDebug>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -68,9 +70,13 @@ int main(int argc, char *argv[]) {
     appQmlRegisterStyle(app.primaryScreen());
 
     qmlRegisterType<NameListModel>("NameListModel", 1, 0, "NameListModel");
+    qmlRegisterType<HoursManager>("HoursManager", 1, 0, "HoursManager");
 
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("datetime", DateTime::instance());
+
+    EntryManager *entrymanager = new EntryManager();
+    context->setContextProperty("entries", entrymanager);
 
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(
