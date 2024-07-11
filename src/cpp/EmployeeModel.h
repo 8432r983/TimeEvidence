@@ -17,8 +17,6 @@ struct Entry {
 class EmployeeModel : public QAbstractListModel {
     Q_OBJECT
 
-    Q_PROPERTY(QVector<Entry> entries READ entries NOTIFY entriesChanged FINAL)
-
   public:
     enum EntryRoles {
         DayRole        = Qt::UserRole + 1,
@@ -34,20 +32,17 @@ class EmployeeModel : public QAbstractListModel {
     virtual QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex &index, int role) const override;
 
-    void loadEntries(QString date, QString Name);
-    void setEmployeeFolder();
+    Q_INVOKABLE void loadEntries(QString date, QString Name);
+    void             setEmployeeFolder();
 
     int     timeToInt(QString time);
     QString intToTime(int time);
 
     explicit EmployeeModel(QObject *parent = nullptr);
-    QVector<Entry> entries() const;
-  signals:
-    void entriesChanged();
 
   private:
-    QVector<Entry> m_entries;
-    QString        employeeFolder = "";
+    QVector<Entry *> m_entries;
+    QString          employeeFolder = "";
 };
 
 #endif // EMPLOYEEMODEL_H

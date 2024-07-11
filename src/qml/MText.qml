@@ -1,13 +1,31 @@
 import QtQuick 2.12
 import Style 1.0
 
-Text
+
+Rectangle
 {
-    property int textH          : 0
-    property string mainText    : ""
+    property int textH                  : 0
+    property string mainText            : ""
+    property bool eraseVerticalBorder   : true
 
-    color: Style.popup.borderColor
-    font.pixelSize: textH * 0.6
+    height: textH
+    color: Style.popup.backColor
+    border.color: Style.popup.borderColor
 
-    text: mainText
+    Rectangle
+    {
+        anchors.centerIn: parent
+        color: Style.popup.backColor
+        width: parent.width - parent.border.width*2
+        height: parent.height - parent.border.width*2 * !parent.eraseVerticalBorder
+    }
+
+    Text
+    {
+        anchors.centerIn: parent
+        color: Style.popup.borderColor
+        font.pixelSize: textH * 0.6
+
+        text: mainText
+    }
 }

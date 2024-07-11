@@ -18,7 +18,8 @@ void HoursManager::addEntry(QString day, QString date, QString clockIn,
 
     if(file.open(QIODevice::ReadWrite | QIODevice::Append)) {
         QTextStream in(&file);
-        in << day + "; " << date + "; " << clockIn + "; " << clockOut << '\n';
+        in << day + "; " << date.split(".")[0] + "; " << clockIn + "; "
+           << clockOut << '\n';
     }
 }
 

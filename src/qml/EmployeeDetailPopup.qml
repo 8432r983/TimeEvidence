@@ -7,6 +7,7 @@ import QtQuick.Dialogs 1.3
 import Style 1.0
 
 import HoursManager 1.0
+import EmployeeModel 1.0
 
 Popup
 {
@@ -33,6 +34,8 @@ Popup
         }
 
         leftPanel.buttonsEnabled = entries.getInOut(leftPanel.employeeName) === "D";
+
+        entriesModel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
     }
 
     Rectangle
@@ -57,7 +60,7 @@ Popup
             property string endTime         : ""
             property bool buttonsEnabled    : entries.getInOut(leftPanel.employeeName) === "D"
 
-            function intToDate(minutes)
+            function intToTime(minutes)
             {
                 let Hours = Math.floor(minutes/60);
                 let Minutes = minutes%60;
@@ -79,6 +82,18 @@ Popup
                 let Hours = Math.floor(time.split(":")[0]) * 60
                 let Minutes = Math.floor(time.split(":")[1])
                 return Hours + Minutes
+            }
+
+            MButton
+            {
+                id                          : travelButton
+                anchors.horizontalCenter    : exitButton.horizontalCenter
+                anchors.bottom              : vacationButton.top
+                anchors.bottomMargin        : 10
+                buttonW                     : exitButton.buttonW
+                buttonH                     : exitButton.buttonH
+                buttonText                  : qsTr("SATI PUTA")
+                textSize                    : buttonH*0.5
             }
 
             MButton
@@ -124,7 +139,7 @@ Popup
                 anchors.bottom              : leftPanel.bottom
                 anchors.horizontalCenter    : leftPanel.horizontalCenter
                 buttonW                     : leftPanel.width-Style.popup.borderWidth*2
-                buttonH                     : parent.height * 0.2125
+                buttonH                     : parent.height * 0.17
                 buttonText                  : "\u2B8C"
                 textSize                    : parent.height * 0.15
 
@@ -163,10 +178,19 @@ Popup
                     x              : parent.width/2 - paintedWidth/2
                     width          : parent.width
                     height         : parent.height
-                    text           : leftPanel.employeeName + " (" +(leftPanel.employeeStatus === "Z" ? "Z" : "S") + ")"
+                    text           : leftPanel.employeeName
                     font.pixelSize : parent.height * 0.7
                     color          : Style.popup.borderColor
                     elide          : Text.ElideMiddle
+                }
+
+                Text
+                {
+                    x                       : parent.width - paintedWidth*2
+                    text                    : leftPanel.employeeStatus === "Z" ? "Z" : "S"
+                    color                   : Style.popup.borderColor
+                    anchors.verticalCenter  : parent.verticalCenter
+                    font.pixelSize          : parent.height * 0.7
                 }
             }
 
@@ -230,7 +254,8 @@ Popup
 
                     onClicked:
                     {
-                        leftPanel.endTime = datetime.formatted.toString().split(" ")[0];
+                        //leftPanel.endTime = datetime.formatted.toString().split(" ")[0];
+                        leftPanel.endTime = leftPanel.intToTime(leftPanel.timeToInt(datetime.formatted.toString().split(" ")[0]) + Math.round(Math.random() * 100));
 
                         if(entries.getInOut(leftPanel.employeeName) === "O")
                         {
@@ -243,6 +268,8 @@ Popup
                         }
 
                         leftPanel.buttonsEnabled = entries.getInOut(leftPanel.employeeName) === "D";
+
+                        entriesModel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
                     }
                 }
             }
@@ -251,52 +278,138 @@ Popup
 
     Rectangle
     {
-        id: bottomPanel
-        width: parent.width
-        height: parent.height - topPanel.height
-        anchors.top: topPanel.bottom
-        anchors.horizontalCenter: topPanel.horizontalCenter
-        color: Style.popup.backColor
+        property int childrenWidth: parent.width/6
+
+        id                          : bottomPanel
+        width                       : parent.width
+        height                      : parent.height - topPanel.height
+        anchors.top                 : topPanel.bottom
+        anchors.topMargin           : 10
+        anchors.horizontalCenter    : topPanel.horizontalCenter
+        color                       : Style.popup.backColor
+
+        EmployeeModel {id: entriesModel}
+
+        ListView
+        {
+            id          : hoursStats
+            width       : parent.width
+            height      : parent.height - headerRow.height - summaryRow.height
+            anchors.top : headerRow.bottom
+            model       : entriesModel
+            delegate    : Row
+            {
+                height  : hoursStats.height/5
+
+                MText
+                {
+                    mainText: model.day
+                    textH   : parent.height
+                    width   : bottomPanel.childrenWidth
+                }
+                MText
+                {
+                    mainText: model.clockIn
+                    textH   : parent.height
+                    width   : bottomPanel.childrenWidth
+                }
+                MText
+                {
+                    mainText: model.clockOut
+                    textH   : parent.height
+                    width   : bottomPanel.childrenWidth
+                }
+                MText
+                {
+                    mainText: model.total
+                    textH   : parent.height
+                    width   : bottomPanel.childrenWidth
+                }
+                MText
+                {
+                    mainText: model.difference
+                    textH   : parent.height
+                    width   : bottomPanel.childrenWidth
+                }
+                MText
+                {
+                    mainText: model.travel
+                    textH   : parent.height
+                    width   : bottomPanel.childrenWidth
+                }
+            }
+        }
 
         Row
         {
-            spacing: 10
-            height: parent.height/8
+            id          : headerRow
+            height      : parent.height/8
+            anchors.top : summaryRow.bottom
 
             MText
             {
-                mainText: "Dan"
-                textH: parent.height
+                mainText            : "Dan"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
             }
             MText
             {
-                mainText: "Datum"
-                textH: parent.height
+                mainText            : "Dolazak"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+
             }
             MText
             {
-                mainText: "Dolazak"
-                textH: parent.height
+                mainText            : "Odlazak"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+
             }
             MText
             {
-                mainText: "Odlazak"
-                textH: parent.height
+                mainText            : "Sat"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+
             }
             MText
             {
-                mainText: "Sat"
-                textH: parent.height
+                mainText            : "Višak Manjak"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+
             }
             MText
             {
-                mainText: "Višak Manjak"
-                textH: parent.height
+                mainText            : "Putni sat"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+
             }
+        }
+
+        Row
+        {
+            id              : summaryRow
+            height          : parent.height/8
+            anchors.top     : bottomPanel.top
+
+            property int summaryWidth: parent.width/4
+
             MText
             {
-                mainText: "Putni sat"
-                textH: parent.height
+                mainText            : "Odrađeno"
+                textH               : parent.height
+                width               : summaryRow.summaryWidth
+                eraseVerticalBorder : false
+
             }
         }
     }

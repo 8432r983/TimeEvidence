@@ -167,7 +167,7 @@ Window
         NumericKeyboard {
             id: keyboard
 
-            property string password: "1456A"
+            property string password: ""
             property string name: namemodel.getName(0);
             property string employeeStatus: namemodel.getStatus(0);
             property int    employeeIndex: 0
