@@ -1,8 +1,14 @@
-#include "employeelistmodel.h"
+#include <QDebug>
+
 #include "employeelist.h"
+#include "employeelistmodel.h"
 
 EmployeeListModel::EmployeeListModel(QObject *parent)
     : QAbstractListModel{parent} {
+}
+
+EmployeeListModel::~EmployeeListModel() {
+    qDebug() << "EmployeeListModel to Garbage.....";
 }
 
 int EmployeeListModel::rowCount(const QModelIndex &parent) const {

@@ -1,7 +1,13 @@
+#include <QDebug>
+
 #include "entrymanager.h"
 
 EntryManager::EntryManager(QObject *parent)
     : QObject{parent} {
+}
+
+EntryManager::~EntryManager() {
+    qDebug() << "EntryManager Destroyed................";
 }
 
 void EntryManager::setInOut(QString Name, QString newVal) {

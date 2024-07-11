@@ -10,6 +10,7 @@ class EmployeeListModel : public QAbstractListModel {
     Q_OBJECT
   public:
     explicit EmployeeListModel(QObject *parent = nullptr);
+    ~EmployeeListModel();
 
     enum EmployeeListModelRoles {
         NameRole      = Qt::UserRole + 1,

@@ -9,6 +9,7 @@ class EntryManager : public QObject {
     Q_OBJECT
   public:
     explicit EntryManager(QObject *parent = nullptr);
+    ~EntryManager();
 
     Q_PROPERTY(
         QHash<QString, QString> inout READ inout NOTIFY inoutChanged FINAL)
