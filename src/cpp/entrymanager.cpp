@@ -26,10 +26,10 @@ QString EntryManager::getStartTime(QString Name) {
     return m_startTimes[Name];
 }
 
-QMap<QString, QString> EntryManager::inout() const {
+QHash<QString, QString> EntryManager::inout() const {
     return m_inout;
 }
 
-QMap<QString, QString> EntryManager::startTimes() const {
+QHash<QString, QString> EntryManager::startTimes() const {
     return m_startTimes;
 }

@@ -252,5 +252,52 @@ Popup
     Rectangle
     {
         id: bottomPanel
+        width: parent.width
+        height: parent.height - topPanel.height
+        anchors.top: topPanel.bottom
+        anchors.horizontalCenter: topPanel.horizontalCenter
+        color: Style.popup.backColor
+
+        Row
+        {
+            spacing: 10
+            height: parent.height/8
+
+            MText
+            {
+                mainText: "Dan"
+                textH: parent.height
+            }
+            MText
+            {
+                mainText: "Datum"
+                textH: parent.height
+            }
+            MText
+            {
+                mainText: "Dolazak"
+                textH: parent.height
+            }
+            MText
+            {
+                mainText: "Odlazak"
+                textH: parent.height
+            }
+            MText
+            {
+                mainText: "Sat"
+                textH: parent.height
+            }
+            MText
+            {
+                mainText: "Višak Manjak"
+                textH: parent.height
+            }
+            MText
+            {
+                mainText: "Putni sat"
+                textH: parent.height
+            }
+        }
     }
 }

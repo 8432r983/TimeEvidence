@@ -65,7 +65,6 @@ class NameListModel : public QAbstractListModel {
   signals:
     void verifiedChanged();
     void employeesChanged();
-
     void currentDeviceChanged();
 
   private:

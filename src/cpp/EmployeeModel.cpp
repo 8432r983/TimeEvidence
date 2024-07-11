@@ -66,8 +66,8 @@ void EmployeeModel::loadEntries(QString date, QString Name) {
 
     if(file.exists()) {
         if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            int     TotalTime = 0;
-            QString pastDay   = "";
+            int   TotalTime = 0;
+            Entry pastEntry;
 
             while(!file.atEnd()) {
                 QString     line  = QString(file.readLine());
@@ -80,29 +80,28 @@ void EmployeeModel::loadEntries(QString date, QString Name) {
 
                 Entry entry;
 
-                if(Day != pastDay) {
-                    entry.day        = Day;
-                    entry.date       = Date;
-                    entry.clockIn    = ClockIn;
-                    entry.clockOut   = ClockOut;
-                    entry.total      = TotalTime.toString();
-                    entry.travel     = "-";
-                    entry.difference = intToTime(TotalTime - 8);
+                if(Day != pastEntry.day) {
+                    pastEntry.total      = QString::number(TotalTime);
+                    pastEntry.travel     = "-";
+                    pastEntry.difference = intToTime(TotalTime - 8);
+
+                    m_entries.append(pastEntry);
 
                     TotalTime = 0;
                 } else {
                     TotalTime += timeToInt(ClockOut) - timeToInt(ClockIn);
-                    entry.day        = Day;
-                    entry.date       = Date;
-                    entry.clockIn    = ClockIn;
-                    entry.clockOut   = ClockOut;
-                    entry.total      = "-";
-                    entry.travel     = "-";
-                    entry.difference = "-";
                 }
 
-                pastDay = Day;
+                entry.day        = Day;
+                entry.date       = Date;
+                entry.clockIn    = ClockIn;
+                entry.clockOut   = ClockOut;
+                entry.total      = "-";
+                entry.travel     = "-";
+                entry.difference = "-";
+
                 m_entries.append(entry);
+                pastEntry = entry;
             }
         }
     } else {
@@ -135,12 +134,20 @@ QString EmployeeModel::intToTime(int time) {
     int Hours   = floor(time / 60);
     int Minutes = time & 60;
 
-    QString res;
+    QString res = "";
 
     if(Hours < 10)
-        res += "0" +
+        res += "0" + QString::number(Hours);
+    else
+        res += QString::number(Hours);
 
-               return res;
+    res += ":";
+    if(Minutes < 10)
+        res += "0" + QString::number(Minutes);
+    else
+        res += QString::number(Minutes);
+
+    return res;
 }
 
 QVector<Entry> EmployeeModel::entries() const {
