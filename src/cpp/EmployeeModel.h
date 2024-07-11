@@ -28,6 +28,8 @@ class EmployeeModel : public QAbstractListModel {
         DifferenceRole = Qt::UserRole + 7
     };
 
+    explicit EmployeeModel(QObject *parent = nullptr);
+
     int rowCount(const QModelIndex &parent) const override;
     virtual QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex &index, int role) const override;
@@ -37,8 +39,6 @@ class EmployeeModel : public QAbstractListModel {
 
     int     timeToInt(QString time);
     QString intToTime(int time);
-
-    explicit EmployeeModel(QObject *parent = nullptr);
 
   private:
     QVector<Entry *> m_entries;

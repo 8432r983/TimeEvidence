@@ -3,13 +3,13 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.3
 import QtQuick.Layouts 1.3
-import NameListModel 1.0
 
 import QtQuick.Controls.Styles 1.4
+
+import EmployeeListModel 1.0
 import Style 1.0
 
-Window
-{
+Window {
     id      : window
     width   : Style.dispWidth
     height  : Style.dispHeight
@@ -17,12 +17,18 @@ Window
     title   : qsTr("Time Evidence")
     color   : Style.dispBgColor
 
-    NameListModel {id:namemodel}
+    EmployeeListModel {id:empmodel  }
+    Component.onCompleted :  empmodel.readEmployees()
 
-    property bool anyOpen: false;
-    //opacity :(anyOpen)? 0.5 : 1;
-    Loader
-    {
+    property QtObject emp  : QtObject{
+        property int    ix       : -1
+        property string name     : ""
+        property string password : ""
+        property string hours    : ""
+        property string vacation : ""
+        property string status   : ""
+    }
+    Loader {
         id       : popupLoader
         x        : 0
         y        : 0
@@ -33,40 +39,38 @@ Window
         onLoaded : item.open();
     }
 
-    Rectangle
-    {
+    Rectangle  {
         id              : nameBox
         height          : parent.height
-        width           : window.width * 0.4
+        width           : window.width * 0.5
         anchors.left    : parent.left
         color           : Style.popup.backColor
 
-        ListView
-        {
+        ListView  {
             id                      : nameView
-            width                   : parent.width-Style.popup.borderWidth*4
+            width                   : parent.width - Style. popup.borderWidth * 4
             height                  : parent.height
             anchors.topMargin       : 10
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top             : refreshButton.bottom
-            model                   : namemodel
+            model                   : empmodel
             spacing                 : 5
 
-            delegate: MouseArea
-            {
-                onClicked:
-                {
-                    nameView.currentIndex = index;
-                    keyboard.name = namemodel.getName(index);
-                    keyboard.employeeStatus = namemodel.getStatus(index);
-                    keyboard.employeeIndex = index;
+            delegate: MouseArea {
+                onClicked:           {
+                    nameView.currentIndex = model.index;
+                    emp.ix       = model.index
+                    emp.name     = model.name
+                    emp.password = model.password
+                    emp.hours    = model.hours
+                    emp.vacation = model.vacation
+                    emp.status   = model.status
                 }
-                height  : nameView.height/8
+                height  : nameView.height / 8
                 width   : nameView.width
 
-                Text
-                {
-                    text            : (index+1).toString() + ". " + model.name
+                Text  {
+                    text            : (model.index + 1) + ". " + model.name
                     elide           : Text.ElideMiddle
                     font.pixelSize  : nameView.height/12
                     height          : nameView.height/8
@@ -82,12 +86,11 @@ Window
                 width           : nameView.width
                 radius          : Style.popup.borderRadius
                 border.width    : Style.popup.borderWidth
-                border.color    :Style.popup.borderColor
+                border.color    : Style.popup.borderColor
             }
         }
 
-        MButton
-        {
+        MButton {
             id                          : refreshButton
             anchors.horizontalCenter    : parent.horizontalCenter
             anchors.top                 : parent.top
@@ -96,16 +99,11 @@ Window
             buttonText                  : "\u27F3"
             textSize                    : buttonH
             anchors.topMargin           : 5
-
-            onClicked: {
-                namemodel.refreshEmployees();
-                //nameView.update()
-            }
+            onClicked                   : empmodel.readEmployees();
         }
     }
 
-    Rectangle
-    {
+    Rectangle  {
         id              : keyboardBox
         height          : parent.height
         width           : window.width - nameBox.width
@@ -113,8 +111,7 @@ Window
         anchors.right   : parent.right
         color           : Style.popup.backColor
 
-        Rectangle
-        {
+        Rectangle {
             id                          : passwordBox
             width                       : keyboard.width*0.95
             height                      : parent.height/10
@@ -125,8 +122,7 @@ Window
             color                       : Style.popup.backColor
             border.color                : Style.popup.borderColor
 
-            Text
-            {
+            Text {
                 id                  : nameField
                 anchors.centerIn    : parent
                 color               : Style.popup.borderColor
@@ -134,8 +130,7 @@ Window
                 font.pixelSize      : parent.height * 0.5
             }
 
-            MButton
-            {
+            MButton  {
                 anchors.right           : parent.right
                 anchors.verticalCenter  : parent.verticalCenter
                 anchors.rightMargin     : 5
@@ -144,33 +139,30 @@ Window
                 buttonText              : "X"
                 textSize                : buttonH * 0.7
                 borderW                 : 0
-
-                onClicked:
-                {
+                onClicked : {
                     nameField.text = ""
                     keyboard.password = ""
                 }
             }
         }
 
-        MClock
-        {
+        MClock {
             id: clock
             anchors.bottom              : passwordBox.top
             anchors.horizontalCenter    : passwordBox.horizontalCenter
-            clockWidth                  : parent.width-Style.popup.borderWidth*2
+            clockWidth                  : parent.width - Style.popup.borderWidth*2
             clockHeight                 : parent.height - passwordBox.height - keyboard.height
             border.color                : Style.popup.backColor
             border.width                : 0
         }
 
-        NumericKeyboard {
+        NumericKeyboard  {
             id: keyboard
 
             property string password: ""
-            property string name: namemodel.getName(0);
-            property string employeeStatus: namemodel.getStatus(0);
-            property int    employeeIndex: 0
+            // property string name: namemodel.getName(0);
+            // property string employeeStatus: namemodel.getStatus(0);
+            // property int    employeeIndex: 0
 
             width               : keyboardBox.width
             height              : keyboardBox.height * 0.5
@@ -189,23 +181,19 @@ Window
             }
             onEnterPressed: {
                 console.log("Entered: " + nameField.text);
-                if(namemodel.verifyEmployee(password, name))
-                {
+                if(password === emp.password)  {
+                    console.log("good Password");
                     popupLoader.source = "EmployeeDetailPopup.qml";
+                    //TODO MAR pass QtObject emp to the next vlaue....
                     popupLoader.item.setData({employeeName: name, employeeStatus: employeeStatus});
                     popupLoader.loaded()
-                    //anyOpen = true;
-                }
-                else
-                {
+                } else {
                     popupLoader.source = "ErrorPopup.qml";
                     popupLoader.item.message = "Kriva lozinka. Pokušajte ponovo."
                     popupLoader.loaded()
-                    //anyOpen = true;
                 }
             }
-            onLetterPressed:
-            {
+            onLetterPressed: {
                 nameField.text += "\u25CF";
                 password += letter;
             }

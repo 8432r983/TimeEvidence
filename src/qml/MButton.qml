@@ -12,8 +12,8 @@ MouseArea
     property int textSize: 0 //!!!is it pixel or what!!
     property int borderW: Style.popup.borderWidth
 
-    width: buttonW
-    height: buttonH
+    width  : buttonW
+    height : buttonH
 
     Rectangle
     {

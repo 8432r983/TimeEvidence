@@ -1,10 +1,10 @@
-#include "hoursmanager.h"
-
 #include <QDebug>
 #include <QFile>
 #include <QSettings>
 #include <QString>
 #include <QTextStream>
+
+#include "hoursmanager.h"
 
 HoursManager::HoursManager(QObject *parent)
     : QObject{parent} {

@@ -7,7 +7,7 @@
 #include <QStringList>
 #include <QVector>
 
-struct Employee {
+struct Employee1 {
     QString name;
     QString password;
     double  hours;
@@ -19,16 +19,10 @@ struct Employee {
 class NameListModel : public QAbstractListModel {
     Q_OBJECT
 
-    Q_PROPERTY(
-        QVector<Employee> employees READ employees NOTIFY employeesChanged)
-    Q_PROPERTY(bool verified READ verified NOTIFY verifiedChanged)
-    Q_PROPERTY(
-        int currentDevice READ currentDevice NOTIFY currentDeviceChanged);
-
   public:
     explicit NameListModel(QObject *parent = nullptr);
 
-    enum employeeRoles {
+    enum NameListModelRoles {
         NameRole           = Qt::UserRole + 1,
         PasswordRole       = Qt::UserRole + 2,
         HoursRole          = Qt::UserRole + 3,
@@ -37,11 +31,12 @@ class NameListModel : public QAbstractListModel {
         EmployeeStatusRole = Qt::UserRole + 6
     };
 
-    // QAbstractItemModel interface
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index,
+                  int                role = Qt::DisplayRole) const override;
 
-    int rowCount(const QModelIndex &parent) const override;
-    // int columnCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const override;
+    virtual QHash<int, QByteArray> roleNames() const override;
 
     void loadEmployees();
 
@@ -54,10 +49,6 @@ class NameListModel : public QAbstractListModel {
     Q_INVOKABLE void    popupExited();
     Q_INVOKABLE void    refreshEmployees();
 
-    virtual QHash<int, QByteArray> roleNames() const override;
-
-    QVector<Employee>
-         employees() const; // MAR Keep it private... no need for signals...
     bool verified() const;
 
     int currentDevice() const;
@@ -68,17 +59,13 @@ class NameListModel : public QAbstractListModel {
     void currentDeviceChanged();
 
   private:
-    QVector<Employee> m_employees;
-    bool              m_verified;
+    QVector<Employee1> mlst;
 
-#if(WIN_FULL)
-    const QString cPath =
-        "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\data\\"; // MAR
-                                                                      // path to
-                                                                      // server
-#elif(WIN_DEMO)
+#if(WIN_ADR)
     const QString cPath =
         "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\data\\";
+#elif(WIN_MAR)
+    const QString cPath = "C:\\QtProjects\\TimeEvidence\\data\\";
 #elif(GUF_ROKO_0700)
     const QString cPath = "/root/data/"
 #elif(CHE_DUNF_0310)

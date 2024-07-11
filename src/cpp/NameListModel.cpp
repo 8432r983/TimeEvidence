@@ -1,50 +1,37 @@
-#include "NameListModel.h"
 #include <QDebug>
 #include <QFile>
+#include <QGuiApplication>
+#include <QLoggingCategory>
 #include <QSettings>
 #include <QTextStream>
 
+#include "nameListmodel.h"
+
 NameListModel::NameListModel(QObject *parent)
     : QAbstractListModel(parent) {
-
     beginResetModel();
     setDevice();
     loadEmployees();
     endResetModel();
 }
 
-QVector<Employee> NameListModel::employees() const {
-    return m_employees;
-}
-
-bool NameListModel::verified() const {
-    return m_verified;
-}
-
 int NameListModel::rowCount(const QModelIndex &parent) const {
     if(parent.isValid())
         return 0;
-    return m_employees.size();
+    return mlst.size();
 }
 
-QHash<int, QByteArray> NameListModel::roleNames() const {
-    QHash<int, QByteArray> res;
-    res[NameRole]           = "name";
-    res[PasswordRole]       = "password";
-    res[HoursRole]          = "hours";
-    res[VacationRole]       = "vacation";
-    res[DeviceRole]         = "device";
-    res[EmployeeStatusRole] = "employeeStatus";
-    return res;
+int NameListModel::columnCount(const QModelIndex &parent) const {
+    if(parent.isValid() || mlst.isEmpty())
+        return 0;
+    return 1;
 }
 
 QVariant NameListModel::data(const QModelIndex &index, int role) const {
     if(!hasIndex(index.row(), index.column(), index.parent()))
         return QVariant();
 
-    const Employee employeeItem = m_employees[index.row()];
-    // MAR should be case...
-
+    const Employee1 employeeItem = mlst[index.row()];
     switch(role) {
     case NameRole:
         return QVariant(employeeItem.name);
@@ -59,16 +46,22 @@ QVariant NameListModel::data(const QModelIndex &index, int role) const {
     case EmployeeStatusRole:
         return QVariant(employeeItem.employeeStatus);
     }
-
     return QVariant();
+}
+QHash<int, QByteArray> NameListModel::roleNames() const {
+    QHash<int, QByteArray> res;
+    res[NameRole]           = "name";
+    res[PasswordRole]       = "password";
+    res[HoursRole]          = "hours";
+    res[VacationRole]       = "vacation";
+    res[DeviceRole]         = "device";
+    res[EmployeeStatusRole] = "employeeStatus";
+    return res;
 }
 
 void NameListModel::loadEmployees() {
-    // qDebug() << cPath + cEmployees;
     QFile file(cPath + cEmployees);
-
-    m_employees.clear();
-
+    mlst.clear();
     if(file.exists()) {
 
         if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -89,8 +82,8 @@ void NameListModel::loadEmployees() {
                 int     device         = elements[5].toInt();
 
                 if(device == m_currentDevice)
-                    m_employees.append({name, password, hours, vacation, device,
-                                        employeeStatus});
+                    mlst.append({name, password, hours, vacation, device,
+                                 employeeStatus});
             }
             c++;
         }
@@ -102,10 +95,8 @@ void NameListModel::loadEmployees() {
 }
 
 QString NameListModel::getConfigFilePath() {
-    QString filePath(
-        "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\build\\Desktop_Qt_"
-        "5_15_2_MinGW_32_bit-Debug\\src\\debug\\inelteh\\items.ini");
-#if((WIN_10_DEMO) || (WIN_10_FULL))
+    QString filePath;
+#if((WIN_ADR) || (WIN_MAR))
     filePath = QGuiApplication::applicationDirPath() + "/inelteh/items.ini";
 #elif(GUF_ROKO_0700)
     filePath = "/root/inelteh/itams.ini";
@@ -127,31 +118,31 @@ void NameListModel::setDevice() {
 }
 
 bool NameListModel::verifyEmployee(QString password, QString name) {
-    for(int i = 0; i < m_employees.size(); i++) {
-        if(m_employees[i].password == password && m_employees[i].name == name) {
+    for(int i = 0; i < mlst.size(); i++) {
+        if(mlst[i].password == password && mlst[i].name == name) {
             qDebug() << password << name;
-            m_verified = true;
+            // TODO m_verified = true;
             emit verifiedChanged();
         }
     }
 
-    return m_verified;
+    return true; // TODO m_verified;
 }
 
 QString NameListModel::getName(int index) {
-    if(index >= 0 && index < m_employees.size())
-        return m_employees[index].name;
+    if(index >= 0 && index < mlst.size())
+        return mlst[index].name;
     return QString();
 }
 
 QString NameListModel::getStatus(int index) {
-    if(index >= 0 && index < m_employees.size())
-        return m_employees[index].employeeStatus;
+    if(index >= 0 && index < mlst.size())
+        return mlst[index].employeeStatus;
     return QString();
 }
 
 void NameListModel::popupExited() {
-    m_verified = false;
+    // TODO m_verified = false;
     emit verifiedChanged();
 }
 

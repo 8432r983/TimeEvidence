@@ -1,10 +1,10 @@
-#include "EmployeeModel.h"
-
 #include <QDebug>
 #include <QFile>
 #include <QSettings>
 #include <algorithm>
 #include <cmath>
+
+#include "EmployeeModel.h"
 
 EmployeeModel::EmployeeModel(QObject *parent)
     : QAbstractListModel(parent) {

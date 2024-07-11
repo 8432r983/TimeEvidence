@@ -1,8 +1,3 @@
-#include "EmployeeModel.h"
-#include "NameListModel.h"
-#include "datetime.h"
-#include "entrymanager.h"
-#include "hoursmanager.h"
 #include <QDebug>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -10,6 +5,14 @@
 #include <QScreen>
 #include <QSettings>
 #include <QtGui/QFontDatabase>
+
+#include "datetime.h"
+#include "employeemodel.h"
+#include "entrymanager.h"
+#include "hoursmanager.h"
+#include "namelistmodel.h"
+
+#include "employeelistmodel.h"
 
 /*----------------------------------------------------------------------------*/
 void appQmlRegisterFonts() {
@@ -73,6 +76,9 @@ int main(int argc, char *argv[]) {
     qmlRegisterType<NameListModel>("NameListModel", 1, 0, "NameListModel");
     qmlRegisterType<HoursManager>("HoursManager", 1, 0, "HoursManager");
     qmlRegisterType<EmployeeModel>("EmployeeModel", 1, 0, "EmployeeModel");
+
+    qmlRegisterType<EmployeeListModel>("EmployeeListModel", 1, 0,
+                                       "EmployeeListModel");
 
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("datetime", DateTime::instance());
