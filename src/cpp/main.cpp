@@ -10,7 +10,6 @@
 #include "employeemodel.h"
 #include "entrymanager.h"
 #include "hoursmanager.h"
-#include "namelistmodel.h"
 
 #include "employeelistmodel.h"
 
@@ -38,19 +37,19 @@ void appQmlRegisterStyle(QScreen *screen) {
         qDebug() << "Display type 1";
     } else if((width == 1024) && (height == 600)) {
         // 7.1 inches with high resolution
-        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style.qml"), "Style", 1, 0, "Style");
+        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style1.qml"), "Style", 1, 0, "Style");
         qDebug() << "Display type 2";
     } else if((width == 1280) && (height == 800)) {
         // 10.1 inches as Santaro or Christ 12"
-        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style.qml"), "Style", 1, 0, "Style");
+        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style1.qml"), "Style", 1, 0, "Style");
         qDebug() << "Display type 3";
     } else if((width == 1024) && (height == 768)) {
         // 12.1 inches as Santoka
-        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style.qml"), "Style", 1, 0, "Style");
+        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style1.qml"), "Style", 1, 0, "Style");
         qDebug() << "Display type 4";
     } else if((width == 1366) && (height == 768)) {
         // 15" CHE
-        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style.qml"), "Style", 1, 0, "Style");
+        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style1.qml"), "Style", 1, 0, "Style");
         qDebug() << "Display type 5";
     } else {
         // windows display
@@ -73,7 +72,6 @@ int main(int argc, char *argv[]) {
     appQmlRegisterFonts();
     appQmlRegisterStyle(app.primaryScreen());
 
-    qmlRegisterType<NameListModel>("NameListModel", 1, 0, "NameListModel");
     qmlRegisterType<HoursManager>("HoursManager", 1, 0, "HoursManager");
     qmlRegisterType<EmployeeModel>("EmployeeModel", 1, 0, "EmployeeModel");
 
