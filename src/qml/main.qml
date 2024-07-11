@@ -180,13 +180,14 @@ Window {
                 password = password.length > 0 ? password.slice(0,-1) : "";
             }
             onEnterPressed: {
-                console.log("Entered: " + nameField.text);
                 if(password === emp.password)  {
                     console.log("good Password");
                     popupLoader.source = "EmployeeDetailPopup.qml";
-                    //TODO MAR pass QtObject emp to the next vlaue....
-                    popupLoader.item.setData({employeeName: name, employeeStatus: employeeStatus});
+                    popupLoader.item.setData(emp);
                     popupLoader.loaded()
+                    // here you clear password, do not mix stuff...
+                    keyboard.password = ""
+                    nameField.text    = ""
                 } else {
                     popupLoader.source = "ErrorPopup.qml";
                     popupLoader.item.message = "Kriva lozinka. Pokušajte ponovo."

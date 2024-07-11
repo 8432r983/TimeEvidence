@@ -22,20 +22,18 @@ Popup
 
     HoursManager {id:hoursManager}
 
-    function setData(data)
-    {
-        leftPanel.employeeName = data.employeeName;
-        leftPanel.employeeStatus = data.employeeStatus;
-
+    function setData(data) {
+        // Tisučputa sam rekao da vidim ostali variabli a nem vidm ih na ekran... :(
+        leftPanel.employeeName = data.name;
+        leftPanel.employeeStatus = data.status;
         hoursManager.setMainPath(leftPanel.employeeName);
-        if(entries.getInOut(leftPanel.employeeName) === "")
-        {
+        if(entries.getInOut(leftPanel.employeeName) === "") {
             entries.setInOut(leftPanel.employeeName, "D");
         }
-
         leftPanel.buttonsEnabled = entries.getInOut(leftPanel.employeeName) === "D";
-
-        entriesModel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+        entriesModel.loadEntries(
+                    datetime.formatted.toString().split(" ")[1],
+                    leftPanel.employeeName);
     }
 
     Rectangle
@@ -143,13 +141,7 @@ Popup
                 buttonText                  : "\u2B8C"
                 textSize                    : parent.height * 0.15
 
-                onClicked:
-                {
-                    namemodel.popupExited();
-                    mainPopup.close();
-                    keyboard.password = ""
-                    nameField.text = ""
-                }
+                onClicked : mainPopup.close();
             }
         }
 
@@ -229,11 +221,8 @@ Popup
                     onClicked:
                     {
                         leftPanel.startTime = datetime.formatted.toString().split(" ")[0];
-                        //console.log(leftPanel.startDate, leftPanel.startTime);
-
                         entries.setStartTime(leftPanel.employeeName, leftPanel.startTime);
                         entries.setInOut(leftPanel.employeeName, "O");
-
                         leftPanel.buttonsEnabled = entries.getInOut(leftPanel.employeeName) === "D";
                     }
                 }
