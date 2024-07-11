@@ -1,6 +1,6 @@
-name;password;sati;go;status;dev;Dolazak/Odlazak
-Pero Perić; 1; 154.5; 28; Z; 1; D
-Ana Anić; 12023; 106.3; 44; S; 2; D
-Vito Vitić; C5C7D; 81.8; 23; S; 2; D
-Luka Lukić; FF561; 165.2; 36; Z; 1; D
-Hrvoje Tomljanović; AABBCC; 34.2; 22; Z; 1; D
+name;password;sati;go;status;dev
+Pero Perić; 1; 154.5; 28; Z; 1
+Ana Anić; 12023; 106.3; 44; S; 2
+Vito Vitić; C5C7D; 81.8; 23; S; 2
+Luka Lukić; FF561; 165.2; 36; Z; 1
+Hrvoje Tomljanović; AABBCC; 34.2; 22; Z; 1
