@@ -1,6 +1,7 @@
 #ifndef EMPLOYEE_H
 #define EMPLOYEE_H
 
+#include <QDebug>
 #include <QObject>
 
 class Employee : public QObject {
@@ -15,6 +16,7 @@ class Employee : public QObject {
         , device(1) {
     }
     ~Employee() {
+        qDebug() << "Employee Destructor";
     }
 
     QString name;
