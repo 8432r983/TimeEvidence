@@ -56,5 +56,6 @@ void EmployeeListModel::readEmployees() {
     beginResetModel();
     EmployeeList emplst;
     emplst.loadList(this, mlst);
+    qDebug() << "employees size=" << mlst.size();
     endResetModel();
 }

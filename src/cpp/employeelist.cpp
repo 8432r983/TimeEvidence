@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QFile>
 #include <QSettings>
 
@@ -11,6 +12,7 @@ EmployeeList::EmployeeList(QObject *parent)
 void EmployeeList::loadList(QObject *parent1, QVector<Employee *> &mlst) {
     HalFiles hf;
     QString  filepath = hf.getEmployeesFilePath();
+    qDebug() << "zaposlenici file=" << filepath;
     if(!QFile::exists(filepath))
         return;
     QFile file(filepath);
@@ -18,6 +20,7 @@ void EmployeeList::loadList(QObject *parent1, QVector<Employee *> &mlst) {
         return;
     file.readLine(); // skip first line
     int devId = getDeviceId();
+    qDebug() << "devId=" << devId;
     if(devId == -1)
         return;
 
@@ -51,7 +54,7 @@ int EmployeeList::getDeviceId() {
     HalFiles      hf;
     const QString cGroupId  = "AppSettingsGeneral";
     const QString cDeviceId = "deviceId";
-    QSettings settings(hf.getSettingsFilePath(), QSettings::IniFormat, this);
+    QSettings     settings(hf.getSettingsFilePath(), QSettings::IniFormat, this);
     settings.beginGroup(cGroupId);
     int deviceid = settings.value(cDeviceId, -1).toInt();
     settings.endGroup();
