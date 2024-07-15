@@ -9,8 +9,8 @@ Entry::Entry(QObject *parent)
     , clockIn("-")
     , clockOut("-")
     , total("-")
-    , travel("-")
-    , difference("-") {
+    , difference("-")
+    , travel("-") {
 }
 
 void Entry::fromEntry(Entry *val) {

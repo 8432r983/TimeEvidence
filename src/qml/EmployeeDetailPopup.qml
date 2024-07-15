@@ -28,9 +28,7 @@ Popup
 
         summaryRow.totalHours = monthmodel.getMonthHours();
         summaryRow.totalDifference = monthmodel.getMonthDifference();
-    }
 
-    onOpened: {
         leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
     }
 

@@ -5,13 +5,13 @@ activity::activity(QObject *parent)
 }
 
 QString activity::getActivity(QString Name) {
-    if(activeList.contains(Name))
-        return activeList[Name];
+    if(m_activeList.contains(Name))
+        return m_activeList[Name];
     return "";
 }
 
 void activity::setActivity(QString Name, QString val) {
-    activeList[Name] = val;
+    m_activeList[Name] = val;
     emit activeListChanged();
 }
 
