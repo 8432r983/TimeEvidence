@@ -25,12 +25,20 @@ void Entry::fromEntry(Entry *val) {
     difference = val->difference;
 }
 
-void Entry::calcTotal() {
-    total = intToTime(timeToInt(clockOut) - timeToInt(clockIn));
+int Entry::calcTotal() {
+    return timeToInt(clockOut) - timeToInt(clockIn);
 }
 
-void Entry::calcDifference() {
-    difference = intToTime(timeToInt(total) - 8 * 60);
+int Entry::calcDifference() {
+    return timeToInt(total) - 8 * 60;
+}
+
+void Entry::setTotal() {
+    total = intToTime(calcTotal());
+}
+
+void Entry::setDifference() {
+    difference = intToTime(calcDifference());
 }
 
 int Entry::timeToInt(QString time) {

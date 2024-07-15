@@ -7,7 +7,7 @@
 #include <QtGui/QFontDatabase>
 
 #include "datetime.h"
-#include "employeemodel.h"
+#include "monthmodel.h"
 
 #include "employeelistmodel.h"
 
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     appQmlRegisterFonts();
     appQmlRegisterStyle(app.primaryScreen());
 
-    qmlRegisterType<EmployeeModel>("EmployeeModel", 1, 0, "EmployeeModel");
+    qmlRegisterType<MonthModel>("MonthModel", 1, 0, "MonthModel");
 
     qmlRegisterType<EmployeeListModel>("EmployeeListModel", 1, 0,
                                        "EmployeeListModel");

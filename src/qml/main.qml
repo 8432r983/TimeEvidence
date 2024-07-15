@@ -183,6 +183,7 @@ Window {
                 if(password === emp.password)  {
                     console.log("good Password");
                     popupLoader.setSource("qrc:/qml/EmployeeDetailPopup.qml", {"emp":emp})
+                    popupLoader.loaded()
                     keyboard.password = ""
                     nameField.text    = ""
                 } else {

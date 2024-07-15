@@ -11,8 +11,11 @@ class Entry : public QObject {
 
     void fromEntry(Entry *val);
 
-    void calcTotal();
-    void calcDifference();
+    int calcTotal();
+    int calcDifference();
+
+    void setTotal();
+    void setDifference();
 
     int     timeToInt(QString time);
     QString intToTime(int time);

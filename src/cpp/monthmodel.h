@@ -1,12 +1,15 @@
-#ifndef EMPLOYEEMODEL_H
-#define EMPLOYEEMODEL_H
+#ifndef MONTHMODEL_H
+#define MONTHMODEL_H
 
 #include "entry.h"
 #include <QAbstractListModel>
 #include <QObject>
 
-class EmployeeModel : public QAbstractListModel {
+class MonthModel : public QAbstractListModel {
     Q_OBJECT
+
+    Q_PROPERTY(int totalMonthHours READ totalMonthHours NOTIFY
+                   totalMonthHoursChanged FINAL)
 
   public:
     enum EntryRoles {
@@ -19,17 +22,24 @@ class EmployeeModel : public QAbstractListModel {
         DifferenceRole = Qt::UserRole + 7
     };
 
-    explicit EmployeeModel(QObject *parent = nullptr);
+    explicit MonthModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent) const override;
     virtual QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex &index, int role) const override;
 
-    Q_INVOKABLE void loadEntries(QString date, QString Name);
+    Q_INVOKABLE void    loadEntries(QString date, QString Name);
+    Q_INVOKABLE QString getMonthHours();
+
+    int totalMonthHours() const;
+
+  signals:
+    void totalMonthHoursChanged();
 
   private:
     QVector<Entry *> m_entries;
     QString          employeeFolder = "";
+    int m_totalMonthHours;
 };
 
-#endif // EMPLOYEEMODEL_H
+#endif // MONTHMODEL_H

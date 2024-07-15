@@ -19,3 +19,8 @@ QString HalFiles::getSettingsFilePath() const {
 QString HalFiles::getEmployeeFolderPath() const {
     return cPathData + cFnEmployeesFolder;
 }
+
+QString HalFiles::getEmployeeMonth(QString Name, QString Date) const {
+    return cPathData + cFnEmployeesFolder + Name.replace(" ", "_") + "\\" +
+           Date.split(".")[2] + "_" + Date.split(".")[1] + ".txt";
+}

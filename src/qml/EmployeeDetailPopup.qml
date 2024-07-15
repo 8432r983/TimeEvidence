@@ -6,7 +6,7 @@ import QtQuick.Dialogs 1.3
 
 import Style 1.0
 
-import EmployeeModel 1.0
+import MonthModel 1.0
 import MonthLogger 1.0
 
 Popup
@@ -27,7 +27,9 @@ Popup
         activity.setActivity(leftPanel.employeeName, true);
         leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName);
 
-        entriesModel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+
+        summaryRow.totalHours = monthmodel.getMonthHours();
     }
 
     MonthLogger { id: monthlogger }
@@ -254,7 +256,8 @@ Popup
 
                         leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName);
 
-                        entriesModel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+                        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+                        summaryRow.totalHours = monthmodel.getMonthHours();
                     }
                 }
             }
@@ -273,7 +276,7 @@ Popup
         anchors.horizontalCenter    : topPanel.horizontalCenter
         color                       : Style.popup.backColor
 
-        EmployeeModel {id: entriesModel}
+        MonthModel {id: monthmodel}
 
         ListView
         {
@@ -281,7 +284,7 @@ Popup
             width       : parent.width
             height      : parent.height - headerRow.height - summaryRow.height
             anchors.top : headerRow.bottom
-            model       : entriesModel
+            model       : monthmodel
             delegate    : Row
             {
                 height  : hoursStats.height/5
@@ -386,15 +389,15 @@ Popup
             height          : parent.height/8
             anchors.top     : bottomPanel.top
 
-            property int summaryWidth: parent.width/4
+            property int summaryWidth   : parent.width/4
+            property string totalHours  : ""
 
             MText
             {
-                mainText            : "Odrađeno"
-                textH               : parent.height
-                width               : summaryRow.summaryWidth
+                id: monthHoursText
+                mainText            : "Ukupno Odrađeno: " + summaryRow.totalHours
+                textH               : summaryRow.height
                 eraseVerticalBorder : false
-
             }
         }
     }

@@ -11,12 +11,9 @@ MonthLogger::MonthLogger(QObject *parent)
 void MonthLogger::addEntry(QString Name, QString Day, QString Date,
                            QString clockIn, QString clockOut) {
     HalFiles hf;
-    QString  filePath =
-        hf.getEmployeeFolderPath() + Name.replace(" ", "_") + "\\";
+    QString  filePath = hf.getEmployeeMonth(Name, Date);
 
-    QString fileName = Date.split(".")[2] + "_" + Date.split(".")[1] + ".txt";
-
-    QFile file(filePath + fileName);
+    QFile file(filePath);
 
     if(!file.open(QIODevice::WriteOnly | QIODevice::Append)) {
         qDebug() << "cant open file: " + filePath;

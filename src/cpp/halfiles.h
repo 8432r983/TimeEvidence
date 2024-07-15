@@ -12,6 +12,7 @@ class HalFiles : public QObject {
     QString getHolidaysFilePath() const;
     QString getSettingsFilePath() const;
     QString getEmployeeFolderPath() const;
+    QString getEmployeeMonth(QString Name, QString Date) const;
 
   private:
 #if(WIN_ADR)
