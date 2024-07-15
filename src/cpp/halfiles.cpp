@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "halfiles.h"
 
 HalFiles::HalFiles(QObject *parent)
@@ -17,10 +19,18 @@ QString HalFiles::getSettingsFilePath() const {
 }
 
 QString HalFiles::getEmployeeFolderPath() const {
-    return cPathData + cFnEmployeesFolder;
+    return cPathData + cLogFolder;
 }
 
-QString HalFiles::getEmployeeMonth(QString Name, QString Date) const {
-    return cPathData + cFnEmployeesFolder + Name.replace(" ", "_") + "\\" +
-           Date.split(".")[2] + "_" + Date.split(".")[1] + ".txt";
+QString HalFiles::getEmployeeMonth(const QString &name, const QString &date) const {
+    QString str("");
+    QString tempName  = name;
+    tempName          = tempName.replace(" ", "_");
+    QStringList dlist = date.split(".");
+
+    str = getEmployeeFolderPath() + tempName + "\\" + tempName + "_" + dlist[2] + "_" + dlist[1] +
+          ".txt";
+
+    qDebug() << "Employee log file" << str;
+    return str;
 }

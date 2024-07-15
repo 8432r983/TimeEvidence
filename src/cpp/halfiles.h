@@ -12,12 +12,11 @@ class HalFiles : public QObject {
     QString getHolidaysFilePath() const;
     QString getSettingsFilePath() const;
     QString getEmployeeFolderPath() const;
-    QString getEmployeeMonth(QString Name, QString Date) const;
+    QString getEmployeeMonth(const QString &Name, const QString &Date) const;
 
   private:
 #if(WIN_ADR)
-    const QString cPathData =
-        "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\data\\";
+    const QString cPathData = "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\data\\";
 #elif(WIN_MAR)
     const QString cPathData = "C:\\QtProjects\\TimeEvidence\\data\\";
 #elif(GUF_ROKO_0700)
@@ -25,10 +24,10 @@ class HalFiles : public QObject {
 #elif(CHE_DUNF_0310)
     const QString cPathData = "/home/root/data/"
 #endif
-    const QString cFnEmployees       = "zaposlenici.txt";
-    const QString cFnHolidays        = "praznici.txt";
-    const QString cFnSettings        = "TimeEvidence.ini";
-    const QString cFnEmployeesFolder = "Zaposlenici\\";
+    const QString cFnEmployees = "zaposlenici.txt";
+    const QString cFnHolidays  = "praznici.txt";
+    const QString cFnSettings  = "TimeEvidence.ini";
+    const QString cLogFolder   = "monthlog\\";
 };
 
 #endif // HALFILES_H
