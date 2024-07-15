@@ -11,6 +11,7 @@ class HalFiles : public QObject {
     QString getEmployeesFilePath() const;
     QString getHolidaysFilePath() const;
     QString getSettingsFilePath() const;
+    QString getEmployeeFolderPath() const;
 
   private:
 #if(WIN_ADR)
@@ -23,9 +24,10 @@ class HalFiles : public QObject {
 #elif(CHE_DUNF_0310)
     const QString cPathData = "/home/root/data/"
 #endif
-    const QString cFnEmployees = "zaposlenici.txt";
-    const QString cFnHolidays  = "praznici.txt";
-    const QString cFnSettings  = "TimeEvidence.ini";
+    const QString cFnEmployees       = "zaposlenici.txt";
+    const QString cFnHolidays        = "praznici.txt";
+    const QString cFnSettings        = "TimeEvidence.ini";
+    const QString cFnEmployeesFolder = "Zaposlenici\\";
 };
 
 #endif // HALFILES_H

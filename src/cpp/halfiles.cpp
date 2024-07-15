@@ -15,3 +15,7 @@ QString HalFiles::getHolidaysFilePath() const {
 QString HalFiles::getSettingsFilePath() const {
     return cPathData + cFnSettings;
 }
+
+QString HalFiles::getEmployeeFolderPath() const {
+    return cPathData + cFnEmployeesFolder;
+}

@@ -6,8 +6,8 @@ import QtQuick.Dialogs 1.3
 
 import Style 1.0
 
-import HoursManager 1.0
 import EmployeeModel 1.0
+import MonthLogger 1.0
 
 Popup
 {
@@ -19,22 +19,18 @@ Popup
     {
         color: Style.popup.backColor
     }
+    property var emp;
+    Component.onCompleted: {
+        leftPanel.employeeName = emp.name;
+        leftPanel.employeeStatus = emp.status;
 
-    HoursManager {id:hoursManager}
+        activity.setActivity(leftPanel.employeeName, true);
+        leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName);
 
-    function setData(data) {
-        // Tisučputa sam rekao da vidim ostali variabli a nem vidm ih na ekran... :(
-        leftPanel.employeeName = data.name;
-        leftPanel.employeeStatus = data.status;
-        hoursManager.setMainPath(leftPanel.employeeName);
-        if(entries.getInOut(leftPanel.employeeName) === "") {
-            entries.setInOut(leftPanel.employeeName, "D");
-        }
-        leftPanel.buttonsEnabled = entries.getInOut(leftPanel.employeeName) === "D";
-        entriesModel.loadEntries(
-                    datetime.formatted.toString().split(" ")[1],
-                    leftPanel.employeeName);
+        entriesModel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
     }
+
+    MonthLogger { id: monthlogger }
 
     Rectangle
     {
@@ -56,7 +52,7 @@ Popup
             property string employeeStatus  : ""
             property string startTime       : ""
             property string endTime         : ""
-            property bool buttonsEnabled    : entries.getInOut(leftPanel.employeeName) === "D"
+            property bool buttonsEnabled    : false
 
             function intToTime(minutes)
             {
@@ -221,9 +217,8 @@ Popup
                     onClicked:
                     {
                         leftPanel.startTime = datetime.formatted.toString().split(" ")[0];
-                        entries.setStartTime(leftPanel.employeeName, leftPanel.startTime);
-                        entries.setInOut(leftPanel.employeeName, "O");
-                        leftPanel.buttonsEnabled = entries.getInOut(leftPanel.employeeName) === "D";
+                        activity.setActivity(leftPanel.employeeName, false);
+                        leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName);
                     }
                 }
 
@@ -246,17 +241,18 @@ Popup
                         //leftPanel.endTime = datetime.formatted.toString().split(" ")[0];
                         leftPanel.endTime = leftPanel.intToTime(leftPanel.timeToInt(datetime.formatted.toString().split(" ")[0]) + Math.round(Math.random() * 100));
 
-                        if(entries.getInOut(leftPanel.employeeName) === "O")
+                        if(!activity.getActivity(leftPanel.employeeName))
                         {
-                            hoursManager.addEntry(datetime.currentDay.slice(0,3),
-                                                  datetime.formatted.toString().split(" ")[1],
-                                                  entries.getStartTime(leftPanel.employeeName),
-                                                  leftPanel.endTime);
-                            entries.setInOut(leftPanel.employeeName, "D");
-                            //entries.setStartTime(leftPanel.employeeName, 0);
+                            monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
+                                                 datetime.formatted.toString().split(" ")[1],
+                                                 leftPanel.startTime,
+                                                 leftPanel.endTime);
+
+
+                            activity.setActivity(leftPanel.employeeName, true);
                         }
 
-                        leftPanel.buttonsEnabled = entries.getInOut(leftPanel.employeeName) === "D";
+                        leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName);
 
                         entriesModel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
                     }

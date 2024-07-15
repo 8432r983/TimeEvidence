@@ -182,10 +182,7 @@ Window {
             onEnterPressed: {
                 if(password === emp.password)  {
                     console.log("good Password");
-                    popupLoader.source = "EmployeeDetailPopup.qml";
-                    popupLoader.item.setData(emp);
-                    popupLoader.loaded()
-                    // here you clear password, do not mix stuff...
+                    popupLoader.setSource("qrc:/qml/EmployeeDetailPopup.qml", {"emp":emp})
                     keyboard.password = ""
                     nameField.text    = ""
                 } else {

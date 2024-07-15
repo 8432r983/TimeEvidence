@@ -5,13 +5,15 @@
 #include <cmath>
 
 #include "EmployeeModel.h"
+#include "entry.h"
+#include "halfiles.h"
 
 EmployeeModel::EmployeeModel(QObject *parent)
     : QAbstractListModel(parent) {
 }
 
 int EmployeeModel::rowCount(const QModelIndex &parent) const {
-    if(parent.isValid())
+    if(parent.isValid() || m_entries.isEmpty())
         return 0;
     return m_entries.size();
 }
@@ -58,68 +60,56 @@ QVariant EmployeeModel::data(const QModelIndex &index, int role) const {
 
 void EmployeeModel::loadEntries(QString date, QString Name) {
     beginResetModel();
-    setEmployeeFolder();
+
+    HalFiles hf;
+
     QString filePath =
-        employeeFolder + Name.split(" ")[0] + "_" + Name.split(" ")[1] + "\\";
+        hf.getEmployeeFolderPath() + Name.replace(" ", "_") + "\\";
+    QString fileName = date.split(".")[2] + "_" + date.split(".")[1] + ".txt";
 
-    QFile file(filePath + date.split(".")[2] + "_" + date.split(".")[1] +
-               ".txt");
+    QFile file(filePath + fileName);
 
+    qDeleteAll(m_entries);
     m_entries.clear();
+
     if(file.exists()) {
         if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            int    TotalTime = 0;
-            Entry *pastEntry = new Entry();
+            Entry *lastEntry;
+            int    totalTime = 0;
 
-            bool c = false;
+            lastEntry = new Entry();
             while(!file.atEnd()) {
-                QString     line  = QString(file.readLine());
-                QStringList items = line.replace(" ", "").split(";");
+                QString     line     = QString(file.readLine());
+                QStringList elements = line.replace("\n", "").split(";");
+                Entry      *entry;
 
-                QString Day      = items[0];
-                QString Date     = items[1];
-                QString ClockIn  = items[2];
-                QString ClockOut = items[3].replace("\n", "");
+                if(elements.size() == 4) {
+                    entry           = new Entry();
+                    entry->day      = elements[0].trimmed();
+                    entry->date     = elements[1].trimmed();
+                    entry->clockIn  = elements[2].trimmed();
+                    entry->clockOut = elements[3].trimmed();
+                    m_entries.append(entry);
 
-                Entry *entry = new Entry();
-                // pastEntry    = new Entry();
-
-                if(Day != pastEntry->day && c) {
-                    pastEntry->clockIn    = "-";
-                    pastEntry->clockOut   = "-";
-                    pastEntry->total      = intToTime(TotalTime);
-                    pastEntry->travel     = "-";
-                    pastEntry->difference = intToTime(TotalTime - 480);
-
-                    m_entries.append(pastEntry);
-
-                    pastEntry = new Entry();
-                    TotalTime = timeToInt(ClockOut) - timeToInt(ClockIn);
-                } else {
-                    TotalTime += timeToInt(ClockOut) - timeToInt(ClockIn);
-                    c = true;
+                    if(entry->date != lastEntry->date &&
+                       lastEntry->date != "-") {
+                        lastEntry->total = lastEntry->intToTime(totalTime);
+                        lastEntry->calcDifference();
+                        m_entries.append(lastEntry);
+                        totalTime = 0;
+                    } else {
+                        entry->calcTotal();
+                        totalTime += entry->timeToInt(entry->total);
+                    }
+                    lastEntry->fromEntry(entry);
                 }
-
-                entry->day        = Day;
-                entry->date       = Date;
-                entry->clockIn    = ClockIn;
-                entry->clockOut   = ClockOut;
-                entry->total      = "-";
-                entry->travel     = "-";
-                entry->difference = "-";
-
-                m_entries.append(entry);
-                *pastEntry = *entry;
             }
-
-            if(TotalTime != 0) {
-                pastEntry->clockIn    = "-";
-                pastEntry->clockOut   = "-";
-                pastEntry->total      = intToTime(TotalTime);
-                pastEntry->travel     = "-";
-                pastEntry->difference = intToTime(TotalTime - 480);
-
-                m_entries.append(pastEntry);
+            if(totalTime != 0) {
+                lastEntry->total = lastEntry->intToTime(totalTime);
+                lastEntry->calcDifference();
+                lastEntry->clockIn  = "-";
+                lastEntry->clockOut = "-";
+                m_entries.append(lastEntry);
             }
         }
     } else {
@@ -127,50 +117,5 @@ void EmployeeModel::loadEntries(QString date, QString Name) {
     }
 
     std::reverse(m_entries.begin(), m_entries.end());
-
     endResetModel();
-}
-
-void EmployeeModel::setEmployeeFolder() {
-    QString filePath =
-        "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\build\\Desktop_Qt_"
-        "5_15_"
-        "2_MinGW_32_bit-Debug\\src\\debug\\inelteh\\items.ini";
-
-    QSettings settings(filePath, QSettings::IniFormat);
-    settings.beginGroup("AppSettingsGeneral");
-    employeeFolder = settings.value("employeefolder", "").toString();
-    settings.endGroup();
-}
-
-int EmployeeModel::timeToInt(QString time) {
-    if(time == "")
-        return 0;
-    int Hours   = time.split(":")[0].toInt();
-    int Minutes = time.split(":")[1].toInt();
-
-    return Hours * 60 + Minutes;
-}
-
-QString EmployeeModel::intToTime(int time) {
-    int Hours   = floor(abs(time) / 60);
-    int Minutes = abs(time) % 60;
-
-    QString res = "";
-
-    if(Hours < 10)
-        res += "0" + QString::number(Hours);
-    else
-        res += QString::number(Hours);
-
-    res += ":";
-    if(Minutes < 10)
-        res += "0" + QString::number(Minutes);
-    else
-        res += QString::number(Minutes);
-
-    if(time < 0)
-        res = "-" + res;
-
-    return res;
 }

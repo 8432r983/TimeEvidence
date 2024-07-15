@@ -8,11 +8,11 @@
 
 #include "datetime.h"
 #include "employeemodel.h"
-#include "entrymanager.h"
-#include "hoursmanager.h"
 
 #include "employeelistmodel.h"
 
+#include "activity.h"
+#include "monthlogger.h"
 /*----------------------------------------------------------------------------*/
 void appQmlRegisterFonts() {
     /* Add fonts to application */
@@ -72,17 +72,18 @@ int main(int argc, char *argv[]) {
     appQmlRegisterFonts();
     appQmlRegisterStyle(app.primaryScreen());
 
-    qmlRegisterType<HoursManager>("HoursManager", 1, 0, "HoursManager");
     qmlRegisterType<EmployeeModel>("EmployeeModel", 1, 0, "EmployeeModel");
 
     qmlRegisterType<EmployeeListModel>("EmployeeListModel", 1, 0,
                                        "EmployeeListModel");
 
+    qmlRegisterType<MonthLogger>("MonthLogger", 1, 0, "MonthLogger");
+
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("datetime", DateTime::instance());
 
-    EntryManager *entrymanager = new EntryManager();
-    context->setContextProperty("entries", entrymanager);
+    activity act;
+    context->setContextProperty("activity", &act);
 
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(

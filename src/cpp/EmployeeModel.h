@@ -1,18 +1,9 @@
 #ifndef EMPLOYEEMODEL_H
 #define EMPLOYEEMODEL_H
 
+#include "entry.h"
 #include <QAbstractListModel>
 #include <QObject>
-
-struct Entry {
-    QString day;
-    QString date;
-    QString clockIn;
-    QString clockOut;
-    QString total;
-    QString travel;
-    QString difference;
-};
 
 class EmployeeModel : public QAbstractListModel {
     Q_OBJECT
@@ -35,10 +26,6 @@ class EmployeeModel : public QAbstractListModel {
     QVariant data(const QModelIndex &index, int role) const override;
 
     Q_INVOKABLE void loadEntries(QString date, QString Name);
-    void             setEmployeeFolder();
-
-    int     timeToInt(QString time);
-    QString intToTime(int time);
 
   private:
     QVector<Entry *> m_entries;
