@@ -28,6 +28,7 @@ Popup
 
         summaryRow.totalHours = monthmodel.getMonthHours();
         summaryRow.totalDifference = monthmodel.getMonthDifference();
+        summaryRow.pastMonthDifference = monthmodel.calcPastMonthTotal(emp.name, datetime.formatted.toString().split(" ")[1]);
 
         leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
     }
@@ -260,6 +261,7 @@ Popup
 
                         summaryRow.totalHours = monthmodel.getMonthHours();
                         summaryRow.totalDifference = monthmodel.getMonthDifference();
+                        summaryRow.pastMonthDifference = monthmodel.getPastMonthTotal();
                     }
                 }
             }
@@ -285,7 +287,7 @@ Popup
             id          : hoursStats
             width       : parent.width
             height      : parent.height - headerRow.height - summaryRow.height
-            anchors.top : summaryRow.bottom
+            anchors.top : headerRow.bottom
             model       : monthmodel
             delegate    : Row
             {
@@ -334,7 +336,7 @@ Popup
         {
             id          : headerRow
             height      : parent.height/8
-            anchors.top : bottomPanel.top
+            anchors.top : summaryRow.bottom
 
             MText
             {
@@ -388,27 +390,39 @@ Popup
         Row
         {
             id              : summaryRow
-            spacing         : 10
             height          : parent.height * 0.15
-            anchors.top     : headerRow.bottom
+            anchors.top     : bottomPanel.top
 
-            property string totalHours      : ""
-            property string totalDifference : ""
+            property string totalHours          : ""
+            property string totalDifference     : ""
+            property string pastMonthDifference : ""
+            property int cellWidth              : bottomPanel.width/3
 
             MText
             {
                 id: monthHoursText
-                mainText            : "Ukupno Odrađeno: " + summaryRow.totalHours
+                mainText            : "Odrađeno: " + summaryRow.totalHours
                 textH               : summaryRow.height
                 eraseVerticalBorder : false
+                width               : parent.cellWidth
             }
 
             MText
             {
                 id: monthDifferenceText
-                mainText            : "Ukupno Višak/Manjak: " + summaryRow.totalDifference
+                mainText            : "Višak/Manjak: " + summaryRow.totalDifference
                 textH               : summaryRow.height
                 eraseVerticalBorder : false
+                width               : parent.cellWidth
+            }
+
+            MText
+            {
+                id: pastMonthHoursText
+                mainText            : "Prošli mjesec: " + summaryRow.pastMonthDifference
+                textH               : summaryRow.height
+                eraseVerticalBorder : false
+                width               : parent.cellWidth
             }
         }
     }

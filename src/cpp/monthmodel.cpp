@@ -1,3 +1,4 @@
+#include <QDate>
 #include <QDebug>
 #include <QFile>
 #include <QSettings>
@@ -91,8 +92,7 @@ void MonthModel::loadEntries(QString date, QString Name) {
             m_totalDifference = 0;
             for(int i = 1; i < m_entries.size(); i++) {
                 if(m_entries[i]->date != m_entries[i - 1]->date) {
-                    m_entries[i - 1]->total =
-                        m_entries[i - 1]->intToTime(totalTime);
+                    m_entries[i - 1]->total = m_entries[i - 1]->intToTime(totalTime);
                     m_entries[i - 1]->setDifference();
 
                     m_totalDifference += m_entries[i - 1]->calcDifference();
@@ -108,8 +108,7 @@ void MonthModel::loadEntries(QString date, QString Name) {
             m_entries[m_entries.size() - 1]->total =
                 m_entries[m_entries.size() - 1]->intToTime(totalTime);
             m_entries[m_entries.size() - 1]->setDifference();
-            m_totalDifference +=
-                m_entries[m_entries.size() - 1]->calcDifference();
+            m_totalDifference += m_entries[m_entries.size() - 1]->calcDifference();
         }
     } else {
         qDebug() << "file doesnt exist";
@@ -132,6 +131,50 @@ QString MonthModel::getMonthDifference() {
     if(m_entries.size() != 0)
         return m_entries[0]->intToTime(m_totalDifference);
     return "";
+}
+
+QString MonthModel::calcPastMonthTotal(QString Name, QString Date) {
+    QString lastMonth = QDate::fromString(Date, "dd.MM.yyyy").addMonths(-1).toString("dd.MM.yyyy");
+
+    HalFiles hf;
+    QString  filePath = hf.getEmployeeMonth(Name, lastMonth);
+
+    QFile file(filePath);
+
+    QString res        = "";
+    int     difference = 0;
+
+    if(file.exists()) {
+        if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            while(!file.atEnd()) {
+                QString     line     = QString(file.readLine());
+                QStringList elements = line.replace("\n", "").split(";");
+                Entry      *entry;
+
+                QString pastDate = "";
+
+                if(elements.size() == 4) {
+                    entry           = new Entry();
+                    entry->day      = elements[0].trimmed();
+                    entry->date     = elements[1].trimmed();
+                    entry->clockIn  = elements[2].trimmed();
+                    entry->clockOut = elements[3].trimmed();
+
+                    if(pastDate != "" && pastDate != entry->date) {
+                        difference -= 8 * 60;
+                    } else {
+                        difference += entry->calcTotal();
+                    }
+
+                    pastDate = entry->date;
+                }
+            }
+            difference -= 8 * 60;
+        }
+    }
+
+    res = m_entries[0]->intToTime(difference);
+    return res;
 }
 
 int MonthModel::totalMonthHours() const {

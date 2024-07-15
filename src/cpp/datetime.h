@@ -12,8 +12,7 @@ class DateTime : public QObject {
     Q_PROPERTY(QString formatted READ formatted
                    NOTIFY formattedChanged FINAL)
     // clang-format on
-    Q_PROPERTY(
-        QString currentDay READ currentDay NOTIFY currentDayChanged FINAL)
+    Q_PROPERTY(QString currentDay READ currentDay NOTIFY currentDayChanged FINAL)
 
   public:
     explicit DateTime(QObject *parent = nullptr);

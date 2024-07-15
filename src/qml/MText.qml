@@ -9,7 +9,6 @@ Rectangle
     property bool eraseVerticalBorder   : true
 
     height          : textH
-    width           : mtext.paintedWidth + Style.popup.borderWidth*6
     color           : Style.popup.backColor
     border.color    : Style.popup.borderColor
 
