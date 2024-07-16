@@ -27,6 +27,9 @@ class Entry : public QObject {
     QString total;
     QString difference;
     QString travel;
+    QString vacation;
+    QString holiday;
+    QString sickday;
 };
 
 #endif // ENTRY_H

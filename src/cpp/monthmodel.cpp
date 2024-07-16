@@ -29,6 +29,9 @@ QHash<int, QByteArray> MonthModel::roleNames() const {
     res[TotalRole]      = "total";
     res[TravelRole]     = "travel";
     res[DifferenceRole] = "difference";
+    res[HolidayRole]    = "holiday";
+    res[SickdayRole]    = "sickday";
+    res[VacationRole]   = "vacation";
 
     return res;
 }
@@ -54,6 +57,12 @@ QVariant MonthModel::data(const QModelIndex &index, int role) const {
         return QVariant(entryItem->travel);
     case DifferenceRole:
         return QVariant(entryItem->difference);
+    case HolidayRole:
+        return QVariant(entryItem->holiday);
+    case SickdayRole:
+        return QVariant(entryItem->sickday);
+    case VacationRole:
+        return QVariant(entryItem->vacation);
     }
 
     return QVariant();
@@ -70,6 +79,9 @@ void MonthModel::loadEntries(QString date, QString Name) {
     qDeleteAll(m_entries);
     m_entries.clear();
 
+    int totalMonthTime           = 0;
+    int totalMonthTimeDifference = 0;
+
     if(file.exists()) {
         if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             file.readLine();
@@ -78,66 +90,70 @@ void MonthModel::loadEntries(QString date, QString Name) {
                 QStringList elements = line.replace("\n", "").split(";");
                 Entry      *entry;
 
-                if(elements.size() == 4) {
-                    entry           = new Entry();
-                    entry->day      = elements[0].trimmed();
-                    entry->date     = elements[1].trimmed();
-                    entry->clockIn  = elements[2].trimmed();
-                    entry->clockOut = elements[3].trimmed();
+                if(elements.size() > 1) {
+                    entry             = new Entry();
+                    entry->day        = elements[0].trimmed();
+                    entry->date       = elements[1].trimmed();
+                    entry->clockIn    = elements[2].trimmed();
+                    entry->clockOut   = elements[3].trimmed();
+                    entry->total      = elements[4].trimmed();
+                    entry->difference = elements[5].trimmed();
+                    entry->travel     = elements[6].trimmed();
+                    entry->holiday    = elements[7].trimmed();
+                    entry->sickday    = elements[8].trimmed();
+                    entry->vacation   = elements[9].trimmed();
                     m_entries.append(entry);
                 }
             }
 
-            int totalTime     = m_entries[0]->calcTotal();
-            m_totalMonthHours = m_entries[0]->calcTotal();
-            m_totalDifference = 0;
+            int totalDayTime = m_entries[0]->calcTotal();
+
+            totalMonthTime           = m_entries[0]->calcTotal();
+            totalMonthTimeDifference = m_entries[0]->calcDifference();
+
             for(int i = 1; i < m_entries.size(); i++) {
                 if(m_entries[i]->date != m_entries[i - 1]->date) {
-                    m_entries[i - 1]->total = m_entries[i - 1]->intToTime(totalTime);
-                    m_entries[i - 1]->setDifference();
+                    Entry *ent = new Entry();
 
-                    m_totalDifference += m_entries[i - 1]->calcDifference();
+                    ent->date  = m_entries[i - 1]->date;
+                    ent->total = ent->intToTime(totalDayTime);
+                    ent->setDifference();
+                    m_entries.insert(m_entries.begin() + i, ent);
+                    i++;
 
-                    totalTime = m_entries[i]->calcTotal();
+                    totalDayTime = m_entries[i]->timeToInt(m_entries[i]->total);
+
                 } else {
-                    totalTime += m_entries[i]->calcTotal();
+                    totalDayTime += m_entries[i]->calcTotal();
                 }
 
-                m_totalMonthHours += m_entries[i]->calcTotal();
+                totalMonthTime += m_entries[i]->calcTotal();
+                totalMonthTimeDifference += m_entries[i]->calcDifference();
             }
-
-            m_entries[m_entries.size() - 1]->total =
-                m_entries[m_entries.size() - 1]->intToTime(totalTime);
-            m_entries[m_entries.size() - 1]->setDifference();
-            m_totalDifference += m_entries[m_entries.size() - 1]->calcDifference();
+            Entry *ent = new Entry();
+            ent->total = ent->intToTime(totalDayTime);
+            ent->setDifference();
+            m_entries.append(ent);
         }
     } else {
         qDebug() << "file doesnt exist";
     }
 
+    Entry en;
+    m_totalMonthHours      = en.intToTime(totalMonthTime);
+    m_totalMonthDifference = en.intToTime(totalMonthTimeDifference);
+
     emit totalMonthHoursChanged();
-    emit totalDifferenceChanged();
+    emit totalMonthDifferenceChanged();
 
     std::reverse(m_entries.begin(), m_entries.end());
     endResetModel();
 }
 
-QString MonthModel::getMonthHours() {
-    if(m_entries.size() != 0)
-        return m_entries[0]->intToTime(m_totalMonthHours);
-    return "";
-}
-
-QString MonthModel::getMonthDifference() {
-    if(m_entries.size() != 0)
-        return m_entries[0]->intToTime(m_totalDifference);
-    return "";
-}
-
-int MonthModel::totalMonthHours() const {
+QString MonthModel::totalMonthHours() const {
     return m_totalMonthHours;
 }
 
-int MonthModel::totalDifference() const {
-    return m_totalDifference;
+QString MonthModel::totalMonthDifference() const {
+    return m_totalMonthDifference;
 }

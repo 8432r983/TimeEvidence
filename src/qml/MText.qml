@@ -27,5 +27,6 @@ Rectangle
         color               : Style.popup.borderColor
         font.pixelSize      : parent.textH * 0.6
         text                : parent.mainText
+        horizontalAlignment : Text.AlignHCenter
     }
 }

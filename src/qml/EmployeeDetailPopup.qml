@@ -24,10 +24,10 @@ Popup
         leftPanel.employeeName = emp.name;
         leftPanel.employeeStatus = emp.status;
 
-        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+        vacationData.leftoverhours = emp.hours
+        vacationData.vacationdays = emp.vacation
 
-        summaryRow.totalHours = monthmodel.getMonthHours();
-        summaryRow.totalDifference = monthmodel.getMonthDifference();
+        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
 
         leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
     }
@@ -134,25 +134,31 @@ Popup
 
             Column
             {
-                spacing             : 10
+                id                  : vacationData
                 width               : parent.width - buttonsColumn.width
                 height              : parent.height
                 anchors.right       : parent.right
 
-                property double leftoverhours   : 0
-                property int vacationdays       : 0
+                property string leftoverhours   : ""
+                property string vacationdays    : ""
 
                 MText
                 {
-                    id          : leftoverHours
-                    mainText    : "Višak sati prethodnog razdoblja: " + leftoverHours.toString()
-                    textH       : 20//parent.height * 0.5
+                    id                  : leftoverHours
+                    width               : parent.width
+                    height              : parent.height * 0.5
+                    mainText            : "Višak sati:\n" + vacationData.leftoverhours
+                    textH               : parent.height * 0.18
+                    border.width        : 0
                 }
                 MText
                 {
-                    id          : vacationDays
-                    mainText    : "Godišnji odmor: " + vacationDays.toString()
-                    textH       : 20
+                    id                  : vacationDays
+                    width               : parent.width
+                    height              : parent.height * 0.5
+                    mainText            : "Godišnji\nodmor:\n" + vacationData.vacationdays + " dana"
+                    textH               : parent.height * 0.18
+                    border.width        : 0
                 }
             }
         }
@@ -262,7 +268,7 @@ Popup
                             monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
                                                  datetime.formatted.toString().split(" ")[1],
                                                  activity.getActivity(leftPanel.employeeName),
-                                                 leftPanel.endTime);
+                                                 leftPanel.endTime, "-", "-", "-", "-");
 
 
                             activity.setActivity(leftPanel.employeeName, "");
@@ -271,9 +277,6 @@ Popup
                         leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
 
                         monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
-
-                        //summaryRow.totalHours = monthmodel.getMonthHours();
-                        //summaryRow.totalDifference = monthmodel.getMonthDifference();
                     }
                 }
             }
@@ -282,7 +285,7 @@ Popup
 
     Rectangle
     {
-        property int childrenWidth: parent.width/6
+        property int childrenWidth: parent.width/9
 
         id                          : bottomPanel
         width                       : parent.width
@@ -293,6 +296,90 @@ Popup
         color                       : Style.popup.backColor
 
         MonthModel {id: monthmodel}
+
+        Row
+        {
+            id          : headerRow
+            height      : parent.height/8
+            anchors.top : bottomPanel.top
+
+            MText
+            {
+                id: day
+                mainText            : "Dan"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+            }
+            MText
+            {
+                id: clockIn
+                mainText            : "Dolazak"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+
+            }
+            MText
+            {
+                id: clockOut
+                mainText            : "Odlazak"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+
+            }
+            MText
+            {
+                id: total
+                mainText            : "Sat"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+
+            }
+            MText
+            {
+                id: difference
+                mainText            : "Višak Manjak"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+
+            }
+            MText
+            {
+                id: travel
+                mainText            : "Putni sat"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+            }
+            MText
+            {
+                id: holiday
+                mainText            : "Praznik"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+            }
+            MText
+            {
+                id: sickday
+                mainText            : "Bolovanje"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+            }
+            MText
+            {
+                id: vacation
+                mainText            : "Godišnji"
+                textH               : parent.height
+                width               : bottomPanel.childrenWidth
+                eraseVerticalBorder : false
+            }
+        }
 
         ListView
         {
@@ -307,125 +394,59 @@ Popup
 
                 MText
                 {
-                    mainText: model.day
+                    mainText: model.date
                     textH   : parent.height
-                    width   : bottomPanel.childrenWidth
+                    width   : day.width
                 }
                 MText
                 {
                     mainText: model.clockIn
                     textH   : parent.height
-                    width   : bottomPanel.childrenWidth
+                    width   : clockIn.width
                 }
                 MText
                 {
                     mainText: model.clockOut
                     textH   : parent.height
-                    width   : bottomPanel.childrenWidth
+                    width   : clockOut.width
                 }
                 MText
                 {
                     mainText: model.total
                     textH   : parent.height
-                    width   : bottomPanel.childrenWidth
+                    width   : total.width
                 }
                 MText
                 {
                     mainText: model.difference
                     textH   : parent.height
-                    width   : bottomPanel.childrenWidth
+                    width   : difference.width
                 }
                 MText
                 {
                     mainText: model.travel
                     textH   : parent.height
-                    width   : bottomPanel.childrenWidth
+                    width   : travel.width
+                }
+                MText
+                {
+                    mainText: model.holiday
+                    textH   : parent.height
+                    width   : holiday.width
+                }
+                MText
+                {
+                    mainText: model.sickday
+                    textH   : parent.height
+                    width   : sickday.width
+                }
+                MText
+                {
+                    mainText: model.vacation
+                    textH   : parent.height
+                    width   : vacation.width
                 }
             }
         }
-
-        Row
-        {
-            id          : headerRow
-            height      : parent.height/8
-            anchors.top : bottomPanel.top
-
-            MText
-            {
-                mainText            : "Dan"
-                textH               : parent.height
-                width               : bottomPanel.childrenWidth
-                eraseVerticalBorder : false
-            }
-            MText
-            {
-                mainText            : "Dolazak"
-                textH               : parent.height
-                width               : bottomPanel.childrenWidth
-                eraseVerticalBorder : false
-
-            }
-            MText
-            {
-                mainText            : "Odlazak"
-                textH               : parent.height
-                width               : bottomPanel.childrenWidth
-                eraseVerticalBorder : false
-
-            }
-            MText
-            {
-                mainText            : "Sat"
-                textH               : parent.height
-                width               : bottomPanel.childrenWidth
-                eraseVerticalBorder : false
-
-            }
-            MText
-            {
-                mainText            : "Višak Manjak"
-                textH               : parent.height
-                width               : bottomPanel.childrenWidth
-                eraseVerticalBorder : false
-
-            }
-            MText
-            {
-                mainText            : "Putni sat"
-                textH               : parent.height
-                width               : bottomPanel.childrenWidth
-                eraseVerticalBorder : false
-
-            }
-        }
-
-        //Row
-        //{
-        //    id              : summaryRow
-        //    height          : parent.height * 0.15
-        //    anchors.top     : bottomPanel.top
-
-        //    property string totalHours          : ""
-        //    property string totalDifference     : ""
-        //    property int cellWidth              : bottomPanel.width/2
-
-        //    MText
-        //    {
-        //        id: monthHoursText
-        //        mainText            : "Odrađeno: " + summaryRow.totalHours
-        //        textH               : summaryRow.height
-        //        eraseVerticalBorder : false
-        //        width               : parent.cellWidth
-        //    }
-
-        //    MText
-        //    {
-        //        id: monthDifferenceText
-        //        mainText            : "Višak/Manjak: " + summaryRow.totalDifference
-        //        textH               : summaryRow.height
-        //        eraseVerticalBorder : false
-        //        width               : parent.cellWidth
-        //    }
-        //}
     }
 }

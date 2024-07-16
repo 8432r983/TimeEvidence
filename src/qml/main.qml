@@ -1,7 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.2
-import QtQuick.Dialogs 1.3
 import QtQuick.Layouts 1.3
 
 import QtQuick.Controls.Styles 1.4
@@ -160,9 +159,6 @@ Window {
             id: keyboard
 
             property string password: ""
-            // property string name: namemodel.getName(0);
-            // property string employeeStatus: namemodel.getStatus(0);
-            // property int    employeeIndex: 0
 
             width               : keyboardBox.width
             height              : keyboardBox.height * 0.5

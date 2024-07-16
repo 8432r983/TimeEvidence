@@ -10,26 +10,21 @@ Entry::Entry(QObject *parent)
     , clockOut("-")
     , total("-")
     , difference("-")
-    , travel("-") {
-}
-
-void Entry::fromEntry(Entry *val) {
-    if(!val)
-        return;
-    day        = val->day;
-    date       = val->date;
-    clockIn    = val->clockIn;
-    clockOut   = val->clockOut;
-    total      = val->total;
-    travel     = val->travel;
-    difference = val->difference;
+    , travel("-")
+    , vacation("-")
+    , holiday("-")
+    , sickday("-") {
 }
 
 int Entry::calcTotal() {
-    return timeToInt(clockOut) - timeToInt(clockIn);
+    if(clockIn != "-" && clockOut != "-")
+        return timeToInt(clockOut) - timeToInt(clockIn);
+    return 0;
 }
 
 int Entry::calcDifference() {
+    if(total == "-")
+        return -8 * 60;
     return timeToInt(total) - 8 * 60;
 }
 
