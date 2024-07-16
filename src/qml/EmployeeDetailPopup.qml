@@ -28,7 +28,6 @@ Popup
 
         summaryRow.totalHours = monthmodel.getMonthHours();
         summaryRow.totalDifference = monthmodel.getMonthDifference();
-        summaryRow.pastMonthDifference = monthmodel.calcPastMonthTotal(emp.name, datetime.formatted.toString().split(" ")[1]);
 
         leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
     }
@@ -48,7 +47,7 @@ Popup
             x               : Style.popup.borderWidth
             y               : Style.popup.borderWidth
             height          : parent.height-Style.popup.borderWidth*2
-            width           : parent.width * 0.4
+            width           : parent.width * 0.5
             color           : Style.popup.backColor
 
             property string employeeName    : ""
@@ -81,66 +80,80 @@ Popup
                 return Hours + Minutes
             }
 
-            MButton
+            Column
             {
-                id                          : travelButton
-                anchors.horizontalCenter    : exitButton.horizontalCenter
-                anchors.bottom              : vacationButton.top
-                anchors.bottomMargin        : 10
-                buttonW                     : exitButton.buttonW
-                buttonH                     : exitButton.buttonH
-                buttonText                  : qsTr("SATI PUTA")
-                textSize                    : buttonH*0.5
+                id              : buttonsColumn
+                spacing         : 10
+                width           : parent.width * 0.5
+                height          : parent.height
+                anchors.left    : parent.left
+
+                MButton
+                {
+                    id                          : travelButton
+                    buttonW                     : exitButton.buttonW
+                    buttonH                     : exitButton.buttonH
+                    buttonText                  : qsTr("SATI PUTA")
+                    textSize                    : buttonH*0.5
+                }
+                MButton
+                {
+                    id                          : vacationButton
+                    buttonW                     : exitButton.buttonW
+                    buttonH                     : exitButton.buttonH
+                    buttonText                  : qsTr("ZAHTJEV ZA GODIŠNJI")
+                    textSize                    : buttonH*0.4
+                }
+                MButton
+                {
+                    id                          : sickDayButton1
+                    buttonW                     : exitButton.buttonW
+                    buttonH                     : exitButton.buttonH
+                    buttonText                  : qsTr("BOLOVANJE SA DOZVOLOM")
+                    textSize                    : parent.height * 0.07
+                }
+                MButton
+                {
+
+                    id                          : sickDayButton2
+                    buttonW                     : exitButton.buttonW
+                    buttonH                     : exitButton.buttonH
+                    buttonText                  : qsTr("BOLOVANJE BEZ DOZVOLE")
+                    textSize                    : parent.height * 0.07
+                }
+                MButton
+                {
+                    id                          : exitButton
+                    buttonW                     : parent.width
+                    buttonH                     : parent.height * 0.17
+                    buttonText                  : "\u2B8C"
+                    textSize                    : parent.height * 0.15
+                    onClicked                   : mainPopup.close();
+                }
             }
 
-            MButton
+            Column
             {
-                id                          : vacationButton
-                anchors.horizontalCenter    : exitButton.horizontalCenter
-                anchors.bottom              : sickDayButton1.top
-                anchors.bottomMargin        : 10
-                buttonW                     : exitButton.buttonW
-                buttonH                     : exitButton.buttonH
-                buttonText                  : qsTr("ZAHTJEV ZA GODIŠNJI")
-                textSize                    : buttonH*0.5
-            }
+                spacing             : 10
+                width               : parent.width - buttonsColumn.width
+                height              : parent.height
+                anchors.right       : parent.right
 
-            MButton
-            {
-                id                          : sickDayButton1
-                anchors.horizontalCenter    : exitButton.horizontalCenter
-                anchors.bottom              : sickDayButton2.top
-                anchors.bottomMargin        : 10
-                buttonW                     : exitButton.buttonW
-                buttonH                     : exitButton.buttonH
-                buttonText                  : qsTr("BOLOVANJE SA DOZVOLOM")
-                textSize                    : buttonH*0.5
-            }
+                property double leftoverhours   : 0
+                property int vacationdays       : 0
 
-            MButton
-            {
-
-                id                          : sickDayButton2
-                anchors.horizontalCenter    : exitButton.horizontalCenter
-                anchors.bottom              : exitButton.top
-                anchors.bottomMargin        : 10
-                buttonW                     : exitButton.buttonW
-                buttonH                     : exitButton.buttonH
-                buttonText                  : qsTr("BOLOVANJE BEZ DOZVOLE")
-                textSize                    : buttonH*0.5
-            }
-
-            MButton
-            {
-                id                          : exitButton
-                anchors.bottom              : leftPanel.bottom
-                anchors.horizontalCenter    : leftPanel.horizontalCenter
-                buttonW                     : leftPanel.width-Style.popup.borderWidth*2
-                buttonH                     : parent.height * 0.17
-                buttonText                  : "\u2B8C"
-                textSize                    : parent.height * 0.15
-
-                onClicked : mainPopup.close();
+                MText
+                {
+                    id          : leftoverHours
+                    mainText    : "Višak sati prethodnog razdoblja: " + leftoverHours.toString()
+                    textH       : 20//parent.height * 0.5
+                }
+                MText
+                {
+                    id          : vacationDays
+                    mainText    : "Godišnji odmor: " + vacationDays.toString()
+                    textH       : 20
+                }
             }
         }
 
@@ -259,9 +272,8 @@ Popup
 
                         monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
 
-                        summaryRow.totalHours = monthmodel.getMonthHours();
-                        summaryRow.totalDifference = monthmodel.getMonthDifference();
-                        summaryRow.pastMonthDifference = monthmodel.getPastMonthTotal();
+                        //summaryRow.totalHours = monthmodel.getMonthHours();
+                        //summaryRow.totalDifference = monthmodel.getMonthDifference();
                     }
                 }
             }
@@ -286,7 +298,7 @@ Popup
         {
             id          : hoursStats
             width       : parent.width
-            height      : parent.height - headerRow.height - summaryRow.height
+            height      : parent.height - headerRow.height
             anchors.top : headerRow.bottom
             model       : monthmodel
             delegate    : Row
@@ -336,7 +348,7 @@ Popup
         {
             id          : headerRow
             height      : parent.height/8
-            anchors.top : summaryRow.bottom
+            anchors.top : bottomPanel.top
 
             MText
             {
@@ -387,43 +399,33 @@ Popup
             }
         }
 
-        Row
-        {
-            id              : summaryRow
-            height          : parent.height * 0.15
-            anchors.top     : bottomPanel.top
+        //Row
+        //{
+        //    id              : summaryRow
+        //    height          : parent.height * 0.15
+        //    anchors.top     : bottomPanel.top
 
-            property string totalHours          : ""
-            property string totalDifference     : ""
-            property string pastMonthDifference : ""
-            property int cellWidth              : bottomPanel.width/3
+        //    property string totalHours          : ""
+        //    property string totalDifference     : ""
+        //    property int cellWidth              : bottomPanel.width/2
 
-            MText
-            {
-                id: monthHoursText
-                mainText            : "Odrađeno: " + summaryRow.totalHours
-                textH               : summaryRow.height
-                eraseVerticalBorder : false
-                width               : parent.cellWidth
-            }
+        //    MText
+        //    {
+        //        id: monthHoursText
+        //        mainText            : "Odrađeno: " + summaryRow.totalHours
+        //        textH               : summaryRow.height
+        //        eraseVerticalBorder : false
+        //        width               : parent.cellWidth
+        //    }
 
-            MText
-            {
-                id: monthDifferenceText
-                mainText            : "Višak/Manjak: " + summaryRow.totalDifference
-                textH               : summaryRow.height
-                eraseVerticalBorder : false
-                width               : parent.cellWidth
-            }
-
-            MText
-            {
-                id: pastMonthHoursText
-                mainText            : "Prošli mjesec: " + summaryRow.pastMonthDifference
-                textH               : summaryRow.height
-                eraseVerticalBorder : false
-                width               : parent.cellWidth
-            }
-        }
+        //    MText
+        //    {
+        //        id: monthDifferenceText
+        //        mainText            : "Višak/Manjak: " + summaryRow.totalDifference
+        //        textH               : summaryRow.height
+        //        eraseVerticalBorder : false
+        //        width               : parent.cellWidth
+        //    }
+        //}
     }
 }

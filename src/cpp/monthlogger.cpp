@@ -8,8 +8,8 @@ MonthLogger::MonthLogger(QObject *parent)
     : QObject{parent} {
 }
 
-void MonthLogger::addEntry(QString Name, QString Day, QString Date,
-                           QString clockIn, QString clockOut) {
+void MonthLogger::addEntry(QString Name, QString Day, QString Date, QString clockIn,
+                           QString clockOut) {
     HalFiles hf;
     QString  filePath = hf.getEmployeeMonth(Name, Date);
 
@@ -20,6 +20,9 @@ void MonthLogger::addEntry(QString Name, QString Day, QString Date,
     }
 
     QTextStream in(&file);
-    in << Day + "; " << Date.split(".")[0] + "; " << clockIn + "; " << clockOut
-       << '\n';
+    if(file.size() == 0) {
+        in << "Dan; Datum; Dolazak; Odlazak\n";
+    }
+
+    in << Day + "; " << Date.split(".")[0] + "; " << clockIn + "; " << clockOut << '\n';
 }

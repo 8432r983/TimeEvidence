@@ -32,7 +32,6 @@ class MonthModel : public QAbstractListModel {
 
     Q_INVOKABLE QString getMonthHours();
     Q_INVOKABLE QString getMonthDifference();
-    Q_INVOKABLE QString calcPastMonthTotal(QString Name, QString Date);
 
     int totalMonthHours() const;
     int totalDifference() const;
