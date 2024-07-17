@@ -123,7 +123,7 @@ void MonthModel::loadEntries(QString date, QString Name) {
                 i++;
 
                 m_entries[i - 1]->daychanged = true;
-                totalDayTime                 = m_entries[i]->timeToInt(m_entries[i]->total);
+                totalDayTime                 = m_entries[i]->calcTotal();
             } else {
                 totalDayTime += m_entries[i]->calcTotal();
             }

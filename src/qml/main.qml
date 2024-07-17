@@ -182,7 +182,14 @@ Window {
                     popupLoader.loaded()
                     keyboard.password = ""
                     nameField.text    = ""
-                } else {
+                }
+                else if(emp.password === "")
+                {
+                    popupLoader.source = "ErrorPopup.qml";
+                    popupLoader.item.message = "Niste odabrali ime. Pokušajte ponovo."
+                    popupLoader.loaded()
+                }
+                else {
                     popupLoader.source = "ErrorPopup.qml";
                     popupLoader.item.message = "Kriva lozinka. Pokušajte ponovo."
                     popupLoader.loaded()
