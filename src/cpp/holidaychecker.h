@@ -1,23 +1,22 @@
-#ifndef HOLIDAYLOGGER_H
-#define HOLIDAYLOGGER_H
+#ifndef HOLIDAYCHECKER_H
+#define HOLIDAYCHECKER_H
 
 #include <QHash>
 #include <QObject>
 #include <QString>
 
-class HolidayLogger : public QObject {
+class HolidayChecker : public QObject {
     Q_OBJECT
   public:
-    explicit HolidayLogger(QObject *parent = nullptr);
+    explicit HolidayChecker(QObject *parent = nullptr);
 
-    Q_INVOKABLE bool holidayCheck(QString date);
+    Q_INVOKABLE QString holiday();
 
+    bool holidayCheck(QString date);
     void loadHolidays();
-
-  signals:
 
   private:
     QHash<QString, bool> m_holidays;
 };
 
-#endif // HOLIDAYLOGGER_H
+#endif // HOLIDAYCHECKER_H

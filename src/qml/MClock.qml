@@ -5,7 +5,6 @@ import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.3
 
 import Style 1.0
-// all this code will be added to class with QObject and Q_PROPERTY with signals...
 
 Rectangle
 {
@@ -33,6 +32,16 @@ Rectangle
             text                : datetime.formatted.toString().split(" ")[0]
             font.pixelSize      : parent.height * 0.6
             color               : Style.popup.borderColor
+        }
+
+        MText
+        {
+            id                  : holidayText
+            anchors.right       : parent.right
+            anchors.rightMargin : parent.width * 0.15
+            anchors.verticalCenter: parent.verticalCenter
+            textH               : parent.height * 0.6
+            mainText            : holidaycheck.holiday()
         }
     }
 

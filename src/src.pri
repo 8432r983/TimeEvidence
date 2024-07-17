@@ -6,7 +6,7 @@ SOURCES += \
   $$PWD/cpp/entry.cpp \
   $$PWD/cpp/halfiles.cpp \
   $$PWD/cpp/datetime.cpp \
-  $$PWD/cpp/holidaylogger.cpp \
+  $$PWD/cpp/holidaychecker.cpp \
   $$PWD/cpp/main.cpp \
   $$PWD/cpp/monthlogger.cpp \
   $$PWD/cpp/monthmodel.cpp
@@ -20,7 +20,7 @@ HEADERS += \
   $$PWD/cpp/entry.h \
   $$PWD/cpp/halfiles.h \
   $$PWD/cpp/datetime.h \
-  $$PWD/cpp/holidaylogger.h \
+  $$PWD/cpp/holidaychecker.h \
   $$PWD/cpp/monthlogger.h \
   $$PWD/cpp/monthmodel.h
 

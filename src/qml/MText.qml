@@ -4,13 +4,12 @@ import Style 1.0
 
 Rectangle
 {
-    property int textH                  : 0
-    property string mainText            : ""
-    property bool eraseVerticalBorder   : true
+    property int textH        : 0
+    property string mainText  : ""
+    property bool boldEnable  : false
 
     height          : textH
     color           : Style.popup.backColor
-    border.color    : Style.popup.borderColor
 
     Rectangle
     {
@@ -27,6 +26,7 @@ Rectangle
         color               : Style.popup.borderColor
         font.pixelSize      : parent.textH * 0.6
         text                : parent.mainText
+        font.bold           : boldEnable
         horizontalAlignment : Text.AlignHCenter
     }
 }

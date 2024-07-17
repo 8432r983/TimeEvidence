@@ -13,7 +13,8 @@ Entry::Entry(QObject *parent)
     , travel("-")
     , vacation("-")
     , holiday("-")
-    , sickday("-") {
+    , sickday("-")
+    , daychanged(false) {
 }
 
 int Entry::calcTotal() {
@@ -36,12 +37,35 @@ void Entry::setDifference() {
     difference = intToTime(calcDifference());
 }
 
+void Entry::reset() {
+    day        = "-";
+    date       = "-";
+    clockIn    = "-";
+    clockOut   = "-";
+    total      = "-";
+    difference = "-";
+    travel     = "-";
+    vacation   = "-";
+    holiday    = "-";
+    sickday    = "-";
+    daychanged = false;
+}
+
 int Entry::timeToInt(QString time) {
-    if(time == "")
+    if(time == "" || time == "-")
         return 0;
-    int Hours   = time.split(":")[0].toInt();
-    int Minutes = time.split(":")[1].toInt();
-    return Hours * 60 + Minutes;
+
+    bool flag = time[0] == "-";
+
+    int Hours   = time.replace("-", "").split(":")[0].toInt();
+    int Minutes = time.replace("-", "").split(":")[1].toInt();
+
+    int res = Hours * 60 + Minutes;
+
+    if(flag)
+        return -res;
+
+    return res;
 }
 
 QString Entry::intToTime(int time) {

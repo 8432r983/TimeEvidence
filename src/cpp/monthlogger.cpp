@@ -15,6 +15,11 @@ void MonthLogger::addEntry(QString Name, QString Day, QString Date, QString cloc
     HalFiles hf;
     QString  filePath = hf.getEmployeeMonth(Name, Date);
 
+    if(!QFile::exists(filePath)) {
+        qDebug() << "file doesnt exist";
+        return;
+    }
+
     QFile file(filePath);
 
     if(!file.open(QIODevice::WriteOnly | QIODevice::Append)) {

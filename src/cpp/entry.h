@@ -17,6 +17,8 @@ class Entry : public QObject {
     void setTotal();
     void setDifference();
 
+    void reset();
+
     int     timeToInt(QString time);
     QString intToTime(int time);
 
@@ -30,6 +32,7 @@ class Entry : public QObject {
     QString vacation;
     QString holiday;
     QString sickday;
+    bool    daychanged;
 };
 
 #endif // ENTRY_H

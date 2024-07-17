@@ -12,6 +12,7 @@
 #include "employeelistmodel.h"
 
 #include "activity.h"
+#include "holidaychecker.h"
 #include "monthlogger.h"
 /*----------------------------------------------------------------------------*/
 void appQmlRegisterFonts() {
@@ -74,8 +75,7 @@ int main(int argc, char *argv[]) {
 
     qmlRegisterType<MonthModel>("MonthModel", 1, 0, "MonthModel");
 
-    qmlRegisterType<EmployeeListModel>("EmployeeListModel", 1, 0,
-                                       "EmployeeListModel");
+    qmlRegisterType<EmployeeListModel>("EmployeeListModel", 1, 0, "EmployeeListModel");
 
     qmlRegisterType<MonthLogger>("MonthLogger", 1, 0, "MonthLogger");
 
@@ -84,6 +84,9 @@ int main(int argc, char *argv[]) {
 
     activity act;
     context->setContextProperty("activity", &act);
+
+    HolidayChecker holidayChecker;
+    context->setContextProperty("holidaycheck", &holidayChecker);
 
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(

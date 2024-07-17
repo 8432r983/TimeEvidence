@@ -9,10 +9,6 @@
 class MonthModel : public QAbstractListModel {
     Q_OBJECT
 
-    Q_PROPERTY(QString totalMonthHours READ totalMonthHours NOTIFY totalMonthHoursChanged FINAL)
-    Q_PROPERTY(QString totalMonthDifference READ totalMonthDifference NOTIFY
-                   totalMonthDifferenceChanged FINAL)
-
   public:
     enum EntryRoles {
         DayRole        = Qt::UserRole + 1,
@@ -24,7 +20,8 @@ class MonthModel : public QAbstractListModel {
         DifferenceRole = Qt::UserRole + 7,
         HolidayRole    = Qt::UserRole + 8,
         SickdayRole    = Qt::UserRole + 9,
-        VacationRole   = Qt::UserRole + 10
+        VacationRole   = Qt::UserRole + 10,
+        DayChangedRole = Qt::UserRole + 11
     };
 
     explicit MonthModel(QObject *parent = nullptr);
@@ -35,17 +32,18 @@ class MonthModel : public QAbstractListModel {
 
     Q_INVOKABLE void loadEntries(QString date, QString Name);
 
-    QString totalMonthHours() const;
-    QString totalMonthDifference() const;
-
-  signals:
-    void totalMonthHoursChanged();
-    void totalMonthDifferenceChanged();
+    Q_INVOKABLE QString getTotalSum();
+    Q_INVOKABLE QString getDifferenceSum();
+    Q_INVOKABLE QString getTravelSum();
+    Q_INVOKABLE QString getHolidaySum();
+    Q_INVOKABLE QString getSickdaySum();
+    Q_INVOKABLE QString getVacationSum();
 
   private:
     QVector<Entry *> m_entries;
     QString          m_totalMonthHours;
     QString          m_totalMonthDifference;
+    Entry            m_sums;
 };
 
 #endif // MONTHMODEL_H
