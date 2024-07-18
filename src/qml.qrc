@@ -10,5 +10,7 @@
         <file>qml/EmployeeDetailPopup.qml</file>
         <file>qml/ErrorPopup.qml</file>
         <file>qml/MText.qml</file>
+        <file>qml/TravelHoursPopup.qml</file>
+        <file>qml/MLoader.qml</file>
     </qresource>
 </RCC>

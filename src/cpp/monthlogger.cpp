@@ -35,17 +35,13 @@ void MonthLogger::addEntry(QString Name, QString Day, QString Date, QString cloc
     Entry ent;
     ent.clockIn  = clockIn;
     ent.clockOut = clockOut;
+    ent.travel   = travel;
+    ent.holiday  = holiday;
+    ent.sickday  = sickday;
+    ent.vacation = vacation;
+
     ent.setTotal();
     ent.setDifference();
-
-    if(travel != "-")
-        ent.difference = ent.intToTime(ent.timeToInt(ent.difference) + ent.timeToInt(travel));
-    if(holiday != "-")
-        ent.difference = ent.intToTime(ent.timeToInt(ent.difference) + ent.timeToInt(holiday));
-    if(sickday != "-")
-        ent.difference = ent.intToTime(ent.timeToInt(ent.difference) + ent.timeToInt(sickday));
-    if(vacation != "-")
-        ent.difference = ent.intToTime(ent.timeToInt(ent.difference) + ent.timeToInt(vacation));
 
     in << Day + "; " << Date.split(".")[0] + "; " << clockIn + "; " << clockOut + "; "
        << ent.total + "; " << ent.difference + "; " << travel + "; " << holiday + "; "

@@ -19,7 +19,9 @@ Popup
     {
         color: Style.popup.backColor
     }
+
     property var emp;
+
     Component.onCompleted: {
         leftPanel.employeeName = emp.name;
         leftPanel.employeeStatus = emp.status;
@@ -33,6 +35,8 @@ Popup
     }
 
     MonthLogger { id: monthlogger }
+
+    MLoader {id:popupLoader}
 
     Rectangle
     {
@@ -104,6 +108,32 @@ Popup
                     buttonH                     : exitButton.buttonH
                     buttonText                  : qsTr("SATI PUTA")
                     textSize                    : buttonH*0.5
+
+                    onClicked:
+                    {
+                        popupLoader.source = "qrc:/qml/TravelHoursPopup.qml"
+                        popupLoader.loaded()
+                    }
+
+                    Connections
+                    {
+                        target: popupLoader.item
+                        function onHoursSignal(hr)
+                        {
+                            console.log("Odrađenih putnih sati: " + hr)
+                            monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
+                                                 datetime.formatted.toString().split(" ")[1],
+                                                 "-", "-", hr, "-", "-", "-");
+                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+
+                            totalSum.mainText = monthmodel.getTotalSum();
+                            differenceSum.mainText = monthmodel.getDifferenceSum();
+                            travelSum.mainText = monthmodel.getTravelSum();
+                            holidaySum.mainText = monthmodel.getHolidaySum();
+                            sickdaySum.mainText = monthmodel.getSickdaySum();
+                            vacationSum.mainText = monthmodel.getVacationSum();
+                        }
+                    }
                 }
                 MButton
                 {
@@ -165,7 +195,7 @@ Popup
                     width               : parent.width
                     height              : parent.height * 0.5
                     mainText            : qsTr("Godišnji<br>odmor:<br><b>" + vacationData.vacationdays + "</b><br>dana")
-                    textH               : parent.height * 0.18
+                    textH               : parent.height * 0.17
                 }
             }
         }

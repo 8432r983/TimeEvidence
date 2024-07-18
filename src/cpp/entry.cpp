@@ -18,10 +18,8 @@ Entry::Entry(QObject *parent)
 }
 
 int Entry::calcTotal() {
-    if(clockIn != "-" && clockOut != "-")
-        return timeToInt(clockOut) - timeToInt(clockIn) + timeToInt(travel) + timeToInt(vacation) +
-               timeToInt(holiday) + timeToInt(sickday);
-    return 0;
+    return timeToInt(clockOut) - timeToInt(clockIn) + timeToInt(travel) + timeToInt(vacation) +
+           timeToInt(holiday) + timeToInt(sickday);
 }
 
 int Entry::calcDifference() {

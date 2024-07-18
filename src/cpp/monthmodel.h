@@ -41,8 +41,6 @@ class MonthModel : public QAbstractListModel {
 
   private:
     QVector<Entry *> m_entries;
-    QString          m_totalMonthHours;
-    QString          m_totalMonthDifference;
     Entry            m_sums;
 };
 

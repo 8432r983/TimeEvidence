@@ -31,6 +31,6 @@ QString HalFiles::getEmployeeMonth(const QString &name, const QString &date) con
     str = getEmployeeFolderPath() + tempName + "\\" + tempName + "_" + dlist[2] + "_" + dlist[1] +
           ".txt";
 
-    qDebug() << "Employee log file" << str;
+    // qDebug() << "Employee log file" << str;
     return str;
 }

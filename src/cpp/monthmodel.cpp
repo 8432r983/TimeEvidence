@@ -101,7 +101,7 @@ void MonthModel::loadEntries(QString date, QString Name) {
                 entry->clockIn    = elements[2].trimmed();
                 entry->clockOut   = elements[3].trimmed();
                 entry->total      = elements[4].trimmed();
-                entry->difference = "-";
+                entry->difference = elements[5].trimmed();
                 entry->travel     = elements[6].trimmed();
                 entry->holiday    = elements[7].trimmed();
                 entry->sickday    = elements[8].trimmed();
@@ -110,8 +110,21 @@ void MonthModel::loadEntries(QString date, QString Name) {
             }
         }
 
+        m_sums.reset();
+        for(int i = 0; i < m_entries.size(); i++) {
+            m_sums.total = m_sums.intToTime(m_sums.timeToInt(m_sums.total) + m_sums.timeToInt(m_entries[i]->total));
+            if(i != 0 && m_entries[i]->date != m_entries[i - 1]->date)
+                m_sums.difference = m_sums.intToTime(m_sums.timeToInt(m_sums.difference) - 8 * 60);
+            m_sums.travel   = m_sums.intToTime(m_sums.timeToInt(m_sums.travel) + m_sums.timeToInt(m_entries[i]->travel));
+            m_sums.holiday  = m_sums.intToTime(m_sums.timeToInt(m_sums.holiday) + m_sums.timeToInt(m_entries[i]->holiday));
+            m_sums.sickday  = m_sums.intToTime(m_sums.timeToInt(m_sums.sickday) + m_sums.timeToInt(m_entries[i]->sickday));
+            m_sums.vacation = m_sums.intToTime(m_sums.timeToInt(m_sums.vacation) + m_sums.timeToInt(m_entries[i]->vacation));
+        }
+        m_sums.difference = m_sums.intToTime(m_sums.timeToInt(m_sums.difference) - 8 * 60 + m_sums.timeToInt(m_sums.total));
+
         int totalDayTime = m_entries[0]->calcTotal();
 
+        m_entries[0]->difference = "-";
         for(int i = 1; i < m_entries.size(); i++) {
             if(m_entries[i]->date != m_entries[i - 1]->date) {
                 Entry *ent = new Entry();
@@ -123,9 +136,11 @@ void MonthModel::loadEntries(QString date, QString Name) {
                 i++;
 
                 m_entries[i - 1]->daychanged = true;
-                totalDayTime                 = m_entries[i]->calcTotal();
+                totalDayTime                 = m_entries[i]->timeToInt(m_entries[i]->total);
+                m_entries[i]->difference     = "-";
             } else {
-                totalDayTime += m_entries[i]->calcTotal();
+                totalDayTime += m_entries[i]->timeToInt(m_entries[i]->total);
+                m_entries[i]->difference = "-";
             }
         }
         Entry *ent = new Entry();
@@ -133,25 +148,6 @@ void MonthModel::loadEntries(QString date, QString Name) {
         ent->setDifference();
         ent->date = m_entries.last()->date;
         m_entries.append(ent);
-    }
-
-    m_sums.reset();
-
-    for(int i = 0; i < m_entries.size(); i++) {
-        if(m_entries[i]->clockIn == "-" || m_entries[i]->clockOut == "-") {
-            m_sums.total = m_sums.intToTime(m_sums.timeToInt(m_sums.total) +
-                                            m_sums.timeToInt(m_entries[i]->total));
-        }
-        m_sums.difference = m_sums.intToTime(m_sums.timeToInt(m_sums.difference) +
-                                             m_sums.timeToInt(m_entries[i]->difference));
-        m_sums.travel     = m_sums.intToTime(m_sums.timeToInt(m_sums.travel) +
-                                             m_sums.timeToInt(m_entries[i]->travel));
-        m_sums.holiday    = m_sums.intToTime(m_sums.timeToInt(m_sums.holiday) +
-                                             m_sums.timeToInt(m_entries[i]->holiday));
-        m_sums.sickday    = m_sums.intToTime(m_sums.timeToInt(m_sums.sickday) +
-                                             m_sums.timeToInt(m_entries[i]->sickday));
-        m_sums.vacation   = m_sums.intToTime(m_sums.timeToInt(m_sums.vacation) +
-                                             m_sums.timeToInt(m_entries[i]->vacation));
     }
 
     std::reverse(m_entries.begin(), m_entries.end());

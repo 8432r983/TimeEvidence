@@ -36,12 +36,12 @@ Rectangle
 
         MText
         {
-            id                  : holidayText
-            anchors.right       : parent.right
-            anchors.rightMargin : parent.width * 0.15
-            anchors.verticalCenter: parent.verticalCenter
-            textH               : parent.height * 0.6
-            mainText            : holidaycheck.holiday()
+            id                      : holidayText
+            anchors.right           : parent.right
+            anchors.rightMargin     : parent.width * 0.15
+            anchors.verticalCenter  : parent.verticalCenter
+            textH                   : parent.height * 0.6
+            mainText                : holidaycheck.holiday()
         }
     }
 

@@ -5,12 +5,12 @@ MouseArea
 {
     id: mbutton
 
-    property int buttonW: 0 //MAR this could be int
-    property int buttonH: 0 // MAR this could be int...
-
-    property string buttonText: ""
-    property int textSize: 0 //!!!is it pixel or what!!
-    property int borderW: Style.popup.borderWidth
+    property int buttonW        : 0
+    property int buttonH        : 0
+    property string buttonText  : ""
+    property int textSize       : 0
+    property int borderW        : Style.popup.borderWidth
+    property bool glowing       : false
 
     width  : buttonW
     height : buttonH
@@ -24,7 +24,7 @@ MouseArea
                       }
                       else return Style.popup.borderColor
 
-        border.width: borderW
+        border.width: glowing ? borderW*4 : borderW
 
         color: if(mbutton.containsPress)
                {
@@ -41,11 +41,12 @@ MouseArea
 
     Text
     {
-        id: buttontext
-        text: buttonText
-        anchors.centerIn: parent
-        font.pixelSize: mbutton.textSize
-        anchors.margins: 10
+        id                  : buttontext
+        text                : buttonText
+        anchors.centerIn    : parent
+        font.pixelSize      : mbutton.textSize
+        anchors.margins     : 10
+        font.bold           : glowing
         color: if(mbutton.containsPress)
                {
                    return Style.popup.backColor
