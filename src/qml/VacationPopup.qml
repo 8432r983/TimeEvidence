@@ -165,8 +165,8 @@ Popup
         visibleMonth: new Date().getMonth()
         visibleYear : new Date().getFullYear()
 
-        minimumDate: new Date(new Date().getFullYear(), 0, 1);
-        maximumDate: new Date(new Date().getFullYear()+1, 0, 1);
+        minimumDate: dateranges.lowerVacationBound
+        maximumDate: dateranges.upperVacationBound
     }
 
     Rectangle{

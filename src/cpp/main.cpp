@@ -12,6 +12,7 @@
 #include "employeelistmodel.h"
 
 #include "activity.h"
+#include "dateranges.h"
 #include "holidaychecker.h"
 #include "monthlogger.h"
 /*----------------------------------------------------------------------------*/
@@ -87,6 +88,9 @@ int main(int argc, char *argv[]) {
 
     HolidayChecker holidayChecker;
     context->setContextProperty("holidaycheck", &holidayChecker);
+
+    DateRanges dateranges;
+    context->setContextProperty("dateranges", &dateranges);
 
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(
