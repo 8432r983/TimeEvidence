@@ -20,9 +20,9 @@ class HalFiles : public QObject {
 #elif(WIN_MAR)
     const QString cPathData = "C:\\QtProjects\\TimeEvidence\\data\\";
 #elif(GUF_ROKO_0700)
-    const QString cPathData = "/root/data/"
+    const QString cPathData = "/root/data/";
 #elif(CHE_DUNF_0310)
-    const QString cPathData = "/home/root/data/"
+    const QString cPathData = "/home/root/data/";
 #endif
     const QString cFnEmployees = "zaposlenici.txt";
     const QString cFnHolidays  = "praznici.txt";

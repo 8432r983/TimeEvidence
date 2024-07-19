@@ -38,23 +38,23 @@ void appQmlRegisterStyle(QScreen *screen) {
         qDebug() << "Display type 1";
     } else if((width == 1024) && (height == 600)) {
         // 7.1 inches with high resolution
-        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style1.qml"), "Style", 1, 0, "Style");
+        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style2.qml"), "Style", 1, 0, "Style");
         qDebug() << "Display type 2";
     } else if((width == 1280) && (height == 800)) {
         // 10.1 inches as Santaro or Christ 12"
-        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style1.qml"), "Style", 1, 0, "Style");
+        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style3.qml"), "Style", 1, 0, "Style");
         qDebug() << "Display type 3";
     } else if((width == 1024) && (height == 768)) {
         // 12.1 inches as Santoka
-        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style1.qml"), "Style", 1, 0, "Style");
+        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style4.qml"), "Style", 1, 0, "Style");
         qDebug() << "Display type 4";
     } else if((width == 1366) && (height == 768)) {
         // 15" CHE
-        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style1.qml"), "Style", 1, 0, "Style");
+        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style5.qml"), "Style", 1, 0, "Style");
         qDebug() << "Display type 5";
     } else {
         // windows display
-        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style1.qml"), "Style", 1, 0, "Style");
+        qmlRegisterSingletonType(QUrl("qrc:/qml/Style/Style4.qml"), "Style", 1, 0, "Style");
         qDebug() << "Display type windows";
     }
     // clang-format on

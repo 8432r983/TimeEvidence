@@ -1,6 +1,7 @@
 
 SOURCES += \
   $$PWD/cpp/activity.cpp \
+  $$PWD/cpp/dateranges.cpp \
   $$PWD/cpp/employeelist.cpp \
   $$PWD/cpp/employeelistmodel.cpp \
   $$PWD/cpp/entry.cpp \
@@ -14,6 +15,7 @@ SOURCES += \
 
 HEADERS += \
   $$PWD/cpp/activity.h \
+  $$PWD/cpp/dateranges.h \
   $$PWD/cpp/employee.h \
   $$PWD/cpp/employeelist.h \
   $$PWD/cpp/employeelistmodel.h \

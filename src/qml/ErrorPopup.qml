@@ -1,6 +1,4 @@
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import QtQuick.VirtualKeyboard 2.4
+import QtQuick 2.9
 import QtQuick.Controls 2.2
 
 import Style 1.0

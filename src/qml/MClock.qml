@@ -1,9 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import QtQuick.VirtualKeyboard 2.4
+import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtQuick.Dialogs 1.3
-
 import Style 1.0
 
 Rectangle
@@ -60,7 +56,7 @@ Rectangle
             y               : parent.height/2
             width           : parent.width
             height          : parent.height
-            font.pixelSize  : height*0.5
+            font.pixelSize  : height*0.45
             text            : datetime.currentDay.toString() + " " + datetime.formatted.toString().split(" ")[1]
             color           : Style.popup.borderColor
         }

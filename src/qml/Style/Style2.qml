@@ -4,8 +4,8 @@ import QtQml 2.2
 import QtQuick.Window 2.2
 
 QtObject {
-    readonly property int    dispWidth               :  800;
-    readonly property int    dispHeight              :  480;
+    readonly property int    dispWidth               :  1024;
+    readonly property int    dispHeight              :  600;
     readonly property color  dispBgColor             : "black";
 
     readonly property real opacityMin :0.5;

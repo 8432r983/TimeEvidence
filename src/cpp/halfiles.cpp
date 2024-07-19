@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QTextCodec>
 
 #include "halfiles.h"
 
@@ -28,8 +29,21 @@ QString HalFiles::getEmployeeMonth(const QString &name, const QString &date) con
     tempName          = tempName.replace(" ", "_");
     QStringList dlist = date.split(".");
 
-    str = getEmployeeFolderPath() + tempName + "\\" + tempName + "_" + dlist[2] + "_" + dlist[1] +
-          ".txt";
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForLocale(codec);
+
+    tempName.replace("\u010d", "c");
+    tempName.replace("\u0107", "c");
+    tempName.replace("\u017e", "z");
+    tempName.replace("\u0161", "s");
+    tempName.replace("\u0111", "d");
+    tempName.replace("\u010c", "C");
+    tempName.replace("\u0106", "C");
+    tempName.replace("\u017d", "Z");
+    tempName.replace("\u0160", "S");
+    tempName.replace("\u0110", "D");
+
+    str = getEmployeeFolderPath() + tempName + "\\" + tempName + "_" + dlist[2] + "_" + dlist[1] + ".txt";
 
     // qDebug() << "Employee log file" << str;
     return str;

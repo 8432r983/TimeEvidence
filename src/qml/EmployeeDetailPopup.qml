@@ -1,8 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import QtQuick.VirtualKeyboard 2.4
+import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtQuick.Dialogs 1.3
 
 import Style 1.0
 
@@ -12,12 +9,18 @@ import MonthLogger 1.0
 Popup
 {
     id                  : mainPopup
-    height              : parent.height
-    width               : parent.width
-    anchors.centerIn    : parent
-    background          : Rectangle
-    {
-        color: Style.popup.backColor
+
+    height      : Style.dispHeight;
+    width       : Style.dispWidth;
+    modal       : true; focus : true; margins : 0; padding : 0;
+    closePolicy : Popup.NoAutoClose
+    x           : parent ? ((parent.width  - width) /2) : 0
+    y           : parent ? ((parent.height - height)/2) : 0
+    z           : 1;
+    background  : Rectangle {
+        anchors.fill : parent;
+        color        : Style.popup.backColor;
+        border.width : 0;
     }
 
     property var emp;
@@ -60,39 +63,6 @@ Popup
             property string endTime         : ""
             property bool buttonsEnabled    : activity.getActivity(leftPanel.employeeName) !== ""
 
-            function intToTime(minutes)
-            {
-                let Hours = Math.floor(Math.abs(minutes)/60);
-                let Minutes = Math.abs(minutes)%60;
-
-                let HoursStr = "";
-                let MinutesStr = "";
-
-                if(Hours < 10) HoursStr = "0" + Hours.toString();
-                else HoursStr = Hours.toString();
-
-                if(Minutes < 10) MinutesStr = "0" + Minutes.toString();
-                else MinutesStr = Minutes.toString();
-
-                let res = HoursStr + ":" + MinutesStr
-
-                if(minutes < 0)
-                    res = "-" + res
-
-                return res;
-            }
-
-            function timeToInt(time)
-            {
-                let Hours = Math.floor(time.replace("-","").split(":")[0]) * 60
-                let Minutes = Math.floor(time.replace("-","").split(":")[1])
-
-                if(time[0] === "-")
-                    return -(Hours + Minutes)
-
-                return Hours + Minutes
-            }
-
             Column
             {
                 id              : buttonsColumn
@@ -112,26 +82,21 @@ Popup
                     onClicked:
                     {
                         popupLoader.source = "qrc:/qml/TravelHoursPopup.qml"
+                        popupLoader.item.axisZ = mainPopup.z + 1
                         popupLoader.loaded()
                     }
 
                     Connections
                     {
                         target: popupLoader.item
-                        function onHoursSignal(hr)
+                        function hoursSignal(hr)
                         {
                             console.log("Odrađenih putnih sati: " + hr)
                             monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
                                                  datetime.formatted.toString().split(" ")[1],
                                                  "-", "-", hr, "-", "-", "-");
                             monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
-
-                            totalSum.mainText = monthmodel.getTotalSum();
-                            differenceSum.mainText = monthmodel.getDifferenceSum();
-                            travelSum.mainText = monthmodel.getTravelSum();
-                            holidaySum.mainText = monthmodel.getHolidaySum();
-                            sickdaySum.mainText = monthmodel.getSickdaySum();
-                            vacationSum.mainText = monthmodel.getVacationSum();
+                            popupLoader.source = ""
                         }
                     }
                 }
@@ -142,6 +107,13 @@ Popup
                     buttonH                     : exitButton.buttonH
                     buttonText                  : qsTr("ZAHTJEV ZA GO")
                     textSize                    : buttonH*0.5
+
+                    onClicked:
+                    {
+                        popupLoader.source = "qrc:/qml/VacationPopup.qml"
+                        popupLoader.item.axisZ = mainPopup.z + 1
+                        popupLoader.loaded()
+                    }
                 }
                 MButton
                 {
@@ -149,7 +121,7 @@ Popup
                     buttonW                     : exitButton.buttonW
                     buttonH                     : exitButton.buttonH
                     buttonText                  : qsTr("BOLOVANJE SA DOZ")
-                    textSize                    : parent.height * 0.08
+                    textSize                    : parent.height * 0.07
                 }
                 MButton
                 {
@@ -158,7 +130,7 @@ Popup
                     buttonW                     : exitButton.buttonW
                     buttonH                     : exitButton.buttonH
                     buttonText                  : qsTr("BOLOVANJE BEZ DOZ")
-                    textSize                    : parent.height * 0.08
+                    textSize                    : parent.height * 0.07
                 }
                 MButton
                 {
@@ -297,13 +269,7 @@ Popup
 
                     onClicked:
                     {
-                        // THESE LINES ARE USED TO TOGGLE THE RANDOMNESS THAT IS INPUTED IN THE TABLE
-                        // IF DON'T WANT TO ADD RANDOM AMOUNT OF TIME TO THE INPUT THEN USE THE LINE UNDER
-                        // ELSE USE THE LINE UNDER THAT ONE TO ADD SOME RANDOM TIME TO THE INPUT
-
-                        //leftPanel.endTime = datetime.formatted.toString().split(" ")[0];
-                        leftPanel.endTime = leftPanel.intToTime(leftPanel.timeToInt(datetime.formatted.toString().split(" ")[0]) + Math.round(Math.random() * 100));
-
+                        leftPanel.endTime = datetime.formatted.toString().split(" ")[0];
                         if(activity.getActivity(leftPanel.employeeName) !== "")
                         {
                             monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
@@ -318,13 +284,6 @@ Popup
                         leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
 
                         monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
-
-                        totalSum.mainText = monthmodel.getTotalSum();
-                        differenceSum.mainText = monthmodel.getDifferenceSum();
-                        travelSum.mainText = monthmodel.getTravelSum();
-                        holidaySum.mainText = monthmodel.getHolidaySum();
-                        sickdaySum.mainText = monthmodel.getSickdaySum();
-                        vacationSum.mainText = monthmodel.getVacationSum();
                     }
                 }
             }
@@ -458,69 +417,39 @@ Popup
             }
             MText{
                 id                  : totalSum
-                mainText            : ""
+                mainText            : monthmodel.totalSum
                 textH               : parent.height
                 width               : bottomPanel.childrenWidth[1]
-
-                Component.onCompleted:
-                {
-                    mainText = monthmodel.getTotalSum()
-                }
             }
             MText{
                 id                  : differenceSum
-                mainText            : ""
+                mainText            : monthmodel.differenceSum
                 textH               : parent.height
                 width               : bottomPanel.childrenWidth[4]
-
-                Component.onCompleted:
-                {
-                    mainText = monthmodel.getDifferenceSum()
-                }
             }
             MText{
                 id                  : travelSum
-                mainText            : ""
+                mainText            : monthmodel.travelSum
                 textH               : parent.height
                 width               : bottomPanel.childrenWidth[1]
-
-                Component.onCompleted:
-                {
-                    mainText = monthmodel.getTravelSum()
-                }
             }
             MText{
                 id                  : holidaySum
-                mainText            : ""
+                mainText            : monthmodel.holidaySum
                 textH               : parent.height
                 width               : bottomPanel.childrenWidth[1]
-
-                Component.onCompleted:
-                {
-                    mainText = monthmodel.getHolidaySum()
-                }
             }
             MText{
                 id                  : sickdaySum
-                mainText            : ""
+                mainText            : monthmodel.sickdaySum
                 textH               : parent.height
                 width               : bottomPanel.childrenWidth[1]
-
-                Component.onCompleted:
-                {
-                    mainText = monthmodel.getSickdaySum()
-                }
             }
             MText{
                 id                  : vacationSum
-                mainText            : ""
+                mainText            : monthmodel.vacationSum
                 textH               : parent.height
                 width               : bottomPanel.childrenWidth[1]
-
-                Component.onCompleted:
-                {
-                    mainText = monthmodel.getVacationSum()
-                }
             }
         }
 

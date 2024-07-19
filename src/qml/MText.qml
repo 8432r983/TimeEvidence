@@ -1,12 +1,15 @@
-import QtQuick 2.12
+import QtQuick 2.9
 import Style 1.0
 
 
 Rectangle
 {
+    id: mtextRect
+
     property int textH        : 0
     property string mainText  : ""
     property bool boldEnable  : false
+    property bool selected    : false
 
     height          : textH
     color           : Style.popup.backColor
@@ -14,7 +17,7 @@ Rectangle
     Rectangle
     {
         anchors.centerIn    : parent
-        color               : Style.popup.backColor
+        color               : mtextRect.selected ? Style.popup.borderColor : Style.popup.backColor
         width               : parent.width - parent.border.width*2
         height              : parent.height - parent.border.width*2 * !parent.eraseVerticalBorder
     }
@@ -23,8 +26,8 @@ Rectangle
     {
         id                  : mtext
         anchors.centerIn    : parent
-        color               : Style.popup.borderColor
-        font.pixelSize      : parent.textH * 0.6
+        color               : mtextRect.selected ? Style.popup.backColor : Style.popup.borderColor
+        font.pixelSize      : parent.textH * 0.56
         text                : parent.mainText
         font.bold           : boldEnable
         horizontalAlignment : Text.AlignHCenter

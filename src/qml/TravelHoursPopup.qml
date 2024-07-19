@@ -1,8 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import QtQuick.VirtualKeyboard 2.4
+import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtQuick.Dialogs 1.3
 
 import Style 1.0
 
@@ -11,13 +8,13 @@ Popup
     id: travelHoursPopup
 
     property string hours: ""
+    property int axisZ: 0
 
     signal hoursSignal(string hr)
 
     width   : Style.dispWidth
     height  : Style.dispHeight
-
-    MLoader {id: popupLoader}
+    z       : axisZ
 
     background  : Rectangle {
         color           : Style.popup.backColor
@@ -76,6 +73,7 @@ Popup
         onClicked:
         {
             travelHoursPopup.hours = "";
+            hoursText.mainText = ""
             travelHoursPopup.close();
         }
     }

@@ -9,6 +9,13 @@
 class MonthModel : public QAbstractListModel {
     Q_OBJECT
 
+    Q_PROPERTY(QString totalSum READ totalSum NOTIFY totalSumChanged FINAL)
+    Q_PROPERTY(QString differenceSum READ differenceSum NOTIFY differenceSumChanged FINAL)
+    Q_PROPERTY(QString travelSum READ travelSum NOTIFY travelSumChanged FINAL)
+    Q_PROPERTY(QString holidaySum READ holidaySum NOTIFY holidaySumChanged FINAL)
+    Q_PROPERTY(QString sickdaySum READ sickdaySum NOTIFY sickdaySumChanged FINAL)
+    Q_PROPERTY(QString vacationSum READ vacationSum NOTIFY vacationSumChanged FINAL)
+
   public:
     enum EntryRoles {
         DayRole        = Qt::UserRole + 1,
@@ -32,16 +39,30 @@ class MonthModel : public QAbstractListModel {
 
     Q_INVOKABLE void loadEntries(QString date, QString Name);
 
-    Q_INVOKABLE QString getTotalSum();
-    Q_INVOKABLE QString getDifferenceSum();
-    Q_INVOKABLE QString getTravelSum();
-    Q_INVOKABLE QString getHolidaySum();
-    Q_INVOKABLE QString getSickdaySum();
-    Q_INVOKABLE QString getVacationSum();
+    QString totalSum() const;
+    QString differenceSum() const;
+    QString travelSum() const;
+    QString holidaySum() const;
+    QString sickdaySum() const;
+    QString vacationSum() const;
+
+  signals:
+    void totalSumChanged();
+    void differenceSumChanged();
+    void travelSumChanged();
+    void holidaySumChanged();
+    void sickdaySumChanged();
+    void vacationSumChanged();
 
   private:
     QVector<Entry *> m_entries;
     Entry            m_sums;
+    QString          m_totalSum;
+    QString          m_differenceSum;
+    QString          m_travelSum;
+    QString          m_holidaySum;
+    QString          m_sickdaySum;
+    QString          m_vacationSum;
 };
 
 #endif // MONTHMODEL_H

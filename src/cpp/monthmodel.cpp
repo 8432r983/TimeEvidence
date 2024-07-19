@@ -78,7 +78,7 @@ void MonthModel::loadEntries(QString date, QString Name) {
     QString  filePath = hf.getEmployeeMonth(Name, date);
 
     if(!QFile::exists(filePath)) {
-        qDebug() << "file doesnt exist";
+        qDebug() << "file doesnt exist: " << filePath;
         return;
     }
 
@@ -150,30 +150,44 @@ void MonthModel::loadEntries(QString date, QString Name) {
         m_entries.append(ent);
     }
 
+    m_totalSum      = m_sums.total;
+    m_differenceSum = m_sums.difference;
+    m_travelSum     = m_sums.travel;
+    m_holidaySum    = m_sums.holiday;
+    m_sickdaySum    = m_sums.sickday;
+    m_vacationSum   = m_sums.vacation;
+
+    emit totalSumChanged();
+    emit differenceSumChanged();
+    emit travelSumChanged();
+    emit holidaySumChanged();
+    emit sickdaySumChanged();
+    emit vacationSumChanged();
+
     std::reverse(m_entries.begin(), m_entries.end());
     endResetModel();
 }
 
-QString MonthModel::getTotalSum() {
-    return m_sums.total;
+QString MonthModel::totalSum() const {
+    return m_totalSum;
 }
 
-QString MonthModel::getDifferenceSum() {
-    return m_sums.difference;
+QString MonthModel::differenceSum() const {
+    return m_differenceSum;
 }
 
-QString MonthModel::getTravelSum() {
-    return m_sums.travel;
+QString MonthModel::travelSum() const {
+    return m_travelSum;
 }
 
-QString MonthModel::getHolidaySum() {
-    return m_sums.holiday;
+QString MonthModel::holidaySum() const {
+    return m_holidaySum;
 }
 
-QString MonthModel::getSickdaySum() {
-    return m_sums.sickday;
+QString MonthModel::sickdaySum() const {
+    return m_sickdaySum;
 }
 
-QString MonthModel::getVacationSum() {
-    return m_sums.vacation;
+QString MonthModel::vacationSum() const {
+    return m_vacationSum;
 }

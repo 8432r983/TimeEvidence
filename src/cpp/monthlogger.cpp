@@ -9,15 +9,13 @@ MonthLogger::MonthLogger(QObject *parent)
     : QObject{parent} {
 }
 
-void MonthLogger::addEntry(QString Name, QString Day, QString Date, QString clockIn,
-                           QString clockOut, QString travel, QString holiday, QString sickday,
-                           QString vacation) {
+void MonthLogger::addEntry(QString Name, QString Day, QString Date, QString clockIn, QString clockOut, QString travel,
+                           QString holiday, QString sickday, QString vacation) {
     HalFiles hf;
     QString  filePath = hf.getEmployeeMonth(Name, Date);
 
     if(!QFile::exists(filePath)) {
-        qDebug() << "file doesnt exist";
-        return;
+        qDebug() << "file doesnt exist: " << filePath;
     }
 
     QFile file(filePath);
@@ -43,7 +41,6 @@ void MonthLogger::addEntry(QString Name, QString Day, QString Date, QString cloc
     ent.setTotal();
     ent.setDifference();
 
-    in << Day + "; " << Date.split(".")[0] + "; " << clockIn + "; " << clockOut + "; "
-       << ent.total + "; " << ent.difference + "; " << travel + "; " << holiday + "; "
-       << sickday + "; " << vacation << '\n';
+    in << Day + "; " << Date.split(".")[0] + "; " << clockIn + "; " << clockOut + "; " << ent.total + "; "
+       << ent.difference + "; " << travel + "; " << holiday + "; " << sickday + "; " << vacation << '\n';
 }

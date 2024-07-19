@@ -12,5 +12,11 @@
         <file>qml/MText.qml</file>
         <file>qml/TravelHoursPopup.qml</file>
         <file>qml/MLoader.qml</file>
+        <file>qml/Style/Style2.qml</file>
+        <file>qml/Style/Style3.qml</file>
+        <file>qml/Style/Style4.qml</file>
+        <file>qml/Style/Style5.qml</file>
+        <file>qml/Style/Style6.qml</file>
+        <file>qml/VacationPopup.qml</file>
     </qresource>
 </RCC>
