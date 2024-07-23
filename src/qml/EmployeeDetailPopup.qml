@@ -6,9 +6,12 @@ import Style 1.0
 import MonthModel 1.0
 import MonthLogger 1.0
 
+import VacationLogger 1.0
+import SickdayLogger 1.0
+
 Popup
 {
-    id                  : mainPopup
+    id          : mainPopup
 
     height      : Style.dispHeight;
     width       : Style.dispWidth;
@@ -38,8 +41,13 @@ Popup
     }
 
     MonthLogger { id: monthlogger }
+    VacationLogger { id: vacationLogger }
+    SickdayLogger {id: sickdayLogger}
 
-    MLoader {id:popupLoader}
+    MLoader {id:travelPopupLoader}
+    MLoader {id:vacationPopupLoader}
+    MLoader {id:validSickdayLoader}
+    MLoader {id:invalidSickdayLoader}
 
     Rectangle
     {
@@ -62,86 +70,6 @@ Popup
             property string startTime       : ""
             property string endTime         : ""
             property bool buttonsEnabled    : activity.getActivity(leftPanel.employeeName) !== ""
-
-            Column
-            {
-                id              : buttonsColumn
-                spacing         : 10
-                width           : parent.width * 0.5
-                height          : parent.height
-                anchors.left    : parent.left
-
-                MButton
-                {
-                    id                          : travelButton
-                    buttonW                     : exitButton.buttonW
-                    buttonH                     : exitButton.buttonH
-                    buttonText                  : qsTr("SATI PUTA")
-                    textSize                    : buttonH*0.5
-
-                    onClicked:
-                    {
-                        popupLoader.source = "qrc:/qml/TravelHoursPopup.qml"
-                        popupLoader.item.axisZ = mainPopup.z + 1
-                        popupLoader.loaded()
-                    }
-
-                    Connections
-                    {
-                        target: popupLoader.item
-                        function hoursSignal(hr)
-                        {
-                            console.log("Odrađenih putnih sati: " + hr)
-                            monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
-                                                 datetime.formatted.toString().split(" ")[1],
-                                                 "-", "-", hr, "-", "-", "-");
-                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
-                            popupLoader.source = ""
-                        }
-                    }
-                }
-                MButton
-                {
-                    id                          : vacationButton
-                    buttonW                     : exitButton.buttonW
-                    buttonH                     : exitButton.buttonH
-                    buttonText                  : qsTr("ZAHTJEV ZA GO")
-                    textSize                    : buttonH*0.5
-
-                    onClicked:
-                    {
-                        popupLoader.source = "qrc:/qml/VacationPopup.qml"
-                        popupLoader.item.axisZ = mainPopup.z + 1
-                        popupLoader.loaded()
-                    }
-                }
-                MButton
-                {
-                    id                          : sickDayButton1
-                    buttonW                     : exitButton.buttonW
-                    buttonH                     : exitButton.buttonH
-                    buttonText                  : qsTr("BOLOVANJE SA DOZ")
-                    textSize                    : parent.height * 0.07
-                }
-                MButton
-                {
-
-                    id                          : sickDayButton2
-                    buttonW                     : exitButton.buttonW
-                    buttonH                     : exitButton.buttonH
-                    buttonText                  : qsTr("BOLOVANJE BEZ DOZ")
-                    textSize                    : parent.height * 0.07
-                }
-                MButton
-                {
-                    id                          : exitButton
-                    buttonW                     : parent.width
-                    buttonH                     : parent.height * 0.17
-                    buttonText                  : "\u2B8C"
-                    textSize                    : parent.height * 0.15
-                    onClicked                   : mainPopup.close();
-                }
-            }
 
             Column
             {
@@ -170,6 +98,149 @@ Popup
                     textH               : parent.height * 0.17
                 }
             }
+
+            Column
+            {
+                id                  : buttonsColumn
+                spacing             : 10
+                width               : parent.width * 0.5
+                height              : parent.height
+                anchors.left        : parent.left
+                anchors.top         : parent.top
+                anchors.leftMargin  : 10
+                anchors.topMargin   : 10
+
+                MButton
+                {
+                    id                          : travelButton
+                    buttonW                     : exitButton.buttonW
+                    buttonH                     : exitButton.buttonH
+                    buttonText                  : qsTr("SATI PUTA")
+                    textSize                    : buttonH*0.5
+
+                    onClicked:
+                    {
+                        travelPopupLoader.source = "qrc:/qml/TravelHoursPopup.qml"
+                        travelPopupLoader.item.axisZ = mainPopup.z + 1
+                        travelPopupLoader.loaded()
+                    }
+
+                    Connections
+                    {
+                        target: travelPopupLoader.item
+                        function onHoursSignal(hr)
+                        {
+                            //console.log("Odrađenih putnih sati: " + hr)
+                            monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
+                                                 datetime.formatted.toString().split(" ")[1],
+                                                 "-", "-", hr, "-", "-", "-", "-");
+                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+                            travelPopupLoader.source = ""
+                        }
+                    }
+                }
+                MButton
+                {
+                    id                          : vacationButton
+                    buttonW                     : exitButton.buttonW
+                    buttonH                     : exitButton.buttonH
+                    buttonText                  : qsTr("ZAHTJEV ZA GO")
+                    textSize                    : buttonH*0.5
+
+                    onClicked:
+                    {
+                        vacationPopupLoader.source = "qrc:/qml/CalendarPopup.qml"
+                        vacationPopupLoader.item.axisZ = mainPopup.z + 1
+                        vacationPopupLoader.item.popupTitle = "Godišnji odmor"
+
+                        vacationPopupLoader.item.lowerBound = dateranges.lowerVacationBound;
+                        vacationPopupLoader.item.upperBound = dateranges.upperVacationBound;
+
+                        vacationPopupLoader.loaded()
+                    }
+
+                    Connections
+                    {
+                        target: vacationPopupLoader.item
+                        function onDateSignal(dates)
+                        {
+                            //console.log(dates.startDate, dates.endDate);
+                            vacationLogger.addVacation(leftPanel.employeeName, dates.startDate, dates.endDate);
+                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+                        }
+                    }
+                }
+                MButton
+                {
+                    id                          : sickDayButton1
+                    buttonW                     : exitButton.buttonW
+                    buttonH                     : exitButton.buttonH
+                    buttonText                  : qsTr("BOLOVANJE SA DOZ")
+                    textSize                    : parent.height * 0.07
+
+                    onClicked:
+                    {
+                        validSickdayLoader.source = "qrc:/qml/CalendarPopup.qml"
+                        validSickdayLoader.item.axisZ = mainPopup.z + 1
+                        validSickdayLoader.item.popupTitle = "Bolovanje sa dozvolom"
+
+                        validSickdayLoader.item.lowerBound = dateranges.lowerValidSickdayBound;
+                        validSickdayLoader.item.upperBound = dateranges.upperValidSickdayBound
+
+                        validSickdayLoader.loaded()
+                    }
+
+                    Connections
+                    {
+                        target: validSickdayLoader.item
+                        function onDateSignal(dates)
+                        {
+                            sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Ne");
+                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+                        }
+                    }
+                }
+                MButton
+                {
+
+                    id                          : sickDayButton2
+                    buttonW                     : exitButton.buttonW
+                    buttonH                     : exitButton.buttonH
+                    buttonText                  : qsTr("BOLOVANJE BEZ DOZ")
+                    textSize                    : parent.height * 0.07
+
+                    onClicked:
+                    {
+                        invalidSickdayLoader.source = "qrc:/qml/CalendarPopup.qml";
+                        invalidSickdayLoader.item.axisZ = mainPopup.z + 1;
+                        invalidSickdayLoader.item.popupTitle = "Bolovanje bez dozvole";
+
+                        invalidSickdayLoader.item.lowerBound = dateranges.lowerInvalidSickdayBound;
+                        invalidSickdayLoader.item.upperBound = dateranges.upperInvalidSickdayBound;
+
+                        invalidSickdayLoader.loaded()
+                    }
+
+                    Connections
+                    {
+                        target: invalidSickdayLoader.item
+                        function onDateSignal(dates)
+                        {
+                            sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Da");
+                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+                        }
+                    }
+                }
+                MButton
+                {
+                    id                          : exitButton
+                    buttonW                     : parent.width
+                    buttonH                     : parent.height * 0.17
+                    buttonText                  : "\u2B8C"
+                    textSize                    : parent.height * 0.15
+                    onClicked                   : mainPopup.close();
+                }
+            }
         }
 
         Rectangle
@@ -191,6 +262,7 @@ Popup
                 height                  : parent.height * 0.15
                 color                   : Style.popup.backColor
                 border.color            : Style.popup.borderColor
+                radius                  : Style.popup.borderRadius
 
                 Text
                 {
@@ -275,7 +347,7 @@ Popup
                             monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
                                                  datetime.formatted.toString().split(" ")[1],
                                                  activity.getActivity(leftPanel.employeeName),
-                                                 leftPanel.endTime, "-", "-", "-", "-");
+                                                 leftPanel.endTime, "-", "-", "-", "-","-");
 
 
                             activity.setActivity(leftPanel.employeeName, "");

@@ -14,6 +14,7 @@ Entry::Entry(QObject *parent)
     , vacation("-")
     , holiday("-")
     , sickday("-")
+    , sickdayValidity("-")
     , daychanged(false) {
 }
 

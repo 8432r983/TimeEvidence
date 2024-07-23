@@ -56,8 +56,8 @@ Rectangle
             y               : parent.height/2
             width           : parent.width
             height          : parent.height
-            font.pixelSize  : height*0.45
-            text            : datetime.currentDay.toString() + " " + datetime.formatted.toString().split(" ")[1]
+            font.pixelSize  : height*0.5
+            text            : datetime.currentDay.toString() + ", " + datetime.formatted.toString().split(" ")[1]
             color           : Style.popup.borderColor
         }
     }

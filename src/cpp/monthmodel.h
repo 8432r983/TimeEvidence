@@ -3,6 +3,7 @@
 
 #include "entry.h"
 #include <QAbstractListModel>
+#include <QHash>
 #include <QObject>
 #include <QString>
 
@@ -18,17 +19,18 @@ class MonthModel : public QAbstractListModel {
 
   public:
     enum EntryRoles {
-        DayRole        = Qt::UserRole + 1,
-        DateRole       = Qt::UserRole + 2,
-        ClockInRole    = Qt::UserRole + 3,
-        ClockOutRole   = Qt::UserRole + 4,
-        TotalRole      = Qt::UserRole + 5,
-        TravelRole     = Qt::UserRole + 6,
-        DifferenceRole = Qt::UserRole + 7,
-        HolidayRole    = Qt::UserRole + 8,
-        SickdayRole    = Qt::UserRole + 9,
-        VacationRole   = Qt::UserRole + 10,
-        DayChangedRole = Qt::UserRole + 11
+        DayRole             = Qt::UserRole + 1,
+        DateRole            = Qt::UserRole + 2,
+        ClockInRole         = Qt::UserRole + 3,
+        ClockOutRole        = Qt::UserRole + 4,
+        TotalRole           = Qt::UserRole + 5,
+        TravelRole          = Qt::UserRole + 6,
+        DifferenceRole      = Qt::UserRole + 7,
+        HolidayRole         = Qt::UserRole + 8,
+        SickdayRole         = Qt::UserRole + 9,
+        VacationRole        = Qt::UserRole + 10,
+        SickdayValidityRole = Qt::UserRole + 11,
+        DayChangedRole      = Qt::UserRole + 12
     };
 
     explicit MonthModel(QObject *parent = nullptr);
@@ -38,6 +40,7 @@ class MonthModel : public QAbstractListModel {
     QVariant                       data(const QModelIndex &index, int role) const override;
 
     Q_INVOKABLE void loadEntries(QString date, QString Name);
+    void             loadVacation(QString Name);
 
     QString totalSum() const;
     QString differenceSum() const;
@@ -57,6 +60,7 @@ class MonthModel : public QAbstractListModel {
   private:
     QVector<Entry *> m_entries;
     Entry            m_sums;
+    QVector<QString> m_vacation;
     QString          m_totalSum;
     QString          m_differenceSum;
     QString          m_travelSum;

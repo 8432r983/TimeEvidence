@@ -32,6 +32,7 @@ class Entry : public QObject {
     QString vacation;
     QString holiday;
     QString sickday;
+    QString sickdayValidity;
     bool    daychanged;
 };
 

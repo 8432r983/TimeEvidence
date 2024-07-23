@@ -9,9 +9,8 @@ class MonthLogger : public QObject {
   public:
     explicit MonthLogger(QObject *parent = nullptr);
 
-    Q_INVOKABLE void addEntry(QString Name, QString Day, QString Date, QString clockIn,
-                              QString clockOut, QString travel, QString holiday, QString sickday,
-                              QString vacation);
+    Q_INVOKABLE void addEntry(QString Name, QString Day, QString Date, QString clockIn, QString clockOut, QString travel,
+                              QString holiday, QString sickday, QString vacation, QString sickdayValidity);
 
   signals:
 };

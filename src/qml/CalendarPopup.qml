@@ -7,13 +7,17 @@ import Style 1.0
 
 Popup
 {
-    property int axisZ: 0
+    id: calendarPopup
 
-    id  : vacationPopup
-    z   : axisZ
+    property int axisZ          : 0
+    property string popupTitle  : "Title"
 
-    signal datesSignal(string dates)
+    property date lowerBound: new Date()
+    property date upperBound: new Date()
 
+    signal dateSignal(var dates);
+
+    z       : axisZ
     width   : Style.dispWidth
     height  : Style.dispHeight
 
@@ -22,35 +26,72 @@ Popup
     }
 
     function convert(date) {
-        if(date === undefined){return ""}
+        if(date === undefined){return "-"}
         return date.getDate() + "." + (date.getMonth()+1).toString() + "." + date.getFullYear()
     }
 
     Rectangle
     {
-        id                          : datePanel
-        height                      : parent.height * 0.2
+        id                          : titleBox
+        height                      : parent.height * 0.1
         width                       : parent.width
-        anchors.top                 : parent.top
         anchors.horizontalCenter    : parent.horizontalCenter
+        color                       : Style.popup.backColor
+        border.color                : Style.popup.borderColor
+
+        MText
+        {
+            width                   : parent.width * 0.5
+            anchors.verticalCenter  : parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            mainText                : calendarPopup.popupTitle
+            height                  : parent.height - Style.popup.borderWidth*2
+            textH                   : parent.height
+        }
+    }
+
+    Rectangle
+    {
+        id                          : datePanel
+        height                      : parent.height * 0.1
+        width                       : parent.width
+        anchors.horizontalCenter    : parent.horizontalCenter
+        anchors.top                 : titleBox.bottom
         color                       : Style.popup.backColor
 
         MText
         {
-            id          : startVacation
-            width       : parent.width * 0.5
-            anchors.left: parent.left
-            mainText    : "Od: " + convert(datePicker.startDate)
-            textH       : parent.height * 0.6
+            id                      : startVacation
+            width                   : parent.width * 0.5
+            anchors.verticalCenter  : parent.verticalCenter
+            anchors.left            : parent.left
+            mainText                : "Od: " + calendarPopup.convert(datePicker.startDate)
+            textH                   : parent.height
         }
 
         MText
         {
-            id              : endVacation
-            anchors.right   : parent.right
-            width           : parent.width - startVacation.width
-            mainText        : "Do: " + convert(datePicker.endDate)
-            textH           : parent.height * 0.6
+            id                      : endVacation
+            width                   : parent.width - startVacation.width
+            anchors.verticalCenter  : parent.verticalCenter
+            anchors.right           : parent.right
+            mainText                : "Do: " + calendarPopup.convert(datePicker.endDate)
+            textH                   : parent.height
+        }
+    }
+
+    MText{
+        id          : difference
+        width       : parent.width
+        height      : parent.height * 0.1
+        anchors.top : datePanel.bottom
+        textH       : height * 0.6
+
+        mainText: {
+            if(datePicker.startDate === undefined || datePicker.endDate === undefined){
+                return calendarPopup.popupTitle + " dani: -"
+            }
+            return calendarPopup.popupTitle + " dani: " + dateranges.dateDist(datePicker.startDate, datePicker.endDate);
         }
     }
 
@@ -58,15 +99,16 @@ Popup
     {
         id                          : datePicker
         width                       : parent.width
-        height                      : parent.height - buttonPanel.height - datePanel.height
+        height                      : parent.height - buttonPanel.height - datePanel.height - titleBox.height - difference.height
         anchors.horizontalCenter    : parent.horizontalCenter
-        anchors.top                 : datePanel.bottom
+        anchors.top                 : difference.bottom
         locale                      : Qt.locale("hr_HR");
 
         property var startDate   : undefined
         property var endDate     : undefined
 
-        property color todayColor: "red"
+        property color todayColor   : "red"
+        property color holidayColor : "blue"
 
         function checkDate(dateA, dateB)
         {
@@ -79,11 +121,11 @@ Popup
 
         function calcColor(baseColor, highlightColor, styleData)
         {
-            if(!styleData.visibleMonth)
+            if(styleData.date < datePicker.minimumDate || styleData.date > datePicker.maximumDate)
             {
                 return Style.popup.backColor
             }
-            else if(styleData.visibleMonth){
+            else if((styleData.date > datePicker.minimumDate && styleData.date < datePicker.maximumDate)){
                 if(datePicker.startDate != undefined &&
                 datePicker.checkDate(datePicker.startDate,styleData.date))
                 {
@@ -111,6 +153,57 @@ Popup
         {
             gridVisible : false
 
+            navigationBar: Rectangle{
+                height : datePicker.height * 0.15
+                color  : Style.popup.backColor
+
+                MButton
+                {
+                    id                      : previousMonthButton
+                    anchors.left            : parent.left
+                    anchors.leftMargin      : 10
+                    anchors.verticalCenter  : parent.verticalCenter
+                    buttonH                 : parent.height - Style.popup.borderWidth * 4
+                    buttonW                 : buttonH + Style.popup.borderWidth
+                    buttonText              : "\u2B9C"
+                    textSize                : buttonH * 0.6
+                    onClicked               : control.showPreviousMonth()
+                }
+
+                MText
+                {
+                    anchors.horizontalCenter    : parent.horizontalCenter
+                    anchors.verticalCenter      : parent.verticalCenter
+                    mainText                    : styleData.title
+                    textH                       : parent.height
+                }
+
+                MButton
+                {
+                    id                      : nextMonthButton
+                    anchors.right           : parent.right
+                    anchors.rightMargin     : 10
+                    anchors.verticalCenter  : parent.verticalCenter
+                    buttonH                 : parent.height - Style.popup.borderWidth * 4
+                    buttonW                 : buttonH + Style.popup.borderWidth
+                    buttonText              : "\u2B9E"
+                    textSize                : buttonH * 0.6
+                    onClicked               : control.showNextMonth()
+                }
+            }
+
+            dayOfWeekDelegate: Rectangle
+            {
+                height : datePicker.height * 0.15
+                MText
+                {
+                    anchors.fill        : parent
+                    anchors.centerIn    : parent
+                    mainText            : control.locale.dayName(styleData.dayOfWeek, control.dayOfWeekFormat)
+                    textH               : parent.height * 0.8
+                }
+            }
+
             dayDelegate: Rectangle {
 
                 color: datePicker.calcColor(Style.popup.backColor, Style.popup.borderColor, styleData)
@@ -123,6 +216,11 @@ Popup
 
                     onClicked:
                     {
+                        if(styleData.date < datePicker.minimumDate || styleData.date > datePicker.maximumDate)
+                        {
+                            return;
+                        }
+
                         if(datePicker.startDate == undefined && datePicker.endDate == undefined){
                             datePicker.startDate = styleData.date
                         }
@@ -156,6 +254,10 @@ Popup
                         {
                             return datePicker.todayColor
                         }
+                        else if(holidaycheck.holidayCheck(styleData.date))
+                        {
+                            return datePicker.holidayColor
+                        }
                         return datePicker.calcColor(Style.popup.borderColor, Style.popup.backColor, styleData)
                     }
                 }
@@ -165,14 +267,14 @@ Popup
         visibleMonth: new Date().getMonth()
         visibleYear : new Date().getFullYear()
 
-        minimumDate: dateranges.lowerVacationBound
-        maximumDate: dateranges.upperVacationBound
+        minimumDate: calendarPopup.lowerBound
+        maximumDate: calendarPopup.upperBound
     }
 
     Rectangle{
 
         id              : buttonPanel
-        height          : parent.height * 0.2
+        height          : parent.height * 0.1
         width           : parent.width
         anchors.bottom  : parent.bottom
         color           : Style.popup.backColor
@@ -180,30 +282,40 @@ Popup
         MButton
         {
             id                          : escapeButton
-            buttonW                     : parent.width * 0.5
-            buttonH                     : parent.height
+            buttonW                     : parent.width * 0.5 - Style.popup.borderWidth*8
+            buttonH                     : parent.height - Style.popup.borderWidth*4
             buttonText                  : "\u2B8C"
             textSize                    : buttonH * 0.7
             anchors.left                : parent.left
+            anchors.leftMargin          : Style.popup.borderWidth*2
             anchors.verticalCenter      : parent.verticalCenter
 
             onClicked:
             {
-                datePicker.startDate = undefined
-                datePicker.endDate = undefined
-                vacationPopup.close()
+                datePicker.startDate = undefined;
+                datePicker.endDate = undefined;
+                calendarPopup.close()
             }
         }
 
         MButton
         {
             id                          : confirmButton
-            buttonW                     : parent.width - escapeButton.width
-            buttonH                     : parent.height
+            buttonW                     : parent.width - escapeButton.width - Style.popup.borderWidth*8
+            buttonH                     : parent.height - Style.popup.borderWidth*4
             buttonText                  : "\u2713"
             textSize                    : buttonH * 0.6
             anchors.right               : parent.right
+            anchors.rightMargin         : Style.popup.borderWidth*2
             anchors.verticalCenter      : parent.verticalCenter
+
+            onClicked:
+            {
+                calendarPopup.dateSignal({startDate: datePicker.startDate, endDate: datePicker.endDate});
+                datePicker.startDate = undefined;
+                datePicker.endDate = undefined;
+                calendarPopup.close();
+            }
         }
     }
 }

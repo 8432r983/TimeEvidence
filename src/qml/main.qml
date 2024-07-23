@@ -98,7 +98,11 @@ Window {
             buttonText                  : "\u27F3"
             textSize                    : buttonH
             anchors.topMargin           : 5
-            onClicked                   : empmodel.readEmployees();
+            onClicked                   :
+            {
+                empmodel.readEmployees();
+                holidaycheck.loadHolidays();
+            }
         }
     }
 
@@ -186,12 +190,12 @@ Window {
                 else if(emp.password === "")
                 {
                     popupLoader.source = "ErrorPopup.qml";
-                    popupLoader.item.message = "Niste odabrali ime. Pokušajte ponovo."
+                    popupLoader.item.message = "Niste odabrali ime.<br>Pokušajte ponovo."
                     popupLoader.loaded()
                 }
                 else {
                     popupLoader.source = "ErrorPopup.qml";
-                    popupLoader.item.message = "Kriva lozinka. Pokušajte ponovo."
+                    popupLoader.item.message = "Kriva lozinka.<br>Pokušajte ponovo."
                     popupLoader.loaded()
                 }
             }

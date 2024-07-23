@@ -10,7 +10,9 @@ SOURCES += \
   $$PWD/cpp/holidaychecker.cpp \
   $$PWD/cpp/main.cpp \
   $$PWD/cpp/monthlogger.cpp \
-  $$PWD/cpp/monthmodel.cpp
+  $$PWD/cpp/monthmodel.cpp \
+  $$PWD/cpp/sickdaylogger.cpp \
+  $$PWD/cpp/vacationlogger.cpp
 
 
 HEADERS += \
@@ -24,5 +26,7 @@ HEADERS += \
   $$PWD/cpp/datetime.h \
   $$PWD/cpp/holidaychecker.h \
   $$PWD/cpp/monthlogger.h \
-  $$PWD/cpp/monthmodel.h
+  $$PWD/cpp/monthmodel.h \
+  $$PWD/cpp/sickdaylogger.h \
+  $$PWD/cpp/vacationlogger.h
 

@@ -57,25 +57,25 @@ void DateTime::setCurrentDay() {
 
     switch(day) {
     case 1:
-        weekDay = "ponedeljak";
+        weekDay = "pon";
         break;
     case 2:
-        weekDay = "utorak";
+        weekDay = "uto";
         break;
     case 3:
-        weekDay = "srijeda";
+        weekDay = "sri";
         break;
     case 4:
-        weekDay = "četvrtak";
+        weekDay = "čet";
         break;
     case 5:
-        weekDay = "petak";
+        weekDay = "pet";
         break;
     case 6:
-        weekDay = "subota";
+        weekDay = "sub";
         break;
     case 7:
-        weekDay = "nedelja";
+        weekDay = "ned";
         break;
     }
     m_currentDay = weekDay;

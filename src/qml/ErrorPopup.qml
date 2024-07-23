@@ -31,10 +31,11 @@ Popup
         }
         anchors.centerIn : parent;
         Text  {
-            anchors.centerIn    : parent
+            anchors.centerIn: parent
             font.pixelSize      : parent.height * 0.1
             text                : message
             color               : Style.popup.borderColor
+            horizontalAlignment : Text.AlignHCenter
         }
     }
 

@@ -1,6 +1,6 @@
 #include "holidaychecker.h"
 #include "halfiles.h"
-#include <QDateTime>
+#include <QDate>
 #include <QDebug>
 #include <QFile>
 #include <QString>
@@ -11,18 +11,17 @@ HolidayChecker::HolidayChecker(QObject *parent)
 }
 
 QString HolidayChecker::holiday() {
-    QDateTime curr     = QDateTime::currentDateTime();
-    QString   formated = curr.toString("dd.MM");
+    QDate today = QDate::currentDate();
 
-    if(holidayCheck(formated)) {
+    if(holidayCheck(today)) {
         return "Praz.";
     }
 
     return "";
 }
 
-bool HolidayChecker::holidayCheck(QString date) {
-    if(m_holidays.contains(date))
+bool HolidayChecker::holidayCheck(QDate date) {
+    if(m_holidays.contains(date.toString("dd.MM")))
         return true;
     return false;
 }
@@ -38,6 +37,8 @@ void HolidayChecker::loadHolidays() {
     }
 
     QFile file(filePath);
+
+    m_holidays.clear();
 
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         while(!file.atEnd()) {

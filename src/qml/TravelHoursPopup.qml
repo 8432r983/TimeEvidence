@@ -24,11 +24,21 @@ Popup
     {
         id                        : hoursText
         width                     : keyboard.width * 0.9
-        textH                     : parent.height * 0.2
+        textH                     : parent.height * 0.20
         border.color              : Style.popup.backColor
         border.width              : Style.popup.borderWidth
         anchors.bottom            : keyboard.top
         anchors.bottomMargin      : textH * 0.1
+        anchors.horizontalCenter  : keyboard.horizontalCenter
+    }
+
+    MText
+    {
+        id                        : titleText
+        mainText                  : "Putni sat"
+        width                     : keyboard.width * 0.9
+        textH                     : parent.height * 0.15
+        anchors.bottom            : hoursText.top
         anchors.horizontalCenter  : keyboard.horizontalCenter
     }
 
@@ -37,8 +47,8 @@ Popup
         id: keyboard
 
         width               : parent.width
-        height              : parent.height * 0.55 //- hoursText.height - escapeButton.height - Style.popup.borderWidth*4
-        anchors.bottom      : parent.bottom
+        height              : parent.height * 0.55
+        anchors.bottom      : escapeButton.top
         anchors.bottomMargin: 20
         buttonWidth         : keyboard.width * 0.225
         buttonHeight        : keyboard.height * 0.19
@@ -63,11 +73,11 @@ Popup
     MButton
     {
         id                          : escapeButton
-        buttonW                     : keyboard.width * 0.9
-        buttonH                     : parent.height * 0.2
+        buttonW                     : keyboard.width * 0.95
+        buttonH                     : parent.height * 0.1
         buttonText                  : "\u2B8C"
         textSize                    : buttonH * 0.7
-        anchors.bottom              : hoursText.top
+        anchors.bottom              : parent.bottom
         anchors.horizontalCenter    : parent.horizontalCenter
 
         onClicked:

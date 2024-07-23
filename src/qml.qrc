@@ -17,6 +17,6 @@
         <file>qml/Style/Style4.qml</file>
         <file>qml/Style/Style5.qml</file>
         <file>qml/Style/Style6.qml</file>
-        <file>qml/VacationPopup.qml</file>
+        <file>qml/CalendarPopup.qml</file>
     </qresource>
 </RCC>

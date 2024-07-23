@@ -10,7 +10,7 @@ MonthLogger::MonthLogger(QObject *parent)
 }
 
 void MonthLogger::addEntry(QString Name, QString Day, QString Date, QString clockIn, QString clockOut, QString travel,
-                           QString holiday, QString sickday, QString vacation) {
+                           QString holiday, QString sickday, QString vacation, QString sickdayValidity) {
     HalFiles hf;
     QString  filePath = hf.getEmployeeMonth(Name, Date);
 
@@ -42,5 +42,6 @@ void MonthLogger::addEntry(QString Name, QString Day, QString Date, QString cloc
     ent.setDifference();
 
     in << Day + "; " << Date.split(".")[0] + "; " << clockIn + "; " << clockOut + "; " << ent.total + "; "
-       << ent.difference + "; " << travel + "; " << holiday + "; " << sickday + "; " << vacation << '\n';
+       << ent.difference + "; " << travel + "; " << holiday + "; " << sickday + "; " << vacation + "; " << sickdayValidity
+       << '\n';
 }

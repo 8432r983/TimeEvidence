@@ -23,6 +23,16 @@ QString HalFiles::getEmployeeFolderPath() const {
     return cPathData + cLogFolder;
 }
 
+QString HalFiles::getEmployeeVacationPath(QString Name) const {
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForLocale(codec);
+
+    QString newName = cleanString(Name);
+
+    QString fileName = newName.replace(" ", "_") + "_" + "Godisnji.txt";
+    return getEmployeeFolderPath() + newName.replace(" ", "_") + "\\" + fileName;
+}
+
 QString HalFiles::getEmployeeMonth(const QString &name, const QString &date) const {
     QString str("");
     QString tempName  = name;
@@ -32,19 +42,27 @@ QString HalFiles::getEmployeeMonth(const QString &name, const QString &date) con
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);
 
-    tempName.replace("\u010d", "c");
-    tempName.replace("\u0107", "c");
-    tempName.replace("\u017e", "z");
-    tempName.replace("\u0161", "s");
-    tempName.replace("\u0111", "d");
-    tempName.replace("\u010c", "C");
-    tempName.replace("\u0106", "C");
-    tempName.replace("\u017d", "Z");
-    tempName.replace("\u0160", "S");
-    tempName.replace("\u0110", "D");
+    QString newtempName = cleanString(tempName);
 
-    str = getEmployeeFolderPath() + tempName + "\\" + tempName + "_" + dlist[2] + "_" + dlist[1] + ".txt";
+    str = getEmployeeFolderPath() + newtempName + "\\" + newtempName + "_" + dlist[2] + "_" + dlist[1] + ".txt";
 
     // qDebug() << "Employee log file" << str;
+    return str;
+}
+
+QString HalFiles::cleanString(QString str) const {
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForLocale(codec);
+
+    str.replace("\u010d", "c");
+    str.replace("\u0107", "c");
+    str.replace("\u017e", "z");
+    str.replace("\u0161", "s");
+    str.replace("\u0111", "d");
+    str.replace("\u010c", "C");
+    str.replace("\u0106", "C");
+    str.replace("\u017d", "Z");
+    str.replace("\u0160", "S");
+    str.replace("\u0110", "D");
     return str;
 }

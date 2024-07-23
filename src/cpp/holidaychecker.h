@@ -1,6 +1,7 @@
 #ifndef HOLIDAYCHECKER_H
 #define HOLIDAYCHECKER_H
 
+#include <QDate>
 #include <QHash>
 #include <QObject>
 #include <QString>
@@ -12,8 +13,8 @@ class HolidayChecker : public QObject {
 
     Q_INVOKABLE QString holiday();
 
-    bool holidayCheck(QString date);
-    void loadHolidays();
+    Q_INVOKABLE bool holidayCheck(QDate date);
+    Q_INVOKABLE void loadHolidays();
 
   private:
     QHash<QString, bool> m_holidays;
