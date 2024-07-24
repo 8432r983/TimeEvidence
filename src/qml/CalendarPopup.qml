@@ -37,7 +37,6 @@ Popup
         width                       : parent.width
         anchors.horizontalCenter    : parent.horizontalCenter
         color                       : Style.popup.backColor
-        border.color                : Style.popup.borderColor
 
         MText
         {
@@ -102,13 +101,26 @@ Popup
         height                      : parent.height - buttonPanel.height - datePanel.height - titleBox.height - difference.height
         anchors.horizontalCenter    : parent.horizontalCenter
         anchors.top                 : difference.bottom
-        locale                      : Qt.locale("hr_HR");
+        //locale                      : Qt.locale("hr_HR");
 
         property var startDate   : undefined
         property var endDate     : undefined
 
         property color todayColor   : "red"
         property color holidayColor : "blue"
+
+        property var monthMap: {"January":"Siječanj",
+            "February":"Veljača",
+            "March":"Ožujak",
+           "April":"Travanj",
+            "May":"Svibanj",
+            "June":"Lipanj",
+            "July":"Srpanj",
+            "August":"Kolovoz",
+            "September":"Rujan",
+            "October":"Listopad",
+            "November":"Studenti",
+            "December":"Prosinac"}
 
         function checkDate(dateA, dateB)
         {
@@ -174,7 +186,7 @@ Popup
                 {
                     anchors.horizontalCenter    : parent.horizontalCenter
                     anchors.verticalCenter      : parent.verticalCenter
-                    mainText                    : styleData.title
+                    mainText                    : datePicker.monthMap[styleData.title.split(" ")[0]] + " " + styleData.title.split(" ")[1]
                     textH                       : parent.height
                 }
 
@@ -195,17 +207,18 @@ Popup
             dayOfWeekDelegate: Rectangle
             {
                 height : datePicker.height * 0.15
+
                 MText
                 {
                     anchors.fill        : parent
                     anchors.centerIn    : parent
-                    mainText            : control.locale.dayName(styleData.dayOfWeek, control.dayOfWeekFormat)
+                    mainText            : ["ned","pon","uto","sri","čet","pet","sub"][styleData.dayOfWeek]
+                    //mainText            :control.locale.dayName(styleData.dayOfWeek, control.dayOfWeekFormat)
                     textH               : parent.height * 0.8
                 }
             }
 
             dayDelegate: Rectangle {
-
                 color: datePicker.calcColor(Style.popup.backColor, Style.popup.borderColor, styleData)
 
                 MouseArea
@@ -273,11 +286,12 @@ Popup
 
     Rectangle{
 
-        id              : buttonPanel
-        height          : parent.height * 0.1
-        width           : parent.width
-        anchors.bottom  : parent.bottom
-        color           : Style.popup.backColor
+        id                  : buttonPanel
+        height              : parent.height * 0.1
+        width               : parent.width
+        anchors.top         : datePicker.bottom
+        anchors.topMargin   : 8
+        color               : Style.popup.backColor
 
         MButton
         {

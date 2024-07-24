@@ -9,6 +9,11 @@ DateTime::DateTime(QObject *parent)
     , m_dateTime(QDateTime::currentDateTime())
     , m_formattedDateTime("hh:mm dd.MM.yyyy.") {
     initializeTimer();
+#if(GUF_ROKO_0700)
+    m_isDemo = false;
+#else
+    m_isDemo = true;
+#endif
 }
 
 DateTime::~DateTime() {
@@ -57,29 +62,40 @@ void DateTime::setCurrentDay() {
 
     switch(day) {
     case 1:
-        weekDay = "pon";
+        weekDay = "Pon";
         break;
     case 2:
-        weekDay = "uto";
+        weekDay = "Uto";
         break;
     case 3:
-        weekDay = "sri";
+        weekDay = "Sri";
         break;
     case 4:
-        weekDay = "čet";
+        weekDay = "Čet";
         break;
     case 5:
-        weekDay = "pet";
+        weekDay = "Pet";
         break;
     case 6:
-        weekDay = "sub";
+        weekDay = "Sub";
         break;
     case 7:
-        weekDay = "ned";
+        weekDay = "Ned";
         break;
     }
     m_currentDay = weekDay;
     emit currentDayChanged();
+}
+
+bool DateTime::isDemo() const {
+    return m_isDemo;
+}
+
+void DateTime::setIsDemo(const bool &newIsDemo) {
+    if(m_isDemo == newIsDemo)
+        return;
+    m_isDemo = newIsDemo;
+    emit isDemoChanged();
 }
 
 void DateTime::timerTout() {

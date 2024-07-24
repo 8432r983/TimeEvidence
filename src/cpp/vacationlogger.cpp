@@ -37,6 +37,11 @@ void VacationLogger::addVacation(QString Name, QDate startDate, QDate endDate) {
     bool           isSmaller = (begin < end);
     HolidayChecker hch;
 
+    if(begin.dayOfWeek() != 6 && begin.dayOfWeek() != 7 && !hch.holidayCheck(begin)) {
+        in << begin.toString("dd.MM.yyyy") + "; "
+           << "-"
+           << "\n";
+    }
     while(begin != end) {
         if(isSmaller)
             begin = begin.addDays(1);

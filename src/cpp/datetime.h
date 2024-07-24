@@ -9,10 +9,10 @@
 class DateTime : public QObject {
     Q_OBJECT
     // clang-format off
-    Q_PROPERTY(QString formatted READ formatted
-                   NOTIFY formattedChanged FINAL)
-    // clang-format on
+    Q_PROPERTY(QString formatted  READ formatted  NOTIFY formattedChanged  FINAL)
     Q_PROPERTY(QString currentDay READ currentDay NOTIFY currentDayChanged FINAL)
+    Q_PROPERTY(bool    isDemo     READ isDemo     NOTIFY isDemoChanged     FINAL)
+    // clang-format on
 
   public:
     explicit DateTime(QObject *parent = nullptr);
@@ -29,12 +29,18 @@ class DateTime : public QObject {
     QString currentDay() const;
     void    setCurrentDay();
 
+    bool isDemo() const;
+    void setIsDemo(const bool &newIsDemo);
+
   signals:
     void formattedChanged();
 
     void currentDayChanged();
 
+    void isDemoChanged();
+
   private:
+    bool      m_isDemo;
     QDateTime m_dateTime;
     QString   m_formattedDateTime;
     QTimer   *m_timer;

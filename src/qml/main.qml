@@ -14,7 +14,9 @@ Window {
     visible : true
     title   : qsTr("Time Evidence")
     color   : Style.dispBgColor
-    //visibility: Window.FullScreen;
+    visibility : datetime.isDemo
+                 ? Window.Windowed
+                 : Window.FullScreen;
 
     EmployeeListModel {id:empmodel  }
     Component.onCompleted :  empmodel.readEmployees()

@@ -59,14 +59,15 @@ class MonthModel : public QAbstractListModel {
 
   private:
     QVector<Entry *> m_entries;
-    Entry            m_sums;
     QVector<QString> m_vacation;
+    Entry            m_sums;
     QString          m_totalSum;
     QString          m_differenceSum;
     QString          m_travelSum;
     QString          m_holidaySum;
     QString          m_sickdaySum;
     QString          m_vacationSum;
+    static bool      comp(const Entry *lhs, const Entry *rhs);
 };
 
 #endif // MONTHMODEL_H

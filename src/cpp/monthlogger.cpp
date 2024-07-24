@@ -27,7 +27,7 @@ void MonthLogger::addEntry(QString Name, QString Day, QString Date, QString cloc
     QTextStream in(&file);
     if(file.size() == 0) {
         in << "Dan; Datum; Dolazak; Odlazak; Odradeno sati; Visak/Manjak; Sati puta; Drzavni ";
-        in << "praznik; Bolovanje; Godisnji\r\n";
+        in << "praznik; Bolovanje; Godisnji; Dozvola za bolovanje\r\n";
     }
 
     Entry ent;

@@ -115,7 +115,7 @@ Popup
                     id                          : travelButton
                     buttonW                     : exitButton.buttonW
                     buttonH                     : exitButton.buttonH
-                    buttonText                  : qsTr("SATI PUTA")
+                    buttonText                  : qsTr("PUTNI SAT")
                     textSize                    : buttonH*0.5
 
                     onClicked:
@@ -150,8 +150,8 @@ Popup
                     onClicked:
                     {
                         vacationPopupLoader.source = "qrc:/qml/CalendarPopup.qml"
-                        vacationPopupLoader.item.axisZ = mainPopup.z + 1
-                        vacationPopupLoader.item.popupTitle = "Godišnji odmor"
+                        vacationPopupLoader.item.z = mainPopup.z + 1
+                        vacationPopupLoader.item.popupTitle = "Zahtjev za Godišnji odmor"
 
                         vacationPopupLoader.item.lowerBound = dateranges.lowerVacationBound;
                         vacationPopupLoader.item.upperBound = dateranges.upperVacationBound;
@@ -195,7 +195,7 @@ Popup
                         target: validSickdayLoader.item
                         function onDateSignal(dates)
                         {
-                            sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Ne");
+                            sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Da");
                             monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
                         }
                     }
@@ -226,7 +226,7 @@ Popup
                         target: invalidSickdayLoader.item
                         function onDateSignal(dates)
                         {
-                            sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Da");
+                            sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Ne");
                             monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
                         }
                     }
@@ -256,10 +256,10 @@ Popup
             Rectangle
             {
                 id                      : nameEmployee
-                anchors.bottom          : parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom          : startAndLeave.top
+                anchors.horizontalCenter: startAndLeave.horizontalCenter
                 width                   : parent.width - Style.popup.borderWidth*4
-                height                  : parent.height * 0.15
+                height                  : parent.height * 0.165
                 color                   : Style.popup.backColor
                 border.color            : Style.popup.borderColor
                 radius                  : Style.popup.borderRadius
@@ -288,7 +288,7 @@ Popup
             MClock
             {
                 id                          : clock
-                anchors.bottom              : startAndLeave.top
+                anchors.bottom              : nameEmployee.top
                 anchors.horizontalCenter    : startAndLeave.horizontalCenter
                 clockWidth                  : parent.width - Style.popup.borderWidth*2
                 clockHeight                 : parent.height * 0.8
@@ -296,12 +296,12 @@ Popup
 
             Rectangle
             {
-                id: startAndLeave
-                anchors.bottom: nameEmployee.top
-                anchors.horizontalCenter: nameEmployee.horizontalCenter
-                width: parent.width
-                height: parent.height * 0.25
-                color: Style.popup.backColor
+                id                          : startAndLeave
+                anchors.bottom              : parent.bottom
+                anchors.horizontalCenter    : parent.horizontalCenter
+                width                       : parent.width
+                height                      : exitButton.height + Style.popup.borderWidth*4
+                color                       : Style.popup.backColor
 
                 MButton
                 {

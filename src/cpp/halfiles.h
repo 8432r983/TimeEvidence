@@ -19,17 +19,21 @@ class HalFiles : public QObject {
   private:
 #if(WIN_ADR)
     const QString cPathData = "C:\\Users\\Adrian\\Documents\\Praksa\\TimeEvidence\\data\\";
+    const QString sep       = "\\";
 #elif(WIN_MAR)
-    const QString cPathData = "C:\\QtProjects\\TimeEvidence\\data\\";
+    const QString cPathData = "C:/QtProjects/TimeEvidence/data/";
+    const QString sep       = "/";
 #elif(GUF_ROKO_0700)
     const QString cPathData = "/root/data/";
+    const QString sep       = "/";
 #elif(CHE_DUNF_0310)
     const QString cPathData = "/home/root/data/";
+    const QString sep       = "/";
 #endif
     const QString cFnEmployees = "zaposlenici.txt";
     const QString cFnHolidays  = "praznici.txt";
     const QString cFnSettings  = "TimeEvidence.ini";
-    const QString cLogFolder   = "monthlog\\";
+    const QString cLogFolder   = "monthlog" + sep;
 };
 
 #endif // HALFILES_H
