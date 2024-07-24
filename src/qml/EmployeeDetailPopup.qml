@@ -152,6 +152,7 @@ Popup
                         vacationPopupLoader.source = "qrc:/qml/CalendarPopup.qml"
                         vacationPopupLoader.item.z = mainPopup.z + 1
                         vacationPopupLoader.item.popupTitle = "Zahtjev za Godišnji odmor"
+                        vacationPopupLoader.item.isVacationPopup = true
 
                         vacationPopupLoader.item.lowerBound = dateranges.lowerVacationBound;
                         vacationPopupLoader.item.upperBound = dateranges.upperVacationBound;

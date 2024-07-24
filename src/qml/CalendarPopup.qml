@@ -15,6 +15,8 @@ Popup
     property date lowerBound: new Date()
     property date upperBound: new Date()
 
+    property bool isVacationPopup: false
+
     signal dateSignal(var dates);
 
     z       : axisZ
@@ -263,13 +265,13 @@ Popup
                     font.pixelSize      : parent.height * 0.6
                     color               :
                     {
-                        if(datePicker.checkDate(styleData.date, new Date()))
-                        {
-                            return datePicker.todayColor
-                        }
-                        else if(holidaycheck.holidayCheck(styleData.date))
+                        if(holidaycheck.holidayCheck(styleData.date))
                         {
                             return datePicker.holidayColor
+                        }
+                        else if(datePicker.checkDate(styleData.date, new Date()))
+                        {
+                            return datePicker.todayColor
                         }
                         return datePicker.calcColor(Style.popup.borderColor, Style.popup.backColor, styleData)
                     }
@@ -282,6 +284,42 @@ Popup
 
         minimumDate: calendarPopup.lowerBound
         maximumDate: calendarPopup.upperBound
+    }
+
+    MButton {
+        id                          : refreshButton
+        anchors.left                : parent.left
+        anchors.top                 : parent.top
+        buttonW                     : parent.width / 10
+        buttonH                     : parent.height / 10
+        buttonText                  : "\u27F3"
+        textSize                    : buttonH
+        anchors.topMargin           : 15
+        anchors.leftMargin          : 15
+        onClicked                   :
+        {
+            datePicker.visibleMonth = new Date().getMonth();
+            datePicker.visibleYear = new Date().getFullYear()
+        }
+    }
+
+    MButton {
+        id                          : listVacationButton
+        enabled                     : calendarPopup.isVacationPopup
+        visible                     : calendarPopup.isVacationPopup
+        anchors.top                 : refreshButton.bottom
+        anchors.horizontalCenter    : refreshButton.horizontalCenter
+        buttonW                     : refreshButton.buttonW
+        buttonH                     : refreshButton.buttonH
+        buttonText                  : "\u2338"
+        textSize                    : buttonH
+        anchors.topMargin           : 15
+        anchors.leftMargin          : 15
+        onClicked                   :
+        {
+            datePicker.visibleMonth = new Date().getMonth();
+            datePicker.visibleYear = new Date().getFullYear()
+        }
     }
 
     Rectangle{

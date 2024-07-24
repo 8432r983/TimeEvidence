@@ -14,14 +14,6 @@ Rectangle
     height          : textH
     color           : Style.popup.backColor
 
-    Rectangle
-    {
-        anchors.centerIn    : parent
-        color               : mtextRect.selected ? Style.popup.borderColor : Style.popup.backColor
-        width               : parent.width - Style.popup.borderWidth*2
-        height              : parent.height - Style.popup.borderWidth*2 * !parent.eraseVerticalBorder
-    }
-
     Text
     {
         id                  : mtext

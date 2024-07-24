@@ -36,7 +36,7 @@ Rectangle
             anchors.right           : parent.right
             anchors.rightMargin     : parent.width * 0.15
             anchors.verticalCenter  : parent.verticalCenter
-            textH                   : parent.height * 0.6
+            textH                   : parent.height * 0.4
             mainText                : holidaycheck.holiday()
         }
     }
