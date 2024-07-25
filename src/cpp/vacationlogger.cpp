@@ -9,7 +9,7 @@ VacationLogger::VacationLogger(QObject *parent)
     : QObject{parent} {
 }
 
-void VacationLogger::addVacation(QString Name, QDate startDate, QDate endDate) {
+void VacationLogger::addVacation(QString Name, QDate currDate, QDate startDate, QDate endDate) {
 
     HalFiles hf;
     QString  filePath = hf.getEmployeeVacationPath(Name);
@@ -27,7 +27,8 @@ void VacationLogger::addVacation(QString Name, QDate startDate, QDate endDate) {
     QTextStream in(&file);
     if(file.size() == 0) {
         in << "Datum; "
-           << "odobreno"
+           << "Odobreno; "
+           << "Datum zatrazenja"
            << "\n";
     }
 
@@ -39,8 +40,7 @@ void VacationLogger::addVacation(QString Name, QDate startDate, QDate endDate) {
 
     if(begin.dayOfWeek() != 6 && begin.dayOfWeek() != 7 && !hch.holidayCheck(begin)) {
         in << begin.toString("dd.MM.yyyy") + "; "
-           << "-"
-           << "\n";
+           << "-; " << currDate.toString("dd.MM.yyyy") << "\n";
     }
     while(begin != end) {
         if(isSmaller)
@@ -50,8 +50,7 @@ void VacationLogger::addVacation(QString Name, QDate startDate, QDate endDate) {
 
         if(begin.dayOfWeek() != 6 && begin.dayOfWeek() != 7 && !hch.holidayCheck(begin)) {
             in << begin.toString("dd.MM.yyyy") + "; "
-               << "-"
-               << "\n";
+               << "-; " << currDate.toString("dd.MM.yyyy") << "\n";
         }
     }
 }

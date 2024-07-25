@@ -182,7 +182,7 @@ Window {
                 password = password.length > 0 ? password.slice(0,-1) : "";
             }
             onEnterPressed: {
-                if(password === emp.password)  {
+                if(password === emp.password && emp.password !== "")  {
                     console.log("good Password");
                     popupLoader.setSource("qrc:/qml/EmployeeDetailPopup.qml", {"emp":emp})
                     popupLoader.loaded()

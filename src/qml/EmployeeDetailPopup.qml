@@ -35,7 +35,8 @@ Popup
         vacationData.leftoverhours = emp.hours
         vacationData.vacationdays = emp.vacation
 
-        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                               leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
 
         leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
     }
@@ -153,6 +154,7 @@ Popup
                         vacationPopupLoader.item.z = mainPopup.z + 1
                         vacationPopupLoader.item.popupTitle = "Zahtjev za Godišnji odmor"
                         vacationPopupLoader.item.isVacationPopup = true
+                        vacationPopupLoader.item.employeeName = leftPanel.employeeName
 
                         vacationPopupLoader.item.lowerBound = dateranges.lowerVacationBound;
                         vacationPopupLoader.item.upperBound = dateranges.upperVacationBound;
@@ -166,7 +168,7 @@ Popup
                         function onDateSignal(dates)
                         {
                             //console.log(dates.startDate, dates.endDate);
-                            vacationLogger.addVacation(leftPanel.employeeName, dates.startDate, dates.endDate);
+                            vacationLogger.addVacation(leftPanel.employeeName, new Date(), dates.startDate, dates.endDate);
                             monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
                         }
                     }
@@ -182,7 +184,7 @@ Popup
                     onClicked:
                     {
                         validSickdayLoader.source = "qrc:/qml/CalendarPopup.qml"
-                        validSickdayLoader.item.axisZ = mainPopup.z + 1
+                        validSickdayLoader.item.z = mainPopup.z + 1
                         validSickdayLoader.item.popupTitle = "Bolovanje sa dozvolom"
 
                         validSickdayLoader.item.lowerBound = dateranges.lowerValidSickdayBound;
@@ -213,7 +215,7 @@ Popup
                     onClicked:
                     {
                         invalidSickdayLoader.source = "qrc:/qml/CalendarPopup.qml";
-                        invalidSickdayLoader.item.axisZ = mainPopup.z + 1;
+                        invalidSickdayLoader.item.z = mainPopup.z + 1;
                         invalidSickdayLoader.item.popupTitle = "Bolovanje bez dozvole";
 
                         invalidSickdayLoader.item.lowerBound = dateranges.lowerInvalidSickdayBound;
@@ -323,6 +325,8 @@ Popup
                         leftPanel.startTime = datetime.formatted.toString().split(" ")[0];
                         activity.setActivity(leftPanel.employeeName, leftPanel.startTime);
                         leftPanel.buttonsEnabled = activity.getActivity(leftPanel.employeeName) !== "";
+                        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                                               leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
                     }
                 }
 
@@ -599,5 +603,13 @@ Popup
             color       : Style.popup.borderColor
             anchors.top : sumRow.bottom
         }
+    }
+
+    Rectangle
+    {
+        anchors.bottom  : bottomPanel.top
+        width           : parent.width
+        height          : 6
+        color           : Style.popup.borderColor
     }
 }

@@ -1,2 +1,4 @@
 Dan; Datum; Dolazak; Odlazak; Odradeno sati; Visak/Manjak; Sati puta; Drzavni praznik; Bolovanje; Godisnji; Dozvola za bolovanje
 Sri; 24; 13:48; 13:48; 00:00; -08:00; -; -; -; -; -
+Čet; 25; 07:51; 07:51; 00:00; -08:00; -; -; -; -; -
+Čet; 25; 14:18; 14:18; 00:00; -08:00; -; -; -; -; -

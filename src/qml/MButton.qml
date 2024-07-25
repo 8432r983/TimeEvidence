@@ -25,7 +25,6 @@ MouseArea
                       else return Style.popup.borderColor
 
         border.width: glowing ? borderW*4 : borderW
-
         color: if(mbutton.containsPress)
                {
                    return Style.popup.borderColor
@@ -33,8 +32,9 @@ MouseArea
                else return Style.popup.backColor
 
 
-        width: buttonW
-        height: buttonH
+        width   : buttonW
+        height  : buttonH
+
 
         radius: Style.popup.borderRadius
     }
@@ -52,6 +52,5 @@ MouseArea
                    return Style.popup.backColor
                }
                else return Style.popup.borderColor
-        // MAR dont mis back with border... keep stuff sperated..
     }
 }

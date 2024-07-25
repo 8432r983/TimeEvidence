@@ -9,7 +9,7 @@ class VacationLogger : public QObject {
   public:
     explicit VacationLogger(QObject *parent = nullptr);
 
-    Q_INVOKABLE void addVacation(QString Name, QDate startDate, QDate endDate);
+    Q_INVOKABLE void addVacation(QString Name, QDate currDate, QDate startDate, QDate endDate);
 
   signals:
 };

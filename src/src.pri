@@ -12,6 +12,7 @@ SOURCES += \
   $$PWD/cpp/monthlogger.cpp \
   $$PWD/cpp/monthmodel.cpp \
   $$PWD/cpp/sickdaylogger.cpp \
+  $$PWD/cpp/vacationlistmodel.cpp \
   $$PWD/cpp/vacationlogger.cpp
 
 
@@ -28,5 +29,6 @@ HEADERS += \
   $$PWD/cpp/monthlogger.h \
   $$PWD/cpp/monthmodel.h \
   $$PWD/cpp/sickdaylogger.h \
+  $$PWD/cpp/vacationlistmodel.h \
   $$PWD/cpp/vacationlogger.h
 

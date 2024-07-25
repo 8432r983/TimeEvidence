@@ -9,8 +9,8 @@ Popup
 {
     id: calendarPopup
 
-    property int axisZ          : 0
     property string popupTitle  : "Title"
+    property string employeeName: ""
 
     property date lowerBound: new Date()
     property date upperBound: new Date()
@@ -19,7 +19,6 @@ Popup
 
     signal dateSignal(var dates);
 
-    z       : axisZ
     width   : Style.dispWidth
     height  : Style.dispHeight
 
@@ -286,6 +285,8 @@ Popup
         maximumDate: calendarPopup.upperBound
     }
 
+    MLoader { id: listLoader }
+
     MButton {
         id                          : refreshButton
         anchors.left                : parent.left
@@ -298,7 +299,7 @@ Popup
         anchors.leftMargin          : 15
         onClicked                   :
         {
-            datePicker.visibleMonth = new Date().getMonth();
+            datePicker.visibleMonth = new Date().getMonth()
             datePicker.visibleYear = new Date().getFullYear()
         }
     }
@@ -317,8 +318,10 @@ Popup
         anchors.leftMargin          : 15
         onClicked                   :
         {
-            datePicker.visibleMonth = new Date().getMonth();
-            datePicker.visibleYear = new Date().getFullYear()
+            listLoader.source = "qrc:/qml/VacationListPopup.qml";
+            listLoader.item.z = calendarPopup.z + 1
+            listLoader.item.employeeName = calendarPopup.employeeName
+            listLoader.loaded()
         }
     }
 
@@ -363,10 +366,12 @@ Popup
 
             onClicked:
             {
-                calendarPopup.dateSignal({startDate: datePicker.startDate, endDate: datePicker.endDate});
-                datePicker.startDate = undefined;
-                datePicker.endDate = undefined;
-                calendarPopup.close();
+                if(datePicker.startDate !== undefined && datePicker.endDate !== undefined){
+                    calendarPopup.dateSignal({startDate: datePicker.startDate, endDate: datePicker.endDate});
+                    datePicker.startDate = undefined;
+                    datePicker.endDate = undefined;
+                    calendarPopup.close();
+                }
             }
         }
     }

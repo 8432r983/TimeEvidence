@@ -10,6 +10,7 @@
 #include "monthmodel.h"
 
 #include "employeelistmodel.h"
+#include "vacationlistmodel.h"
 
 #include "activity.h"
 #include "dateranges.h"
@@ -78,14 +79,11 @@ int main(int argc, char *argv[]) {
     appQmlRegisterStyle(app.primaryScreen());
 
     qmlRegisterType<MonthModel>("MonthModel", 1, 0, "MonthModel");
-
     qmlRegisterType<EmployeeListModel>("EmployeeListModel", 1, 0, "EmployeeListModel");
-
     qmlRegisterType<MonthLogger>("MonthLogger", 1, 0, "MonthLogger");
-
     qmlRegisterType<VacationLogger>("VacationLogger", 1, 0, "VacationLogger");
-
     qmlRegisterType<SickdayLogger>("SickdayLogger", 1, 0, "SickdayLogger");
+    qmlRegisterType<VacationListModel>("VacationListModel", 1, 0, "VacationListModel");
 
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("datetime", DateTime::instance());

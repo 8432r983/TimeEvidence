@@ -39,7 +39,7 @@ class MonthModel : public QAbstractListModel {
     virtual QHash<int, QByteArray> roleNames() const override;
     QVariant                       data(const QModelIndex &index, int role) const override;
 
-    Q_INVOKABLE void loadEntries(QString date, QString Name);
+    Q_INVOKABLE void loadEntries(QString date, QString Name, QString act = "");
     void             loadVacation(QString Name);
 
     QString totalSum() const;

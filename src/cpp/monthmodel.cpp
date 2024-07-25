@@ -76,23 +76,33 @@ QVariant MonthModel::data(const QModelIndex &index, int role) const {
     return QVariant();
 }
 
-void MonthModel::loadEntries(QString date, QString Name) {
+void MonthModel::loadEntries(QString date, QString Name, QString act) {
     beginResetModel();
+
+    qDeleteAll(m_entries);
+    m_entries.clear();
 
     HalFiles hf;
     QString  filePath = hf.getEmployeeMonth(Name, date);
 
+    if(act != "") {
+        Entry *currEnt   = new Entry();
+        currEnt->date    = date.split(".")[0];
+        currEnt->clockIn = act;
+        m_entries.append(currEnt);
+    }
+
     if(!QFile::exists(filePath)) {
         qDebug() << "file doesnt exist: " << filePath;
+        endResetModel();
         return;
     }
 
     QFile file(filePath);
-    qDeleteAll(m_entries);
-    m_entries.clear();
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "cant open file: " << filePath;
+        endResetModel();
         return;
     }
     file.readLine();
@@ -195,7 +205,7 @@ void MonthModel::loadEntries(QString date, QString Name) {
     }
 
     Entry *endSum = new Entry();
-    qDebug() << totalTime << sickdayTime << vacationTime;
+    // qDebug() << totalTime << sickdayTime << vacationTime;
     if(sickdayTime != 0 && valid) {
         totalTime = sickdayTime;
     }
@@ -229,8 +239,11 @@ void MonthModel::loadEntries(QString date, QString Name) {
     m_differenceSum = m_sums.intToTime(m_sums.timeToInt(m_sums.total) - 8 * 60 * dr.dateDist(startDate, endDate));
     m_travelSum     = m_sums.travel;
     m_holidaySum    = m_sums.holiday;
-    m_sickdaySum    = m_sums.sickday;
-    m_vacationSum   = m_sums.vacation;
+    if(m_sums.sickday == "-") {
+        m_sums.sickday = "00:00";
+    }
+    m_sickdaySum  = m_sums.sickday;
+    m_vacationSum = m_sums.vacation;
 
     emit totalSumChanged();
     emit differenceSumChanged();
@@ -260,7 +273,7 @@ void MonthModel::loadVacation(QString Name) {
     while(!file.atEnd()) {
         QStringList elements = QString(file.readLine()).split(";");
 
-        if(elements.size() == 2) {
+        if(elements.size() == 3) {
             if(elements[1].trimmed().toLower() == "da") {
                 m_vacation.append(elements[0].trimmed());
             }

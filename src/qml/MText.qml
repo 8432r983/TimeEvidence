@@ -9,7 +9,7 @@ Rectangle
     property int textH        : 0
     property string mainText  : ""
     property bool boldEnable  : false
-    property bool selected    : false
+    property color textColor  : Style.popup.borderColor
 
     height          : textH
     color           : Style.popup.backColor
@@ -18,7 +18,7 @@ Rectangle
     {
         id                  : mtext
         anchors.centerIn    : parent
-        color               : mtextRect.selected ? Style.popup.backColor : Style.popup.borderColor
+        color               : parent.textColor
         font.pixelSize      : parent.textH * 0.56
         text                : parent.mainText
         font.bold           : boldEnable
