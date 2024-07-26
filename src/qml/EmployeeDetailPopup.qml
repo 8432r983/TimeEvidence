@@ -135,7 +135,8 @@ Popup
                             monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
                                                  datetime.formatted.toString().split(" ")[1],
                                                  "-", "-", hr, "-", "-", "-", "-");
-                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                                                   leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
                             travelPopupLoader.source = ""
                         }
                     }
@@ -169,7 +170,8 @@ Popup
                         {
                             //console.log(dates.startDate, dates.endDate);
                             vacationLogger.addVacation(leftPanel.employeeName, new Date(), dates.startDate, dates.endDate);
-                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                                                   leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
                         }
                     }
                 }
@@ -199,7 +201,8 @@ Popup
                         function onDateSignal(dates)
                         {
                             sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Da");
-                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                                                   leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
                         }
                     }
                 }
@@ -230,7 +233,8 @@ Popup
                         function onDateSignal(dates)
                         {
                             sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Ne");
-                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1], leftPanel.employeeName);
+                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                                                   leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
                         }
                     }
                 }
@@ -256,12 +260,26 @@ Popup
             anchors.top         : leftPanel.top
             color               : Style.popup.backColor
 
+            MButton{
+                id                          : refreshButton
+                anchors.right               : nameEmployee.left
+                anchors.rightMargin         : Style.popup.borderWidth*2
+                anchors.verticalCenter      : nameEmployee.verticalCenter
+                buttonH                     : nameEmployee.height
+                buttonW                     : nameEmployee.height*2
+                buttonText                  : "\u27F3"
+                textSize                    : buttonH * 0.9
+                onClicked                   : monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                                              leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
+            }
+
             Rectangle
             {
                 id                      : nameEmployee
                 anchors.bottom          : startAndLeave.top
-                anchors.horizontalCenter: startAndLeave.horizontalCenter
-                width                   : parent.width - Style.popup.borderWidth*4
+                anchors.right           : startAndLeave.right
+                anchors.rightMargin     : Style.popup.borderWidth*2
+                width                   : parent.width - Style.popup.borderWidth*6 - refreshButton.buttonW
                 height                  : parent.height * 0.165
                 color                   : Style.popup.backColor
                 border.color            : Style.popup.borderColor
@@ -270,7 +288,7 @@ Popup
                 Text
                 {
                     x              : parent.width/2 - paintedWidth/2
-                    width          : parent.width
+                    width          : parent.width - refreshButton.buttonW
                     height         : parent.height
                     text           : leftPanel.employeeName
                     font.pixelSize : parent.height * 0.7

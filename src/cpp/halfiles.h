@@ -12,8 +12,9 @@ class HalFiles : public QObject {
     QString getHolidaysFilePath() const;
     QString getSettingsFilePath() const;
     QString getEmployeeFolderPath() const;
-    QString getEmployeeVacationPath(QString Name) const;
+    QString getEmployeeVacationPath(QString &Name) const;
     QString getEmployeeMonth(const QString &Name, const QString &Date) const;
+    QString getSpecialDays(const QString &Name) const;
     QString cleanString(QString str) const;
 
   private:
@@ -34,6 +35,8 @@ class HalFiles : public QObject {
     const QString cFnHolidays  = "praznici.txt";
     const QString cFnSettings  = "TimeEvidence.ini";
     const QString cLogFolder   = "monthlog" + sep;
+    const QString cVacation    = "Godisnji.txt";
+    const QString cSpecialDay  = "_Dodatni_sati.txt";
 };
 
 #endif // HALFILES_H

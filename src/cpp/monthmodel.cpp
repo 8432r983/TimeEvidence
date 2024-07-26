@@ -9,7 +9,9 @@
 #include "dateranges.h"
 #include "entry.h"
 #include "halfiles.h"
+#include "holidaychecker.h"
 #include "monthmodel.h"
+#include "specialdaylogger.h"
 
 MonthModel::MonthModel(QObject *parent)
     : QAbstractListModel(parent) {
@@ -226,6 +228,19 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
     for(int i = 1; i < m_entries.size(); i++) {
         if(m_entries[i]->date != m_entries[i - 1]->date) {
             m_entries[i]->daychanged = true;
+        }
+    }
+
+    HolidayChecker   hch;
+    SpecialDayLogger Spl;
+    for(int i = 0; i < m_entries.size(); i++) {
+        if(m_entries[i]->difference != "-") {
+            QString Date = m_entries[i]->date + "." + date.split(".")[1] + "." + date.split(".")[2];
+            if(QDate::fromString(Date, "dd.MM.yyyy").dayOfWeek() >= 6) {
+                Spl.addDay(Name, Date, "vikend", m_entries[i]->total);
+            } else if(hch.holidayCheck(QDate::fromString(Date, "dd.MM.yyyy"))) {
+                Spl.addDay(Name, Date, "praznik", m_entries[i]->total);
+            }
         }
     }
 

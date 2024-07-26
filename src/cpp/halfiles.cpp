@@ -23,13 +23,13 @@ QString HalFiles::getEmployeeFolderPath() const {
     return cPathData + cLogFolder;
 }
 
-QString HalFiles::getEmployeeVacationPath(QString Name) const {
+QString HalFiles::getEmployeeVacationPath(QString &Name) const {
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);
 
     QString newName = cleanString(Name);
 
-    QString fileName = newName.replace(" ", "_") + "_" + "Godisnji.txt";
+    QString fileName = newName.replace(" ", "_") + "_" + cVacation;
     return getEmployeeFolderPath() + newName.replace(" ", "_") + sep + fileName;
 }
 
@@ -47,6 +47,16 @@ QString HalFiles::getEmployeeMonth(const QString &name, const QString &date) con
     str = getEmployeeFolderPath() + newtempName + sep + newtempName + "_" + dlist[2] + "_" + dlist[1] + ".txt";
     qDebug() << "Employee log file" << str;
     return str;
+}
+
+QString HalFiles::getSpecialDays(const QString &Name) const {
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForLocale(codec);
+
+    QString newName = cleanString(Name);
+
+    QString fileName = newName.replace(" ", "_") + "_" + cSpecialDay;
+    return getEmployeeFolderPath() + newName.replace(" ", "_") + sep + fileName;
 }
 
 QString HalFiles::cleanString(QString str) const {

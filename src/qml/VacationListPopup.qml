@@ -39,32 +39,6 @@ Popup {
         onClicked                   : vacationmodel.loadVacation(vacationPopup.employeeName);
     }
 
-    Row
-    {
-        property int textSize: parent.height/15
-
-        id          : labelRow
-        anchors.top : refreshButton.bottom
-        width       : parent.width
-        height      : refreshButton.height
-
-        MText{
-            mainText: "Datum"
-            textH   : parent.textSize
-            width   : parent.width * 0.3
-        }
-        MText{
-            mainText: "Odobreno"
-            textH   : parent.textSize
-            width   : parent.width * 0.3
-        }
-        MText{
-            mainText: "Datum zahtjeva"
-            textH   : parent.textSize
-            width   : parent.width * 0.4
-        }
-    }
-
     ListView
     {
         id          : vacationView
@@ -93,6 +67,32 @@ Popup {
                 textH   : labelRow.textSize
                 width   : parent.width * 0.4
             }
+        }
+    }
+
+    Row
+    {
+        property int textSize: parent.height/15
+
+        id          : labelRow
+        anchors.top : refreshButton.bottom
+        width       : parent.width
+        height      : refreshButton.height
+
+        MText{
+            mainText: "Datum"
+            textH   : parent.textSize
+            width   : parent.width * 0.3
+        }
+        MText{
+            mainText: "Odobreno"
+            textH   : parent.textSize
+            width   : parent.width * 0.3
+        }
+        MText{
+            mainText: "Datum zahtjeva"
+            textH   : parent.textSize
+            width   : parent.width * 0.4
         }
     }
 
