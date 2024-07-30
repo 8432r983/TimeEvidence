@@ -630,4 +630,11 @@ Popup
         height          : 6
         color           : Style.popup.borderColor
     }
+
+    MText
+    {
+        textH: 60
+        width: 300
+        mainText: "extraSum: " + monthmodel.extraSum
+    }
 }

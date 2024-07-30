@@ -11,7 +11,6 @@
 #include "halfiles.h"
 #include "holidaychecker.h"
 #include "monthmodel.h"
-#include "specialdaylogger.h"
 
 MonthModel::MonthModel(QObject *parent)
     : QAbstractListModel(parent) {
@@ -231,19 +230,6 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
         }
     }
 
-    HolidayChecker   hch;
-    SpecialDayLogger Spl;
-    for(int i = 0; i < m_entries.size(); i++) {
-        if(m_entries[i]->difference != "-") {
-            QString Date = m_entries[i]->date + "." + date.split(".")[1] + "." + date.split(".")[2];
-            if(QDate::fromString(Date, "dd.MM.yyyy").dayOfWeek() >= 6) {
-                Spl.addDay(Name, Date, "vikend", m_entries[i]->total);
-            } else if(hch.holidayCheck(QDate::fromString(Date, "dd.MM.yyyy"))) {
-                Spl.addDay(Name, Date, "praznik", m_entries[i]->total);
-            }
-        }
-    }
-
     m_totalSum = m_sums.total;
 
     DateRanges dr;
@@ -266,7 +252,6 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
     emit holidaySumChanged();
     emit sickdaySumChanged();
     emit vacationSumChanged();
-
     endResetModel();
 }
 

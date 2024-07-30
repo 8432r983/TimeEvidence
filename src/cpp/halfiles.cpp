@@ -49,16 +49,6 @@ QString HalFiles::getEmployeeMonth(const QString &name, const QString &date) con
     return str;
 }
 
-QString HalFiles::getSpecialDays(const QString &Name) const {
-    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-    QTextCodec::setCodecForLocale(codec);
-
-    QString newName = cleanString(Name);
-
-    QString fileName = newName.replace(" ", "_") + "_" + cSpecialDay;
-    return getEmployeeFolderPath() + newName.replace(" ", "_") + sep + fileName;
-}
-
 QString HalFiles::cleanString(QString str) const {
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);
