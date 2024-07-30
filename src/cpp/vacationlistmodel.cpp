@@ -63,14 +63,16 @@ void VacationListModel::loadVacation(QString Name) {
 
         Vacation *vacation = new Vacation();
 
-        vacation->date    = elements[0].trimmed();
-        vacation->valid   = elements[1].trimmed();
-        vacation->request = elements[2].trimmed();
+        if(elements.size() == 3) {
+            vacation->date    = elements[0].trimmed();
+            vacation->valid   = elements[1].trimmed();
+            vacation->request = elements[2].trimmed();
 
-        if(elements[1].trimmed().toLower() != "da") {
-            vacation->valid = "Ne";
-        } else {
-            vacation->valid = "Da";
+            if(elements[1].trimmed().toLower() != "da") {
+                vacation->valid = "Ne";
+            } else {
+                vacation->valid = "Da";
+            }
         }
 
         vacationList.append(vacation);

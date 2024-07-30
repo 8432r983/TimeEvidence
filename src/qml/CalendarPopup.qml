@@ -321,6 +321,7 @@ Popup
             listLoader.source = "qrc:/qml/VacationListPopup.qml";
             listLoader.item.z = calendarPopup.z + 1
             listLoader.item.employeeName = calendarPopup.employeeName
+            vacationmodel.loadVacation(calendarPopup.employeeName)
             listLoader.loaded()
         }
     }

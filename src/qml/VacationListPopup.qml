@@ -3,47 +3,51 @@ import QtQuick.Controls 2.2
 
 import Style 1.0
 
-import VacationListModel 1.0
-
 Popup {
 
     id      : vacationPopup
-    width   : Style.dispWidth * 0.5
+    width   : Style.dispWidth
     height  : Style.dispHeight
 
     property string employeeName: ""
 
-    VacationListModel
-    {
-        id: vacationmodel
-    }
-
     background: Item {
-        width: parent.width
-        height: parent.height
+        width           : parent.width
+        height          : parent.height
+        anchors.fill    : parent
 
         Rectangle{
-            anchors.fill    : parent
+            anchors.left    : parent.left
             color           : Style.popup.backColor
-            width           : parent.width
+            width           : parent.width * 0.5
             height          : parent.height
+            border.color    : Style.popup.borderColor
+        }
+
+        Rectangle{
+            anchors.right   : parent.right
+            color           : Style.popup.borderColor
+            width           : parent.width * 0.5
+            height          : parent.height
+            opacity         : 0.2
         }
     }
 
     MButton{
         id                          : refreshButton
-        buttonW                     : parent.width
+        buttonW                     : vacationView.width
+        x                           : parent.width * 0.25 - buttonW * 0.5 - Style.popup.borderWidth * 3
         buttonH                     : parent.height / 11
         buttonText                  : "\u27F3"
         textSize                    : buttonH * 0.9
-        onClicked                   : vacationmodel.loadVacation(vacationPopup.employeeName);
+        onClicked                   : vacationmodel.loadVacation(vacationPopup.employeeName)
     }
 
     ListView
     {
         id          : vacationView
         anchors.top : labelRow.bottom
-        width       : parent.width
+        width       : parent.width * 0.5 - Style.popup.borderWidth*2
         height      : parent.height - refreshButton.height - escapeButton.height - labelRow.height
         model       : vacationmodel
 
@@ -76,7 +80,7 @@ Popup {
 
         id          : labelRow
         anchors.top : refreshButton.bottom
-        width       : parent.width
+        width       : vacationView.width
         height      : refreshButton.height
 
         MText{
@@ -98,8 +102,9 @@ Popup {
 
     MButton{
         id                          : escapeButton
-        buttonW                     : parent.width
+        buttonW                     : vacationView.width
         buttonH                     : parent.height / 11
+        x                           : parent.width * 0.25 - buttonW * 0.5 - Style.popup.borderWidth * 3
         y                           : parent.height - buttonH - Style.popup.borderWidth * 2
         buttonText                  : "\u2B8C"
         textSize                    : buttonH * 0.7

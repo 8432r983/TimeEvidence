@@ -83,7 +83,6 @@ int main(int argc, char *argv[]) {
     qmlRegisterType<MonthLogger>("MonthLogger", 1, 0, "MonthLogger");
     qmlRegisterType<VacationLogger>("VacationLogger", 1, 0, "VacationLogger");
     qmlRegisterType<SickdayLogger>("SickdayLogger", 1, 0, "SickdayLogger");
-    qmlRegisterType<VacationListModel>("VacationListModel", 1, 0, "VacationListModel");
 
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("datetime", DateTime::instance());
@@ -96,6 +95,9 @@ int main(int argc, char *argv[]) {
 
     DateRanges dateranges;
     context->setContextProperty("dateranges", &dateranges);
+
+    VacationListModel vacationmodel;
+    context->setContextProperty("vacationmodel", &vacationmodel);
 
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(
