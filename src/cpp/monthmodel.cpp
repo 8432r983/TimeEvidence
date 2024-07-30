@@ -131,6 +131,7 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
     }
 
     loadVacation(Name);
+    m_monthSum = "-";
 
     for(int i = 0; i < m_vacation.size(); i++) {
         if(m_vacation[i].split(".")[1] == date.split(".")[1]) {
@@ -177,6 +178,7 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
             daySum->total = daySum->intToTime(totalTime);
             daySum->date  = m_entries[i - 1]->date;
             daySum->setDifference();
+            m_monthSum = daySum->intToTime(daySum->timeToInt(daySum->total) + daySum->timeToInt(m_monthSum));
             tempV.append(daySum);
 
             totalTime = 0;
@@ -218,6 +220,7 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
     endSum->total = endSum->intToTime(totalTime);
     endSum->date  = m_entries.last()->date;
     endSum->setDifference();
+    m_monthSum = endSum->intToTime(endSum->timeToInt(endSum->total) + endSum->timeToInt(m_monthSum));
     tempV.append(endSum);
 
     for(int i = 0; i < tempV.size(); i++) {
@@ -247,10 +250,11 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
     m_sickdaySum  = m_sums.sickday;
     m_vacationSum = m_sums.vacation;
 
-    m_monthSum = "-";
-    m_monthSum = m_sums.intToTime(m_sums.timeToInt(m_sums.total) + m_sums.timeToInt(m_monthSum));
-    m_sums.setTotal();
-    m_monthSum = m_sums.intToTime(m_sums.timeToInt(m_sums.total) + m_sums.timeToInt(m_monthSum));
+    QString days     = QString::number(QDate::currentDate().daysInMonth());
+    QDate   firstDay = QDate::fromString("01" + month, "dd.MM.yyyy");
+    QDate   lastDay  = QDate::fromString(days + month, "dd.MM.yyyy");
+    int     dist     = dr.dateDist(firstDay, lastDay);
+    m_monthSum += "/" + QString::number(dist * 8) + ":00";
 
     emit monthSumChanged();
     emit totalSumChanged();

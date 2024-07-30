@@ -45,10 +45,7 @@ Popup
     VacationLogger { id: vacationLogger }
     SickdayLogger {id: sickdayLogger}
 
-    MLoader {id:travelPopupLoader}
-    MLoader {id:vacationPopupLoader}
-    MLoader {id:validSickdayLoader}
-    MLoader {id:invalidSickdayLoader}
+    MLoader { id: mainPopupLoader }
 
     Rectangle
     {
@@ -121,24 +118,18 @@ Popup
 
                     onClicked:
                     {
-                        travelPopupLoader.source = "qrc:/qml/TravelHoursPopup.qml"
-                        travelPopupLoader.item.axisZ = mainPopup.z + 1
-                        travelPopupLoader.loaded()
-                    }
-
-                    Connections
-                    {
-                        target: travelPopupLoader.item
-                        function onHoursSignal(hr)
-                        {
-                            //console.log("Odrađenih putnih sati: " + hr)
-                            monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
-                                                 datetime.formatted.toString().split(" ")[1],
-                                                 "-", "-", hr, "-", "-", "-", "-");
-                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
-                                                   leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
-                            travelPopupLoader.source = ""
-                        }
+                        mainPopupLoader.source = "qrc:/qml/TravelHoursPopup.qml"
+                        mainPopupLoader.item.axisZ = mainPopup.z + 1
+                        mainPopupLoader.item["hoursSignal"].connect(
+                                    function onHoursSignal(hr){
+                                        monthlogger.addEntry(leftPanel.employeeName, datetime.currentDay.slice(0,3),
+                                                             datetime.formatted.toString().split(" ")[1],
+                                                             "-", "-", hr, "-", "-", "-", "-");
+                                        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                                                leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
+                                        mainPopupLoader.source = ""
+                                    });
+                        mainPopupLoader.loaded()
                     }
                 }
                 MButton
@@ -149,30 +140,29 @@ Popup
                     buttonText                  : qsTr("ZAHTJEV ZA GO")
                     textSize                    : buttonH*0.5
 
-                    onClicked:
+                    function onDateSignal(dates)
                     {
-                        vacationPopupLoader.source = "qrc:/qml/CalendarPopup.qml"
-                        vacationPopupLoader.item.z = mainPopup.z + 1
-                        vacationPopupLoader.item.popupTitle = "Zahtjev za Godišnji odmor"
-                        vacationPopupLoader.item.isVacationPopup = true
-                        vacationPopupLoader.item.employeeName = leftPanel.employeeName
-
-                        vacationPopupLoader.item.lowerBound = dateranges.lowerVacationBound;
-                        vacationPopupLoader.item.upperBound = dateranges.upperVacationBound;
-
-                        vacationPopupLoader.loaded()
+                        //console.log(dates.startDate, dates.endDate);
+                        vacationLogger.addVacation(leftPanel.employeeName, new Date(), dates.startDate, dates.endDate);
+                        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                                               leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
                     }
 
-                    Connections
+                    onClicked:
                     {
-                        target: vacationPopupLoader.item
-                        function onDateSignal(dates)
-                        {
-                            //console.log(dates.startDate, dates.endDate);
-                            vacationLogger.addVacation(leftPanel.employeeName, new Date(), dates.startDate, dates.endDate);
-                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
-                                                   leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
-                        }
+                        mainPopupLoader.source = "qrc:/qml/CalendarPopup.qml"
+                        mainPopupLoader.item.z = mainPopup.z + 1
+                        mainPopupLoader.item.popupTitle = "Zahtjev za Godišnji odmor"
+                        mainPopupLoader.item.isVacationPopup = true
+                        mainPopupLoader.item.employeeName = leftPanel.employeeName
+
+                        mainPopupLoader.item.lowerBound = dateranges.lowerVacationBound;
+                        mainPopupLoader.item.upperBound = dateranges.upperVacationBound;
+
+                        mainPopupLoader.item["dateSignal"].disconnect(onDateSignal);
+                        mainPopupLoader.item["dateSignal"].connect(onDateSignal);
+
+                        mainPopupLoader.loaded()
                     }
                 }
                 MButton
@@ -183,59 +173,56 @@ Popup
                     buttonText                  : qsTr("BOLOVANJE SA DOZ")
                     textSize                    : parent.height * 0.07
 
-                    onClicked:
+                    function onDateSignal(dates)
                     {
-                        validSickdayLoader.source = "qrc:/qml/CalendarPopup.qml"
-                        validSickdayLoader.item.z = mainPopup.z + 1
-                        validSickdayLoader.item.popupTitle = "Bolovanje sa dozvolom"
-
-                        validSickdayLoader.item.lowerBound = dateranges.lowerValidSickdayBound;
-                        validSickdayLoader.item.upperBound = dateranges.upperValidSickdayBound
-
-                        validSickdayLoader.loaded()
+                        sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Da");
+                        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                                               leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
                     }
 
-                    Connections
+                    onClicked:
                     {
-                        target: validSickdayLoader.item
-                        function onDateSignal(dates)
-                        {
-                            sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Da");
-                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
-                                                   leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
-                        }
+                        mainPopupLoader.source = "qrc:/qml/CalendarPopup.qml"
+                        mainPopupLoader.item.z = mainPopup.z + 1
+                        mainPopupLoader.item.popupTitle = "Bolovanje sa dozvolom"
+
+                        mainPopupLoader.item.lowerBound = dateranges.lowerValidSickdayBound;
+                        mainPopupLoader.item.upperBound = dateranges.upperValidSickdayBound;
+
+                        mainPopupLoader.item["dateSignal"].disconnect(onDateSignal);
+                        mainPopupLoader.item["dateSignal"].connect(onDateSignal);
+
+                        mainPopupLoader.loaded()
                     }
                 }
                 MButton
                 {
-
                     id                          : sickDayButton2
                     buttonW                     : exitButton.buttonW
                     buttonH                     : exitButton.buttonH
                     buttonText                  : qsTr("BOLOVANJE BEZ DOZ")
                     textSize                    : parent.height * 0.07
 
-                    onClicked:
+                    function onDateSignal(dates)
                     {
-                        invalidSickdayLoader.source = "qrc:/qml/CalendarPopup.qml";
-                        invalidSickdayLoader.item.z = mainPopup.z + 1;
-                        invalidSickdayLoader.item.popupTitle = "Bolovanje bez dozvole";
-
-                        invalidSickdayLoader.item.lowerBound = dateranges.lowerInvalidSickdayBound;
-                        invalidSickdayLoader.item.upperBound = dateranges.upperInvalidSickdayBound;
-
-                        invalidSickdayLoader.loaded()
+                        sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Ne");
+                        monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
+                                               leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
                     }
 
-                    Connections
+                    onClicked:
                     {
-                        target: invalidSickdayLoader.item
-                        function onDateSignal(dates)
-                        {
-                            sickdayLogger.addSickdayEntry(leftPanel.employeeName, dates.startDate, dates.endDate, "Ne");
-                            monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
-                                                   leftPanel.employeeName, activity.getActivity(leftPanel.employeeName));
-                        }
+                        mainPopupLoader.source = "qrc:/qml/CalendarPopup.qml";
+                        mainPopupLoader.item.z = mainPopup.z + 1;
+                        mainPopupLoader.item.popupTitle = "Bolovanje bez dozvole";
+
+                        mainPopupLoader.item.lowerBound = dateranges.lowerInvalidSickdayBound;
+                        mainPopupLoader.item.upperBound = dateranges.upperInvalidSickdayBound;
+
+                        mainPopupLoader.item["dateSignal"].disconnect(onDateSignal);
+                        mainPopupLoader.item["dateSignal"].connect(onDateSignal);
+
+                        mainPopupLoader.loaded()
                     }
                 }
                 MButton
@@ -263,10 +250,10 @@ Popup
             MButton{
                 id                          : refreshButton
                 anchors.right               : nameEmployee.left
-                anchors.rightMargin         : Style.popup.borderWidth*2
+                anchors.rightMargin         : Style.popup.borderWidth*4
                 anchors.verticalCenter      : nameEmployee.verticalCenter
                 buttonH                     : nameEmployee.height
-                buttonW                     : nameEmployee.height*2
+                buttonW                     : nameEmployee.height*1.5
                 buttonText                  : "\u27F3"
                 textSize                    : buttonH * 0.9
                 onClicked                   : monthmodel.loadEntries(datetime.formatted.toString().split(" ")[1],
@@ -277,9 +264,10 @@ Popup
             {
                 id                      : nameEmployee
                 anchors.bottom          : startAndLeave.top
+                anchors.bottomMargin    : Style.popup.borderWidth*2
                 anchors.right           : startAndLeave.right
                 anchors.rightMargin     : Style.popup.borderWidth*2
-                width                   : parent.width - Style.popup.borderWidth*6 - refreshButton.buttonW
+                width                   : parent.width - Style.popup.borderWidth*8 - refreshButton.buttonW
                 height                  : parent.height * 0.165
                 color                   : Style.popup.backColor
                 border.color            : Style.popup.borderColor
@@ -506,7 +494,7 @@ Popup
             anchors.top : headerRow.bottom
 
             MText{
-                mainText            : "SVEUKUPNO SATI: " + monthmodel.monthSum
+                mainText            : "Sveukupno: " + monthmodel.monthSum
                 textH               : parent.height*0.9
                 width               : bottomPanel.childrenWidth[0] + bottomPanel.childrenWidth[1] * 2
                 y                   : -textH

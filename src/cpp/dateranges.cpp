@@ -49,6 +49,9 @@ void DateRanges::loadRanges() {
 }
 
 QDate DateRanges::calcWorkDays(int bound) {
+    if(bound == 0)
+        return QDate::currentDate();
+
     bool  isNeg = (bound < 0);
     QDate today = QDate::currentDate();
 

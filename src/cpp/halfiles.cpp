@@ -27,10 +27,10 @@ QString HalFiles::getEmployeeVacationPath(QString &Name) const {
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);
 
-    QString newName = cleanString(Name);
+    QString newName = cleanString(Name.replace(" ", "_"));
 
-    QString fileName = newName.replace(" ", "_") + "_" + cVacation;
-    return getEmployeeFolderPath() + newName.replace(" ", "_") + sep + fileName;
+    QString fileName = newName + "_" + cVacation;
+    return getEmployeeFolderPath() + newName + sep + fileName;
 }
 
 QString HalFiles::getEmployeeMonth(const QString &name, const QString &date) const {

@@ -230,8 +230,10 @@ Popup
 
                     onClicked:
                     {
-                        if(styleData.date < datePicker.minimumDate || styleData.date > datePicker.maximumDate)
-                        {
+                        if(styleData.date < datePicker.minimumDate || styleData.date > datePicker.maximumDate){
+                            return;
+                        }
+                        if(datePicker.checkDate(styleData.date, new Date())){
                             return;
                         }
 
@@ -268,7 +270,7 @@ Popup
                         {
                             return datePicker.holidayColor
                         }
-                        else if(datePicker.checkDate(styleData.date, new Date()))
+                        if(datePicker.checkDate(styleData.date, new Date()))
                         {
                             return datePicker.todayColor
                         }
@@ -296,7 +298,7 @@ Popup
         buttonText                  : "\u27F3"
         textSize                    : buttonH
         anchors.topMargin           : 15
-        anchors.leftMargin          : 15
+        anchors.leftMargin          : 10
         onClicked                   :
         {
             datePicker.visibleMonth = new Date().getMonth()
@@ -314,8 +316,8 @@ Popup
         buttonH                     : refreshButton.buttonH
         buttonText                  : "\u2338"
         textSize                    : buttonH
-        anchors.topMargin           : 15
-        anchors.leftMargin          : 15
+        anchors.topMargin           : refreshButton.anchors.topMargin
+        anchors.leftMargin          : refreshButton.anchors.leftMargin
         onClicked                   :
         {
             listLoader.source = "qrc:/qml/VacationListPopup.qml";

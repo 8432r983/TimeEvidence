@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include <QObject>
 #include <QString>
+#include <QVector>
 
 struct Vacation {
     QString date;
@@ -27,6 +28,7 @@ class VacationListModel : public QAbstractListModel {
     virtual QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE void loadVacation(QString Name);
+    static bool      comp(const Vacation *lhs, const Vacation *rhs);
 
   private:
     QVector<Vacation *> vacationList;

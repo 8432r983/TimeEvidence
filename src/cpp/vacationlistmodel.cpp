@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QStringList>
+#include <algorithm>
 
 VacationListModel::VacationListModel(QObject *parent)
     : QAbstractListModel{parent} {
@@ -56,26 +57,42 @@ void VacationListModel::loadVacation(QString Name) {
     }
     file.readLine();
 
+    QHash<QString, bool> vacationHash;
     vacationList.clear();
+
     while(!file.atEnd()) {
         QString     line     = QString(file.readLine()).replace("\n", "");
         QStringList elements = line.split(";");
 
-        Vacation *vacation = new Vacation();
-
         if(elements.size() == 3) {
-            vacation->date    = elements[0].trimmed();
-            vacation->valid   = elements[1].trimmed();
-            vacation->request = elements[2].trimmed();
+            Vacation *vacation = new Vacation();
+            vacation->date     = elements[0].trimmed();
+            vacation->valid    = elements[1].trimmed();
+            vacation->request  = elements[2].trimmed();
 
             if(elements[1].trimmed().toLower() != "da") {
                 vacation->valid = "Ne";
             } else {
                 vacation->valid = "Da";
             }
-        }
 
-        vacationList.append(vacation);
+            if(!vacationHash[vacation->date]) {
+                vacationHash[vacation->date] = true;
+                vacationList.append(vacation);
+            }
+        }
     }
+
+    std::sort(vacationList.begin(), vacationList.end(), comp);
     endResetModel();
+}
+
+bool VacationListModel::comp(const Vacation *lhs, const Vacation *rhs) {
+    QString ld = lhs->date;
+    QString rd = rhs->date;
+
+    if(ld.split(".")[1] == rd.split(".")[1]) {
+        return ld.split(".")[0] < rd.split(".")[0];
+    }
+    return ld.split(".")[1] < rd.split(".")[1];
 }
