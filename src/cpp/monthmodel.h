@@ -16,6 +16,7 @@ class MonthModel : public QAbstractListModel {
     Q_PROPERTY(QString holidaySum READ holidaySum NOTIFY holidaySumChanged FINAL)
     Q_PROPERTY(QString sickdaySum READ sickdaySum NOTIFY sickdaySumChanged FINAL)
     Q_PROPERTY(QString vacationSum READ vacationSum NOTIFY vacationSumChanged FINAL)
+    Q_PROPERTY(QString monthSum READ monthSum NOTIFY monthSumChanged FINAL)
 
   public:
     enum EntryRoles {
@@ -48,6 +49,7 @@ class MonthModel : public QAbstractListModel {
     QString holidaySum() const;
     QString sickdaySum() const;
     QString vacationSum() const;
+    QString monthSum() const;
 
   signals:
     void totalSumChanged();
@@ -56,6 +58,7 @@ class MonthModel : public QAbstractListModel {
     void holidaySumChanged();
     void sickdaySumChanged();
     void vacationSumChanged();
+    void monthSumChanged();
 
   private:
     QVector<Entry *> m_entries;
@@ -67,6 +70,7 @@ class MonthModel : public QAbstractListModel {
     QString          m_holidaySum;
     QString          m_sickdaySum;
     QString          m_vacationSum;
+    QString          m_monthSum;
     static bool      comp(const Entry *lhs, const Entry *rhs);
 };
 

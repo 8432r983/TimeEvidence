@@ -151,6 +151,9 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
         if(m_entries[i]->sickdayValidity == "da")
             m_sums.sickday = m_sums.intToTime(m_sums.timeToInt(m_sums.sickday) + m_sums.timeToInt(m_entries[i]->sickday));
         m_sums.vacation = m_sums.intToTime(m_sums.timeToInt(m_sums.vacation) + m_sums.timeToInt(m_entries[i]->vacation));
+        if(m_entries[i]->clockIn != "-" && m_entries[i]->clockOut != "-") {
+            m_sums.total = m_sums.intToTime(m_sums.timeToInt(m_sums.total) + m_sums.timeToInt(m_entries[i]->total));
+        }
     }
 
     int totalTime    = 0;
@@ -174,7 +177,6 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
             daySum->total = daySum->intToTime(totalTime);
             daySum->date  = m_entries[i - 1]->date;
             daySum->setDifference();
-            m_sums.total = m_sums.intToTime(m_sums.timeToInt(m_sums.total) + totalTime);
             tempV.append(daySum);
 
             totalTime = 0;
@@ -216,7 +218,6 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
     endSum->total = endSum->intToTime(totalTime);
     endSum->date  = m_entries.last()->date;
     endSum->setDifference();
-    m_sums.total = m_sums.intToTime(m_sums.timeToInt(m_sums.total) + totalTime);
     tempV.append(endSum);
 
     for(int i = 0; i < tempV.size(); i++) {
@@ -246,12 +247,19 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
     m_sickdaySum  = m_sums.sickday;
     m_vacationSum = m_sums.vacation;
 
+    m_monthSum = "-";
+    m_monthSum = m_sums.intToTime(m_sums.timeToInt(m_sums.total) + m_sums.timeToInt(m_monthSum));
+    m_sums.setTotal();
+    m_monthSum = m_sums.intToTime(m_sums.timeToInt(m_sums.total) + m_sums.timeToInt(m_monthSum));
+
+    emit monthSumChanged();
     emit totalSumChanged();
     emit differenceSumChanged();
     emit travelSumChanged();
     emit holidaySumChanged();
     emit sickdaySumChanged();
     emit vacationSumChanged();
+
     endResetModel();
 }
 
@@ -261,14 +269,18 @@ void MonthModel::loadVacation(QString Name) {
 
     if(!QFile::exists(filePath)) {
         qDebug() << "file doesnt exist: " << filePath;
+        return;
     }
 
     QFile file(filePath);
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "cant open file: " + filePath;
+        return;
     }
     file.readLine();
+
+    m_vacation.clear();
 
     while(!file.atEnd()) {
         QStringList elements = QString(file.readLine()).split(";");
@@ -322,4 +334,8 @@ bool MonthModel::comp(const Entry *lhs, const Entry *rhs) {
         return ent.timeToInt(lhs->clockIn) > ent.timeToInt(rhs->clockIn);
     }
     return lhs->date.toInt() > rhs->date.toInt();
+}
+
+QString MonthModel::monthSum() const {
+    return m_monthSum;
 }

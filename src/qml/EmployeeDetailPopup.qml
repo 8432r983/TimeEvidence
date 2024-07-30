@@ -506,9 +506,10 @@ Popup
             anchors.top : headerRow.bottom
 
             MText{
-                mainText            : ""
-                textH               : parent.height
+                mainText            : "SVEUKUPNO SATI: " + monthmodel.monthSum
+                textH               : parent.height*0.9
                 width               : bottomPanel.childrenWidth[0] + bottomPanel.childrenWidth[1] * 2
+                y                   : -textH
             }
             MText{
                 id                  : totalSum
@@ -559,21 +560,21 @@ Popup
                 mainText            : "Dan"
                 textH               : parent.height
                 width               : bottomPanel.childrenWidth[0]
-                y                   : parent.height/2
+                y                   : parent.height
             }
             MText{
                 id: clockIn
                 mainText            : "Dolazak"
                 textH               : parent.height
                 width               : bottomPanel.childrenWidth[1]
-                y                   : parent.height/2
+                y                   : parent.height
             }
             MText{
                 id: clockOut
                 mainText            : "Odlazak"
                 textH               : parent.height
                 width               : bottomPanel.childrenWidth[2]
-                y                   : parent.height/2
+                y                   : parent.height
             }
             MText{
                 id: total
