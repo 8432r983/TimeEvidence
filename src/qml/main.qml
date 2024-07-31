@@ -5,6 +5,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Controls.Styles 1.4
 
 import EmployeeListModel 1.0
+import MonthLogger 1.0
 import Style 1.0
 
 Window {
@@ -18,9 +19,21 @@ Window {
                  ? Window.Windowed
                  : Window.FullScreen;
 
-    EmployeeListModel {id:empmodel  }
-    Component.onCompleted :  empmodel.readEmployees()
+    MonthLogger { id: monthlogger }
+    EmployeeListModel { id: empmodel  }
+    Component.onCompleted :  {
+        empmodel.readEmployees()
 
+        if(holidaycheck.checkString(datetime.formatted.toString().split(" ")[1].slice(0,5))){
+            var empList = empmodel.getNames();
+
+            for(let i = 0; i < empList.length; i++){
+                monthlogger.addEntry(empList[i], datetime.currentDay.slice(0,3),
+                                     datetime.formatted.toString().split(" ")[1],
+                                     "-", "-", "-", "08:00", "-", "-","-");
+            }
+        }
+    }
     property QtObject emp  : QtObject{
         property int    ix       : -1
         property string name     : ""
@@ -164,7 +177,8 @@ Window {
         NumericKeyboard  {
             id: keyboard
 
-            property string password: ""
+            property string password    : ""
+            property int count          : 0
 
             width               : keyboardBox.width
             height              : keyboardBox.height * 0.5
@@ -188,6 +202,7 @@ Window {
                     popupLoader.loaded()
                     keyboard.password = ""
                     nameField.text    = ""
+                    keyboard.count = 0
                 }
                 else if(emp.password === "")
                 {
@@ -212,10 +227,11 @@ Window {
         opacity: mousespy.logout
 
         onOpacityChanged: {
-            if(popupLoader.source !== ""){
+            if(popupLoader.source !== "" && popupLoader.item !== null){
                 popupLoader.item.close()
                 popupLoader.source = ""
                 keyboard.password = ""
+                keyboard.count = 0
                 nameField.text = ""
                 nameView.currentIndex = ""
             }

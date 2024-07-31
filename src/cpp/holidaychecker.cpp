@@ -26,6 +26,13 @@ bool HolidayChecker::holidayCheck(QDate date) {
     return false;
 }
 
+bool HolidayChecker::checkString(QString date) {
+    if(m_holidays.contains(date)) {
+        return true;
+    }
+    return false;
+}
+
 void HolidayChecker::loadHolidays() {
     HalFiles hf;
 

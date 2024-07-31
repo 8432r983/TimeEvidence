@@ -52,6 +52,14 @@ QHash<int, QByteArray> EmployeeListModel::roleNames() const {
     return names;
 }
 
+QStringList EmployeeListModel::getNames() {
+    QStringList empList;
+    for(int i = 0; i < mlst.size(); i++) {
+        empList.append(mlst[i]->name);
+    }
+    return empList;
+}
+
 void EmployeeListModel::readEmployees() {
     beginResetModel();
     EmployeeList emplst;

@@ -3,6 +3,7 @@
 
 #include <QAbstractListModel>
 #include <QObject>
+#include <QStringList>
 
 #include "employee.h"
 
@@ -20,14 +21,14 @@ class EmployeeListModel : public QAbstractListModel {
         StatusRole    = Qt::UserRole + 5,
     };
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex &index,
-                  int                role = Qt::DisplayRole) const override;
+    int      rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int      columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     virtual QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void readEmployees();
+    Q_INVOKABLE QStringList getNames();
+    Q_INVOKABLE void        readEmployees();
 
   private:
     QVector<Employee *> mlst;

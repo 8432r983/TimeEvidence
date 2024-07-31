@@ -7,8 +7,9 @@ Q_LOGGING_CATEGORY(lcDateTime, "lcDateTime")
 DateTime::DateTime(QObject *parent)
     : QObject{parent}
     , m_dateTime(QDateTime::currentDateTime())
-    , m_formattedDateTime("hh:mm dd.MM.yyyy.") {
+    , m_formattedDateTime(QDateTime::currentDateTime().toString("hh:mm dd.MM.yyyy")) {
     initializeTimer();
+    setCurrentDay();
 #if(GUF_ROKO_0700)
     m_isDemo = false;
 #else

@@ -14,6 +14,7 @@ class HolidayChecker : public QObject {
     Q_INVOKABLE QString holiday();
 
     Q_INVOKABLE bool holidayCheck(QDate date);
+    Q_INVOKABLE bool checkString(QString date);
     Q_INVOKABLE void loadHolidays();
 
   private:

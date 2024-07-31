@@ -412,63 +412,76 @@ Popup
 
                 Row
                 {
+                    property color rowColor: holidaycheck.checkString(model.date + "." +
+                                                datetime.formatted.toString().split(" ")[1].split(".")[1])
+                                                ? "blue" : Style.popup.borderColor
+
                     id      : modelRow
                     width   : parent.width
                     height  : parent.height
 
                     MText
                     {
-                        mainText: model.date
-                        textH   : parent.height
-                        width   : bottomPanel.childrenWidth[0]
+                        mainText    : model.date
+                        textH       : parent.height
+                        width       : bottomPanel.childrenWidth[0]
+                        textColor   : modelRow.rowColor
                     }
                     MText
                     {
-                        mainText: model.clockIn
-                        textH   : parent.height
-                        width   : bottomPanel.childrenWidth[1]
+                        mainText    : model.clockIn
+                        textH       : parent.height
+                        width       : bottomPanel.childrenWidth[1]
+                        textColor   : modelRow.rowColor
                     }
                     MText
                     {
-                        mainText: model.clockOut
-                        textH   : parent.height
-                        width   : bottomPanel.childrenWidth[2]
+                        mainText    : model.clockOut
+                        textH       : parent.height
+                        width       : bottomPanel.childrenWidth[2]
+                        textColor   : modelRow.rowColor
                     }
                     MText
                     {
-                        mainText: model.total
-                        textH   : parent.height
-                        width   : bottomPanel.childrenWidth[3]
+                        mainText    : model.total
+                        textH       : parent.height
+                        width       : bottomPanel.childrenWidth[3]
+                        textColor   : modelRow.rowColor
                     }
                     MText
                     {
-                        mainText: model.difference
-                        textH   : parent.height
-                        width   : bottomPanel.childrenWidth[4]
+                        mainText    : model.difference
+                        textH       : parent.height
+                        width       : bottomPanel.childrenWidth[4]
+                        textColor   : modelRow.rowColor
                     }
                     MText
                     {
-                        mainText: model.travel
-                        textH   : parent.height
-                        width   : bottomPanel.childrenWidth[5]
+                        mainText    : model.travel
+                        textH       : parent.height
+                        width       : bottomPanel.childrenWidth[5]
+                        textColor   : modelRow.rowColor
                     }
                     MText
                     {
-                        mainText: model.holiday
-                        textH   : parent.height
-                        width   : bottomPanel.childrenWidth[6]
+                        mainText    : model.holiday
+                        textH       : parent.height
+                        width       : bottomPanel.childrenWidth[6]
+                        textColor   : modelRow.rowColor
                     }
                     MText
                     {
-                        mainText: model.sickday
-                        textH   : parent.height
-                        width   : bottomPanel.childrenWidth[7]
+                        mainText    : model.sickday
+                        textH       : parent.height
+                        width       : bottomPanel.childrenWidth[7]
+                        textColor   : modelRow.rowColor
                     }
                     MText
                     {
-                        mainText: model.vacation
-                        textH   : parent.height
-                        width   : bottomPanel.childrenWidth[8]
+                        mainText    : model.vacation
+                        textH       : parent.height
+                        width       : bottomPanel.childrenWidth[8]
+                        textColor   : modelRow.rowColor
                     }
                 }
 

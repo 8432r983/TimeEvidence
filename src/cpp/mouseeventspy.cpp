@@ -49,10 +49,11 @@ void MouseEventSpy::initializeTimer() {
 
     timerDuration = settings.value(cTimerDuration, 0).toInt();
 
-    mainTimer = new QTimer(this);
-    connect(mainTimer, &QTimer::timeout, this, timerDone);
-    mainTimer->start(1000 * timerDuration);
-
+    if(timerDuration != 0) {
+        mainTimer = new QTimer(this);
+        connect(mainTimer, &QTimer::timeout, this, &MouseEventSpy::timerDone);
+        mainTimer->start(1000 * timerDuration);
+    }
     settings.endGroup();
 }
 
