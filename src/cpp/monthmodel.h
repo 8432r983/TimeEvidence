@@ -42,6 +42,7 @@ class MonthModel : public QAbstractListModel {
 
     Q_INVOKABLE void loadEntries(QString date, QString Name, QString act = "");
     void             loadVacation(QString Name);
+    void             entriesToFile(QString Name, QString date);
 
     QString totalSum() const;
     QString differenceSum() const;

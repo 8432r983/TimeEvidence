@@ -3,10 +3,12 @@
 #include <QFile>
 #include <QSettings>
 #include <QStringList>
+#include <QTextStream>
 #include <algorithm>
 #include <cmath>
 
 #include "dateranges.h"
+#include "datetime.h"
 #include "entry.h"
 #include "halfiles.h"
 #include "holidaychecker.h"
@@ -82,12 +84,14 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
 
     qDeleteAll(m_entries);
     m_entries.clear();
+    m_sums.reset();
 
     HalFiles hf;
     QString  filePath = hf.getEmployeeMonth(Name, date);
 
     if(act != "") {
         Entry *currEnt   = new Entry();
+        currEnt->day     = DateTime().currentDay();
         currEnt->date    = date.split(".")[0];
         currEnt->clockIn = act;
         m_entries.append(currEnt);
@@ -106,14 +110,15 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
         endResetModel();
         return;
     }
-    file.readLine();
 
+    file.readLine();
     while(!file.atEnd()) {
         QString     line     = QString(file.readLine());
         QStringList elements = line.replace("\n", "").split(";");
         Entry      *entry;
 
         if(elements.size() == 11) {
+            qDebug() << "hello";
             entry                  = new Entry();
             entry->day             = elements[0].trimmed();
             entry->date            = elements[1].trimmed();
@@ -126,7 +131,10 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
             entry->sickday         = elements[8].trimmed();
             entry->vacation        = elements[9].trimmed();
             entry->sickdayValidity = elements[10].trimmed().toLower();
-            m_entries.append(entry);
+
+            if(entry->total != "-") {
+                m_entries.append(entry);
+            }
         }
     }
 
@@ -146,7 +154,8 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
 
     std::sort(m_entries.begin(), m_entries.end(), comp);
 
-    m_sums.reset();
+    entriesToFile(Name, date);
+
     for(int i = 0; i < m_entries.size(); i++) {
         m_sums.travel  = m_sums.intToTime(m_sums.timeToInt(m_sums.travel) + m_sums.timeToInt(m_entries[i]->travel));
         m_sums.holiday = m_sums.intToTime(m_sums.timeToInt(m_sums.holiday) + m_sums.timeToInt(m_entries[i]->holiday));
@@ -293,6 +302,28 @@ void MonthModel::loadVacation(QString Name) {
                 m_vacation.append(elements[0].trimmed());
             }
         }
+    }
+}
+
+void MonthModel::entriesToFile(QString Name, QString date) {
+    HalFiles hf;
+    QString  filePath = hf.getEmployeeMonth(Name, date);
+
+    QFile file(filePath);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug() << "cant open file: " << filePath;
+    }
+
+    QTextStream in(&file);
+    in << "Dan; Datum; Dolazak; Odlazak; Odradeno sati; Visak/Manjak; Sati puta; Drzavni ";
+    in << "praznik; Bolovanje; Godisnji; Dozvola za bolovanje\n";
+
+    for(int i = 0; i < m_entries.size(); i++) {
+        in << m_entries[i]->day + "; " << m_entries[i]->date + "; " << m_entries[i]->clockIn + "; "
+           << m_entries[i]->clockOut + "; " << m_entries[i]->total + "; "
+           << m_entries[i]->intToTime(m_entries[i]->calcDifference()) + "; " << m_entries[i]->travel + "; "
+           << m_entries[i]->holiday + "; " << m_entries[i]->sickday + "; " << m_entries[i]->vacation + "; "
+           << m_entries[i]->sickdayValidity << "\n";
     }
 }
 

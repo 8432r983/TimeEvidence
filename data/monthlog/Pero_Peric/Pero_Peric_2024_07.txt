@@ -1,0 +1,2 @@
+Dan; Datum; Dolazak; Odlazak; Odradeno sati; Visak/Manjak; Sati puta; Drzavni praznik; Bolovanje; Godisnji; Dozvola za bolovanje
+uto; 30; -; -; 08:00; 00:00; -; -; 08:00; -; da
