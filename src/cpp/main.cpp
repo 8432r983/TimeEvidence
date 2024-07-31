@@ -16,6 +16,7 @@
 #include "dateranges.h"
 #include "holidaychecker.h"
 #include "monthlogger.h"
+#include "mouseeventspy.h"
 #include "sickdaylogger.h"
 #include "vacationlogger.h"
 /*----------------------------------------------------------------------------*/
@@ -75,6 +76,8 @@ int main(int argc, char *argv[]) {
 
     QQmlApplicationEngine engine;
 
+    app.installEventFilter(MouseEventSpy::instance());
+
     appQmlRegisterFonts();
     appQmlRegisterStyle(app.primaryScreen());
 
@@ -98,6 +101,8 @@ int main(int argc, char *argv[]) {
 
     VacationListModel vacationmodel;
     context->setContextProperty("vacationmodel", &vacationmodel);
+
+    context->setContextProperty("mousespy", MouseEventSpy::instance());
 
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(

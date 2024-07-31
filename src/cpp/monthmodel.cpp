@@ -130,6 +130,7 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
         }
     }
 
+    m_vacation.clear();
     loadVacation(Name);
     m_monthSum = "-";
 
@@ -284,8 +285,6 @@ void MonthModel::loadVacation(QString Name) {
     }
     file.readLine();
 
-    m_vacation.clear();
-
     while(!file.atEnd()) {
         QStringList elements = QString(file.readLine()).split(";");
 
@@ -329,12 +328,6 @@ bool MonthModel::comp(const Entry *lhs, const Entry *rhs) {
             return false;
 
         Entry ent;
-        if(ent.timeToInt(lhs->total) > ent.timeToInt(rhs->total)) {
-            return true;
-        } else if(ent.timeToInt(lhs->total) < ent.timeToInt(rhs->total)) {
-            return false;
-        }
-
         return ent.timeToInt(lhs->clockIn) > ent.timeToInt(rhs->clockIn);
     }
     return lhs->date.toInt() > rhs->date.toInt();

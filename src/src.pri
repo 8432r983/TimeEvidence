@@ -11,6 +11,7 @@ SOURCES += \
   $$PWD/cpp/main.cpp \
   $$PWD/cpp/monthlogger.cpp \
   $$PWD/cpp/monthmodel.cpp \
+  $$PWD/cpp/mouseeventspy.cpp \
   $$PWD/cpp/sickdaylogger.cpp \
   $$PWD/cpp/vacationlistmodel.cpp \
   $$PWD/cpp/vacationlogger.cpp
@@ -28,6 +29,7 @@ HEADERS += \
   $$PWD/cpp/holidaychecker.h \
   $$PWD/cpp/monthlogger.h \
   $$PWD/cpp/monthmodel.h \
+  $$PWD/cpp/mouseeventspy.h \
   $$PWD/cpp/sickdaylogger.h \
   $$PWD/cpp/vacationlistmodel.h \
   $$PWD/cpp/vacationlogger.h

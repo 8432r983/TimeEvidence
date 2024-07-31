@@ -207,4 +207,18 @@ Window {
             }
         }
     }
+
+    Item{
+        opacity: mousespy.logout
+
+        onOpacityChanged: {
+            if(popupLoader.source !== ""){
+                popupLoader.item.close()
+                popupLoader.source = ""
+                keyboard.password = ""
+                nameField.text = ""
+                nameView.currentIndex = ""
+            }
+        }
+    }
 }
