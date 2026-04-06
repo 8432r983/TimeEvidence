@@ -84,7 +84,7 @@ Popup
                     id                  : leftoverHours
                     width               : parent.width
                     height              : parent.height * 0.5
-                    mainText            : qsTr("Višak sati:<br><b>" + vacationData.leftoverhours)
+                    mainText            : qsTr("Višak sati :<br><b>" + vacationData.leftoverhours)
                     textH               : parent.height * 0.18
                 }
                 MText
@@ -92,7 +92,7 @@ Popup
                     id                  : vacationDays
                     width               : parent.width
                     height              : parent.height * 0.5
-                    mainText            : qsTr("Godišnji<br>odmor:<br><b>" + vacationData.vacationdays + "</b><br>dana")
+                    mainText            : qsTr("Godišnji<br>odmor :<br><b>" + vacationData.vacationdays + "</b><br>dana")
                     textH               : parent.height * 0.17
                 }
             }

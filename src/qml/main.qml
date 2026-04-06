@@ -26,8 +26,7 @@ Window {
 
         if(holidaycheck.checkString(datetime.formatted.toString().split(" ")[1].slice(0,5))){
             var empList = empmodel.getNames();
-
-            for(let i = 0; i < empList.length; i++){
+            for(var i = 0; i < empList.length; i++){
                 monthlogger.addEntry(empList[i], datetime.currentDay.slice(0,3),
                                      datetime.formatted.toString().split(" ")[1],
                                      "-", "-", "-", "08:00", "-", "-","-");
@@ -56,7 +55,7 @@ Window {
     Rectangle  {
         id              : nameBox
         height          : parent.height
-        width           : window.width * 0.5
+        width           : window.width * 0.6
         anchors.left    : parent.left
         color           : Style.popup.backColor
 

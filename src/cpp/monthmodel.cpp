@@ -264,7 +264,7 @@ void MonthModel::loadEntries(QString date, QString Name, QString act) {
     QDate   firstDay = QDate::fromString("01" + month, "dd.MM.yyyy");
     QDate   lastDay  = QDate::fromString(days + month, "dd.MM.yyyy");
     int     dist     = dr.dateDist(firstDay, lastDay);
-    m_monthSum += "/" + QString::number(dist * 8) + ":00";
+    m_monthSum += "/" + QString::number(dist * 8);
 
     emit monthSumChanged();
     emit totalSumChanged();
